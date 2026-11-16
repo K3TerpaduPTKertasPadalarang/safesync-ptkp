@@ -810,41 +810,15 @@
 
             <!-- MODUL 4: PROFIL / MANAJEMEN AKUN & PENGATURAN FITUR (HANYA ADMIN) -->
             <div id="modulProfile" class="hidden space-y-4"><div id="profDb"></div><div id="profLogs"></div>
-                <div class="bg-white rounded-2xl shadow-lg p-5 md:p-6 border border-slate-100 max-w-2xl mx-auto space-y-4 text-xs md:text-sm">
-                    <div class="border-b pb-3">
-                        <h2 class="text-base font-bold text-slate-800">Manajemen Akun & Pengaturan Akses Fitur</h2>
-                        <p class="text-[11px] text-slate-500">Kelola kredensial akun serta buka/kunci akses modul Temuan & APD untuk karyawan.</p>
-                    </div>
-
+                <div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-4 text-xs">
+                    <div><h2 class="text-sm md:text-base font-bold text-slate-900">👤 Akun Administrator</h2><p class="text-[11px] text-slate-500">Ubah username dan password akun admin. Password minimal 8 karakter dan berlaku pada login berikutnya.</p></div>
                     <form onsubmit="handleAccountManagement(event)" class="space-y-4">
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Pilih Akun yang Ingin Diatur *</label>
-                            <select id="targetAccountSelect" onchange="loadAccountCredentials(this.value)" class="w-full px-3.5 py-2.5 border rounded-xl bg-slate-50 font-semibold shadow-sm">
-                                <option value="admin">Akun Administrator</option>
-                                <option value="karyawan">Akun Karyawan / Peserta</option>
-                            </select>
+                        <select id="targetAccountSelect" class="hidden"><option value="admin">Akun Administrator</option></select>
+                        <div class="grid md:grid-cols-2 gap-3">
+                            <div><label class="block font-semibold text-slate-600 mb-1">Username Baru *</label><input type="text" id="manageUsername" required class="w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"></div>
+                            <div><label class="block font-semibold text-slate-600 mb-1">Password Baru *</label><input type="text" id="managePassword" required class="w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-500" placeholder="Minimal 8 karakter"></div>
                         </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Username Baru *</label>
-                            <input type="text" id="manageUsername" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none">
-                        </div>
-
-                        <div>
-                            <label class="block font-semibold text-slate-700 mb-1">Password Baru *</label>
-                            <input type="text" id="managePassword" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none" placeholder="Masukkan password baru">
-                        </div>
-
-                        <div class="bg-slate-50 p-4 rounded-2xl border space-y-2">
-                            <label class="block font-bold text-slate-800">Pengaturan Akses Fitur Karyawan (Temuan & APD)</label>
-                            <p class="text-[10px] text-slate-500">Centang opsi di bawah jika ingin membuka akses modul Temuan & APD agar dapat diakses oleh akun Karyawan.</p>
-                            <div class="flex items-center gap-2 pt-1">
-                                <input type="checkbox" id="featureUnlockedToggle" class="w-4 h-4 text-red-600 rounded border-slate-300 focus:ring-red-500">
-                                <label for="featureUnlockedToggle" class="font-semibold text-slate-700 cursor-pointer">Buka Akses Fitur Temuan untuk Karyawan (Peminjaman APD selalu aktif)</label>
-                            </div>
-                        </div>
-
-                        <button type="submit" class="w-full bg-slate-900 hover:bg-black text-white font-bold py-3 rounded-xl transition shadow">Simpan Perubahan Akun & Akses</button>
+                        <button type="submit" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-black text-white font-bold shadow">💾 Simpan Akun Administrator</button>
                     </form>
                 </div>
             </div>
@@ -1624,13 +1598,6 @@
                 }
             });
 
-            if (modul === 'temuan' && currentUser.role !== 'admin') {
-                let isUnlocked = appCredentials.karyawan && appCredentials.karyawan.featuresUnlocked;
-                if (!isUnlocked) {
-                    document.getElementById('modulLocked').classList.remove('hidden');
-                    return;
-                }
-            }
 
             if (modul === 'apar') { 
                 document.getElementById('modulApar').classList.remove('hidden'); 
@@ -1652,18 +1619,10 @@
         function loadAccountCredentials(targetType) {
             const usernameInput = document.getElementById('manageUsername');
             const passwordInput = document.getElementById('managePassword');
-            const toggleCheckbox = document.getElementById('featureUnlockedToggle');
 
             if(appCredentials[targetType]) {
                 usernameInput.value = appCredentials[targetType].user;
                 passwordInput.value = appCredentials[targetType].pass;
-                if(targetType === 'karyawan') {
-                    toggleCheckbox.checked = !!appCredentials.karyawan.featuresUnlocked;
-                    toggleCheckbox.parentElement.style.display = 'block';
-                } else {
-                    toggleCheckbox.checked = false;
-                    toggleCheckbox.parentElement.style.display = 'none';
-                }
             }
         }
 
@@ -1672,13 +1631,6 @@
             const targetType = document.getElementById('targetAccountSelect').value;
             const newU = document.getElementById('manageUsername').value.trim();
             const newP = document.getElementById('managePassword').value.trim();
-            const toggleCheckbox = document.getElementById('featureUnlockedToggle');
-            if (targetType === 'karyawan') {
-                appCredentials.karyawan.featuresUnlocked = toggleCheckbox.checked;
-                localStorage.setItem('k3_app_credentials', JSON.stringify(appCredentials));
-                alert('Akses fitur karyawan diperbarui. (Password karyawan = nomor register, tidak dapat diubah di sini.)');
-                return;
-            }
             if (!newU || !newP) { alert("Username dan Password wajib diisi!"); return; }
             if (newP.length < 8) { alert("Password minimal 8 karakter."); return; }
             try {
@@ -3559,7 +3511,7 @@ FLAYERS.forEach(lid=>{const l=document.getElementById(lid);if(!l)return;
 </script>
 <script>
 const _swm=window.switchModule;
-window.switchModule=function(m){if(m==='profile'&&currentUser&&currentUser.role==='admin')setTimeout(()=>{window.wpLogs&&wpLogs();window.dbLoad&&dbLoad()},80);if(currentUser&&currentUser.kind==='vendor'){m='wp';document.querySelectorAll('button[onclick^="switchModule("]').forEach(b=>{if(!/'wp'/.test(b.getAttribute('onclick')))b.style.display='none'})}if(m==='wp'){['modulApar','modulTemuan','modulApd','modulLocked','modulProfile'].forEach(i=>{const e=document.getElementById(i);if(e)e.classList.add('hidden')});_swm.call(this,'wp');['modulApar','modulTemuan','modulApd','modulLocked','modulProfile'].forEach(i=>{const e=document.getElementById(i);if(e)e.classList.add('hidden')});document.getElementById('modulWp').classList.remove('hidden');navWp(true);wpEnter();return}document.getElementById('modulWp').classList.add('hidden');const rr=_swm.apply(this,arguments);navWp(false);return rr};
+window.switchModule=function(m){if(m==='profile'&&currentUser&&currentUser.role==='admin')setTimeout(()=>{window.wpLogs&&wpLogs();window.dbLoad&&dbLoad()},80);if(currentUser&&currentUser.kind==='vendor'){m=m==='apd'?'apd':'wp';document.querySelectorAll('button[onclick^="switchModule("]').forEach(b=>{if(!/'(wp|apd)'/.test(b.getAttribute('onclick')))b.style.display='none'})}if(m==='wp'){['modulApar','modulTemuan','modulApd','modulLocked','modulProfile'].forEach(i=>{const e=document.getElementById(i);if(e)e.classList.add('hidden')});_swm.call(this,'wp');['modulApar','modulTemuan','modulApd','modulLocked','modulProfile'].forEach(i=>{const e=document.getElementById(i);if(e)e.classList.add('hidden')});document.getElementById('modulWp').classList.remove('hidden');navWp(true);wpEnter();return}document.getElementById('modulWp').classList.add('hidden');const rr=_swm.apply(this,arguments);navWp(false);return rr};
 let NAV_IN='';window.navWp=on=>{const ids=['navApar','navTemuan','navApd'],q=ids.map(i=>document.getElementById(i)).find(b=>b&&b.className.includes('bg-red-800/80'));if(q)NAV_IN=q.className;if(!NAV_IN)return;document.querySelectorAll('button[onclick*="\'wp\'"]').forEach(b=>{b.className=on?NAV_IN.replace('bg-red-800/80 hover:bg-red-700','bg-red-700').replace('font-semibold','font-bold'):NAV_IN})};
 </script>
 <script>
@@ -4179,7 +4131,7 @@ ${dt.catatan?`<p><b>Catatan inspektor:</b> ${E(dt.catatan)}</p>`:''}<p style="te
 <div style="display:flex;justify-content:flex-end;margin-top:14px;page-break-inside:avoid"><div style="text-align:center;width:250px"><div>Padalarang, ${dtL(tgl)}</div><div>Hormat Kami,</div><div>Departemen Jaminan Keandalan dan K3LH</div><div style="height:78px"></div><div style="font-weight:bold;text-decoration:underline">Dimas Andhika Yunanto</div><div style="font-size:10px">Kepala Departemen</div></div></div>
 <div class="pg"><p style="font-weight:bold;text-align:center">LAMPIRAN — HASIL PEMERIKSAAN LENGKAP<br>${E(i.kodeUnit)} · ${dtL(i.waktu)} · ${E(i.nota||'')}</p><table class="b" style="width:100%"><tr><th style="width:28px">No</th><th>Item pemeriksaan</th><th style="width:60px">Baik</th><th style="width:60px">Perhatian</th><th style="width:60px">Rusak</th><th style="width:50px">N/A</th><th>Keterangan</th></tr>${items.map((x,n)=>`<tr><td align="center">${n+1}</td><td>${E(x.l)}${x.kr?' <i>(kritis)</i>':''}</td>${['B','P','R','N'].map(k=>`<td align="center">${x.s===k?'✓':''}</td>`).join('')}<td>${E(x.c)}</td></tr>`).join('')}</table>${(dt.fotos||[]).length?`<p style="font-weight:bold;margin-top:12px">Dokumentasi foto:</p><div class="ph">${dt.fotos.map(f=>`<img src="${f}">`).join('')}</div>`:''}${tl.perbaikan?`<p style="font-weight:bold;margin-top:12px">Hasil perbaikan (${dtL(tl.perbaikan.waktu)}) oleh ${E(tl.perbaikan.oleh)}:</p><p>${E(tl.perbaikan.uraian)}</p><div class="ph">${(tl.perbaikan.fotos||[]).map(f=>`<img src="${f}">`).join('')}</div>`:''}</div></body></html>`}
 /* ---------- Profil admin: buka / kunci fitur untuk akun karyawan ---------- */
-async function vehProfile(){const mp=$('modulProfile');if(!mp)return;if(!$('profVeh'))mp.insertAdjacentHTML('afterbegin','<div id="profVeh"></div>');const box=$('profVeh');
+async function vehProfile(){return;const mp=$('modulProfile');if(!mp)return;if(!$('profVeh'))mp.insertAdjacentHTML('afterbegin','<div id="profVeh"></div>');const box=$('profVeh');
  try{const r=await call({action:'wpVehInfo'});box.innerHTML=`<div class="${CARD} text-xs"><h3 class="font-bold text-sm">🚗 Akses Fitur Inspeksi Kendaraan — Akun Karyawan</h3><p class="text-slate-500">Saat dikunci, akun karyawan melihat pesan "Fitur Dalam Pengembangan". Setelah dibuka, karyawan hanya melihat unit dan laporan yang menjadi tanggung jawabnya. Akun vendor tidak pernah melihat fitur ini.</p><label class="flex items-center gap-2 font-semibold"><input type="checkbox" id="vOpenChk" ${r.open?'checked':''}> Buka fitur Inspeksi Kendaraan untuk akun Karyawan</label><div class="flex items-center gap-2"><button onclick="vehSaveOpen()" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold">Simpan Akses</button><span id="vOpenSt" class="text-[11px] ${r.open?'text-emerald-700':'text-slate-500'}">Status saat ini: ${r.open?'DIBUKA':'DIKUNCI'}</span></div></div>`}catch(e){box.innerHTML=''}}
 async function admSess(){const mp=$('modulProfile');if(!mp||!isAdm())return;if(!$('profSess'))mp.insertAdjacentHTML('afterbegin','<div id="profSess"></div>');const box=$('profSess');
  try{const r=await call({action:'wpAdminSessions'});box.innerHTML=`<div class="${CARD} text-xs"><h3 class="font-bold text-sm">🔐 Perangkat Admin yang Sedang Login (maks. ${r.max})</h3><p class="text-slate-500">Akun admin hanya dapat login di ${r.max} perangkat sekaligus. Logout dari perangkat lama agar perangkat lain bisa login. Sesi berakhir otomatis setelah 6 jam.</p>${r.list.map(x=>`<div class="flex items-center justify-between gap-2 border rounded-xl px-3 py-2"><div><b>${E(x.dev)}</b>${x.me?' <span class="text-emerald-700 font-bold">(perangkat ini)</span>':''}<br><span class="text-slate-500">Login ${dtT(x.t)}</span></div>${x.me?'':`<button onclick="admRevoke('${E(x.id)}')" class="px-3 py-1.5 rounded-lg bg-red-100 text-red-700 font-bold">Keluarkan</button>`}</div>`).join('')}</div>`}catch(e){box.innerHTML=''}}
@@ -4572,13 +4524,15 @@ addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementB
 const $=id=>document.getElementById(id),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const post=async p=>{const r=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...p,token:localStorage.getItem('wpTok')||''})})).json();if(r.ok===undefined)throw new Error('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.');if(!r.ok)throw new Error(r.msg||'Gagal.');return r};
 const toast=(m,ok=1)=>{const t=document.createElement('div');t.className='fixed top-16 left-1/2 -translate-x-1/2 z-[120] text-white text-xs rounded-xl shadow-2xl px-4 py-2.5 '+(ok?'bg-emerald-700':'bg-red-700');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3800)};
-const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['apd','⛑️ Peminjaman APD',1,0],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
+const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['hdr','⛑️ Modul APD'],['apd_pinjam','Peminjaman APD',1,1,1],['apd_minta','Permintaan APD',1,0,1],['apd_serah','Serah Terima APD',1,0,1],['apd_spb','SPB APD',1,0,1],['apd_stok','Safety Stock APD',1,0,1],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
+const APDS=['apd_pinjam','apd_minta','apd_serah','apd_spb','apd_stok'];
 const keyOf=b=>{const o=b.getAttribute('onclick')||'',m=o.match(/^switchModule\('(apar|temuan|apd|wp|veh)'\)/);return m?m[1]:/^sopOpen\(/.test(o)?'sop':null};
-const NAMA=Object.fromEntries(MODS.map(m=>[m[0],m[1]]));
+const NAMA=Object.assign(Object.fromEntries(MODS.map(m=>[m[0],m[1]])),{apd:'⛑️ APD'});
 let ACC={tutup:{karyawan:[],vendor:[]},pesan:''},CURM=null,SHOWN=false;
 const grp=()=>currentUser&&currentUser.kind==='vendor'?'vendor':'karyawan';
 const isAdm=()=>currentUser&&currentUser.role==='admin';
-const closed=m=>!isAdm()&&!!currentUser&&(ACC.tutup[grp()]||[]).includes(m);
+const closedK=k=>!isAdm()&&!!currentUser&&(ACC.tutup[grp()]||[]).includes(k);
+const closed=m=>m==='apd'?APDS.filter(k=>grp()==='vendor'?k==='apd_pinjam':true).every(closedK):closedK(m);
 
 /* ---- tampilan "modul ditutup" ---- */
 const ALL=['modulApar','modulTemuan','modulApd','modulLocked','modulProfile','modulWp','modulSop','modulVeh','modulLap','modulSi'];
@@ -4590,13 +4544,17 @@ const hideTutup=()=>{const t=$('modulTutup');if(t)t.classList.add('hidden');SHOW
 window.accRefresh=async()=>{await load();if(CURM&&!closed(CURM)){hideTutup();window.switchModule(CURM==='sop'?'apar':CURM);if(CURM==='sop'&&window.sopOpen)window.sopOpen()}else toast('Modul masih ditutup.',0)};
 
 /* ---- tombol menu: tanda gembok ---- */
-function apply(){document.querySelectorAll('#navButtonsContainer button, #navDrawer button, button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
- if(!isAdm()&&CURM&&closed(CURM))showTutup(CURM);else if(SHOWN&&CURM&&!closed(CURM))accRefresh()}
+function closedTab(i){const k=APDS[i];let c=$('pjClosed');if(!c){const m=$('pjMain');if(!m)return;m.insertAdjacentHTML('beforebegin','<div id="pjClosed" class="hidden bg-white rounded-2xl shadow-lg border border-slate-100 p-8 text-center space-y-2"></div>');c=$('pjClosed')}
+ if(closedK(k)){c.innerHTML=`<div class="text-4xl">🛠️</div><h3 class="font-bold text-sm">Fitur ${E(NAMA[k])} Sedang Ditutup Sementara</h3><p class="text-xs text-slate-600">${E(ACC.pesan||'Fitur ini ditutup sementara oleh admin untuk pemeliharaan atau pembaruan sistem.')}</p>`;c.classList.remove('hidden');$('pjMain').classList.add('hidden');if($('pjDev'))$('pjDev').classList.add('hidden')}else c.classList.add('hidden')}
+function tabs(){APDS.forEach((k,i)=>{const b=$('pjT'+i);if(!b)return;const c=closedK(k),l=b.querySelector('.accL');if(c&&!l)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&l)l.remove();b.style.display=(grp()==='vendor'&&!isAdm()&&i>0)?'none':''});const cur=APDS.findIndex((k,i)=>$('pjT'+i)&&$('pjT'+i).className.includes('bg-red-600'));if(cur>=0)closedTab(cur)}
+function apply(){document.querySelectorAll('button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
+ tabs();if(!isAdm()&&CURM&&closed(CURM))showTutup(CURM);else if(SHOWN&&CURM&&!closed(CURM))accRefresh()}
+const PT=window.pjTab;if(PT)window.pjTab=function(){const r=PT.apply(this,arguments);tabs();return r};
 async function load(){if(!currentUser||!localStorage.getItem('wpTok'))return;try{const r=await post({action:'wpAksesGet'});ACC=r.cfg;apply();if(isAdm())fill()}catch(e){}}
 
 /* ---- pembungkus navigasi ---- */
 const SM=window.switchModule;
-window.switchModule=function(m){const em=currentUser&&currentUser.kind==='vendor'&&m!=='profile'?'wp':m;CURM=em;
+window.switchModule=function(m){const em=currentUser&&currentUser.kind==='vendor'&&m!=='profile'?(m==='apd'?'apd':'wp'):m;CURM=em;
  if(m==='profile'&&isAdm()){card();load()}
  if(closed(em)){showTutup(em);return}
  hideTutup();return SM.apply(this,arguments)};
@@ -4611,10 +4569,10 @@ function card(){if($('accCard'))return;const mp=$('modulProfile');if(!mp)return;
  const cell=(m,g,on)=>on?`<label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accCb" data-m="${m}" data-g="${g}" onchange="accTone(this)"><span class="accT text-[11px] font-bold"></span></label>`:'<span class="text-slate-300">—</span>';
  mp.insertAdjacentHTML('afterbegin',`<div id="accCard" class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-4 text-xs mb-4">
  <div><h2 class="text-sm md:text-base font-bold text-slate-900">🔐 Pengaturan Buka / Tutup Modul</h2><p class="text-[11px] text-slate-500">Tutup modul tertentu untuk akun Karyawan atau Vendor saat ada pemeliharaan atau pembaruan. Admin tetap dapat mengakses semua modul. Perubahan berlaku otomatis di perangkat pengguna dalam ±45 detik.</p></div>
- <div class="table-container border rounded-xl"><table class="w-full min-w-[420px]"><thead class="bg-slate-100 text-slate-600"><tr><th class="p-2 text-left">Modul</th><th class="p-2 text-left">Akun Karyawan</th><th class="p-2 text-left">Akun Vendor</th></tr></thead><tbody>${MODS.map(m=>`<tr class="border-t"><td class="p-2 font-semibold">${m[1]}</td><td class="p-2">${cell(m[0],'karyawan',m[2])}</td><td class="p-2">${cell(m[0],'vendor',m[3])}</td></tr>`).join('')}</tbody></table></div>
+ <div class="table-container border rounded-xl"><table class="w-full min-w-[420px]"><thead class="bg-slate-100 text-slate-600"><tr><th class="p-2 text-left">Modul</th><th class="p-2 text-left">Akun Karyawan</th><th class="p-2 text-left">Akun Vendor</th></tr></thead><tbody>${MODS.map(m=>m[0]==='hdr'?`<tr class="border-t bg-slate-50"><td colspan="3" class="p-2 font-bold text-slate-700">${m[1]}</td></tr>`:`<tr class="border-t"><td class="p-2 ${m[4]?'pl-7 text-slate-600':'font-semibold'}">${m[4]?'↳ ':''}${m[1]}</td><td class="p-2">${cell(m[0],'karyawan',m[2])}</td><td class="p-2">${cell(m[0],'vendor',m[3])}</td></tr>`).join('')}</tbody></table></div>
  <div><label class="block font-semibold text-slate-600 mb-1">Pesan yang tampil kepada pengguna (opsional)</label><input id="accMsg" maxlength="200" placeholder="mis. Sedang pemeliharaan sistem, estimasi selesai pukul 15.00 WIB" class="w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"></div>
  <div class="flex flex-wrap gap-2"><button onclick="accSave()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow">💾 Simpan Pengaturan</button><button onclick="accAll(false)" class="px-4 py-2 rounded-xl bg-red-100 text-red-700 font-bold">🔒 Tutup Semua</button><button onclick="accAll(true)" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold">🔓 Buka Semua</button></div>
- <p class="text-[10px] text-slate-400">Work Permit &amp; JSA, Inspeksi Kendaraan, dan SOP &amp; IK juga dikunci di server. APAR, Temuan, dan APD ditutup pada tampilan aplikasi. Inspeksi Kendaraan khusus akun Karyawan.</p></div>`);fill()}
+ <p class="text-[10px] text-slate-400">Work Permit &amp; JSA, Inspeksi Kendaraan, dan SOP &amp; IK juga dikunci di server. APAR, Temuan, dan fitur APD ditutup pada tampilan aplikasi. Akun Vendor dapat menggunakan Work Permit &amp; JSA, Peminjaman APD, dan SOP &amp; IK. Modul APD otomatis terkunci bila semua fiturnya ditutup.</p></div>`);fill()}
 window.accTone=cb=>{const t=cb.parentElement.querySelector('.accT');t.textContent=cb.checked?'Dibuka':'Ditutup';t.className='accT text-[11px] font-bold '+(cb.checked?'text-emerald-600':'text-red-600')};
 function fill(){if(!$('accCard'))return;document.querySelectorAll('.accCb').forEach(cb=>{cb.checked=!(ACC.tutup[cb.dataset.g]||[]).includes(cb.dataset.m);accTone(cb)});$('accMsg').value=ACC.pesan||''}
 window.accAll=v=>{document.querySelectorAll('.accCb').forEach(cb=>{cb.checked=v;accTone(cb)})};
