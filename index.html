@@ -3366,8 +3366,8 @@ function groups(){const g={};S.master.filter(m=>m.aktif).forEach(m=>{const o=g[m
 const stockHTML=()=>groups().map(g=>{const p=g.t?Math.round(g.a/g.t*100):0,c=g.a<=0?'bg-red-500':p<30?'bg-amber-400':'bg-emerald-500';
 return `<div class="bg-slate-50 border rounded-2xl p-3 shadow-sm"><div class="flex items-center gap-2"><span class="text-2xl">${esc(g.ikon)}</span><div class="min-w-0"><p class="text-[11px] font-bold text-slate-700 leading-tight">${esc(g.k)}</p><p class="text-lg font-extrabold ${g.a<=0?'text-red-600':'text-slate-900'}">${g.a}<span class="text-[10px] font-semibold text-slate-400"> / ${g.t} pcs</span></p></div></div><div class="h-1.5 bg-slate-200 rounded-full mt-2 overflow-hidden"><div class="h-full ${c}" style="width:${p}%"></div></div>${g.v.length>1||g.v[0].varian!=='-'?`<div class="flex flex-wrap gap-1 mt-2">${g.v.map(m=>`<span class="px-1.5 py-0.5 rounded-md bg-white border text-[10px] font-semibold">${esc(m.varian)}: ${m.tersedia}</span>`).join('')}</div>`:''}</div>`}).join('')||'<p class="text-xs text-slate-400">Memuat data…</p>';
 
-function rowsHTML(n,mode){return S.loans.slice(0,n).map(l=>{const my=mine.includes(l.kode),click=mode==='adm'||(mode==='emp'&&l.status==='DIPINJAM');
-return `<tr ${click?`onclick="pjOpen('${l.kode}')"`:''} class="border-t ${click?'cursor-pointer hover:bg-red-50':''} ${my?'bg-amber-50/60':''} ${l.kode===flash?'pj-flash':''}"><td class="px-2 py-2 whitespace-nowrap">${fmt(l.waktu)}</td><td class="px-2 py-2 font-semibold">${esc(l.nama)}${my?' <span class="text-[9px] text-amber-700">(Anda)</span>':''}${mode==='pub'?'':`<div class="text-[10px] font-normal text-slate-400">${esc(l.reg)}</div>`}</td><td class="px-2 py-2">${esc(l.dept)}</td><td class="px-2 py-2">${itemsTxt(l)}</td><td class="px-2 py-2 whitespace-nowrap">${badge(l.status)}${l.kembali?`<div class="text-[10px] text-slate-400">${fmt(l.kembali)}</div>`:''}</td>${mode==='pub'?'':`<td class="px-2 py-2 text-[11px] font-bold text-red-700 whitespace-nowrap">${mode==='adm'?'Detail ›':l.status==='DIPINJAM'?'Kembalikan ›':''}</td>`}</tr>`}).join('')||'<tr><td colspan="6" class="text-center py-6 text-slate-400">Belum ada data peminjaman.</td></tr>'}
+function rowsHTML(n,mode){return S.loans.slice(0,n).map(l=>{const my=mine.includes(l.kode),click=mode==='adm'||(mode==='emp'&&l.status==='DIPINJAM'),od=l.status==='DIPINJAM'&&Date.now()-new Date(l.waktu)>=6048e5,hr=od?Math.floor((Date.now()-new Date(l.waktu))/864e5):0;
+return `<tr ${click?`onclick="pjOpen('${l.kode}')"`:''} class="border-t ${click?'cursor-pointer hover:bg-red-50':''} ${my?'bg-amber-50/60':''} ${l.kode===flash?'pj-flash':''} ${od?'od-row':''}"><td class="px-2 py-2 whitespace-nowrap">${fmt(l.waktu)}</td><td class="px-2 py-2 font-semibold">${esc(l.nama)}${my?' <span class="text-[9px] text-amber-700">(Anda)</span>':''}${mode==='pub'?'':`<div class="text-[10px] font-normal text-slate-400">${esc(l.reg)}</div>`}</td><td class="px-2 py-2">${esc(l.dept)}</td><td class="px-2 py-2">${itemsTxt(l)}</td><td class="px-2 py-2 whitespace-nowrap">${badge(l.status)}${od?`<div class="si-blink text-[10px] font-extrabold text-red-600">⚠ TERLAMBAT ${hr} hari</div>`:''}${l.kembali?`<div class="text-[10px] text-slate-400">${fmt(l.kembali)}</div>`:''}</td>${mode==='pub'?'':`<td class="px-2 py-2 text-[11px] font-bold text-red-700 whitespace-nowrap">${mode==='adm'?'Detail ›':l.status==='DIPINJAM'?'Kembalikan ›':''}</td>`}</tr>`}).join('')||'<tr><td colspan="6" class="text-center py-6 text-slate-400">Belum ada data peminjaman.</td></tr>'}
 
 const topHTML=()=>{const a=S[topMode]||[];return a.map((t,i)=>`<li class="flex items-center gap-2"><span class="w-6 h-6 shrink-0 rounded-full ${i<3?'bg-red-600 text-white':'bg-slate-200'} text-[11px] font-bold flex items-center justify-center">${i+1}</span><div class="flex-1 min-w-0"><p class="text-xs font-semibold truncate">${esc(t.nama)} <span class="font-normal text-slate-400">· ${esc(t.dept)}</span></p><div class="h-1.5 bg-slate-100 rounded-full"><div class="h-full bg-red-500 rounded-full" style="width:${t.n/a[0].n*100}%"></div></div></div><span class="text-xs font-bold">${t.n}×</span></li>`).join('')||'<li class="text-xs text-slate-400">Belum ada data.</li>'};
 
@@ -4564,6 +4564,63 @@ document.querySelectorAll('.siv video').forEach(v=>{const w=v.parentElement;
  v.addEventListener('play',()=>{w.querySelector('.siv-play').classList.add('hidden');v.controls=true;const d=w.querySelector('.siv-dur');if(d)d.classList.add('hidden')})});
 window.sivZoom=()=>{if(document.getElementById('sivBox'))return;const o=document.createElement('div');o.id='sivBox';o.className='fixed inset-0 z-[110] bg-black/85 flex items-center justify-center p-4 cursor-zoom-out';o.innerHTML='<img src="apd-tamu.jpg" alt="APD wajib tamu" style="max-height:92vh;max-width:96vw" class="rounded-xl shadow-2xl"><button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-slate-800 font-bold text-lg">✕</button>';o.onclick=()=>o.remove();document.body.appendChild(o)};
 addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementById('sivBox');if(o)o.remove()}});
+</script>
+<style>@keyframes odp{0%,100%{background:#fff1f2}50%{background:#fecaca}}.od-row{animation:odp 1.1s infinite}[data-tutup="1"]{opacity:.55}</style>
+<script>
+/* Pengaturan akses modul (admin) + penutupan modul untuk Karyawan/Vendor */
+(()=>{
+const $=id=>document.getElementById(id),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const post=async p=>{const r=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...p,token:localStorage.getItem('wpTok')||''})})).json();if(r.ok===undefined)throw new Error('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.');if(!r.ok)throw new Error(r.msg||'Gagal.');return r};
+const toast=(m,ok=1)=>{const t=document.createElement('div');t.className='fixed top-16 left-1/2 -translate-x-1/2 z-[120] text-white text-xs rounded-xl shadow-2xl px-4 py-2.5 '+(ok?'bg-emerald-700':'bg-red-700');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3800)};
+const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['apd','⛑️ Peminjaman APD',1,0],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
+const keyOf=b=>{const o=b.getAttribute('onclick')||'',m=o.match(/^switchModule\('(apar|temuan|apd|wp|veh)'\)/);return m?m[1]:/^sopOpen\(/.test(o)?'sop':null};
+const NAMA=Object.fromEntries(MODS.map(m=>[m[0],m[1]]));
+let ACC={tutup:{karyawan:[],vendor:[]},pesan:''},CURM=null,SHOWN=false;
+const grp=()=>currentUser&&currentUser.kind==='vendor'?'vendor':'karyawan';
+const isAdm=()=>currentUser&&currentUser.role==='admin';
+const closed=m=>!isAdm()&&!!currentUser&&(ACC.tutup[grp()]||[]).includes(m);
+
+/* ---- tampilan "modul ditutup" ---- */
+const ALL=['modulApar','modulTemuan','modulApd','modulLocked','modulProfile','modulWp','modulSop','modulVeh','modulLap','modulSi'];
+function showTutup(m){let t=$('modulTutup');if(!t){const w=$('modulWp')||$('modulApar');if(!w)return;w.insertAdjacentHTML('afterend','<div id="modulTutup" class="hidden"></div>');t=$('modulTutup')}
+ ALL.forEach(i=>{const e=$(i);if(e)e.classList.add('hidden')});
+ t.innerHTML=`<div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-12 text-center max-w-xl mx-auto space-y-3"><div class="text-5xl">🛠️</div><h2 class="text-base md:text-lg font-bold text-slate-900">Modul ${E(NAMA[m]||'')} Sedang Ditutup Sementara</h2><p class="text-xs md:text-sm text-slate-600">${E(ACC.pesan||'Modul ini ditutup sementara oleh admin untuk pemeliharaan atau pembaruan sistem.')}</p><p class="text-[11px] text-slate-400">Silakan coba lagi beberapa saat lagi. Modul lain tetap dapat digunakan.</p><button onclick="accRefresh()" class="mt-2 px-4 py-2 rounded-xl bg-red-700 hover:bg-red-800 text-white text-xs font-bold shadow">🔄 Periksa Ulang</button></div>`;
+ t.classList.remove('hidden');SHOWN=true}
+const hideTutup=()=>{const t=$('modulTutup');if(t)t.classList.add('hidden');SHOWN=false};
+window.accRefresh=async()=>{await load();if(CURM&&!closed(CURM)){hideTutup();window.switchModule(CURM==='sop'?'apar':CURM);if(CURM==='sop'&&window.sopOpen)window.sopOpen()}else toast('Modul masih ditutup.',0)};
+
+/* ---- tombol menu: tanda gembok ---- */
+function apply(){document.querySelectorAll('#navButtonsContainer button, #navDrawer button, button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
+ if(!isAdm()&&CURM&&closed(CURM))showTutup(CURM);else if(SHOWN&&CURM&&!closed(CURM))accRefresh()}
+async function load(){if(!currentUser||!localStorage.getItem('wpTok'))return;try{const r=await post({action:'wpAksesGet'});ACC=r.cfg;apply();if(isAdm())fill()}catch(e){}}
+
+/* ---- pembungkus navigasi ---- */
+const SM=window.switchModule;
+window.switchModule=function(m){const em=currentUser&&currentUser.kind==='vendor'&&m!=='profile'?'wp':m;CURM=em;
+ if(m==='profile'&&isAdm()){card();load()}
+ if(closed(em)){showTutup(em);return}
+ hideTutup();return SM.apply(this,arguments)};
+const SO=window.sopOpen;
+if(SO)window.sopOpen=function(){CURM='sop';if(closed('sop')){showTutup('sop');return}hideTutup();return SO.apply(this,arguments)};
+const SN=window.setupNavigation;
+window.setupNavigation=function(){SN.apply(this,arguments);apply();load()};
+setInterval(()=>{if(!document.hidden)load()},45000);
+
+/* ---- panel admin ---- */
+function card(){if($('accCard'))return;const mp=$('modulProfile');if(!mp)return;
+ const cell=(m,g,on)=>on?`<label class="inline-flex items-center gap-2 cursor-pointer"><input type="checkbox" class="accCb" data-m="${m}" data-g="${g}" onchange="accTone(this)"><span class="accT text-[11px] font-bold"></span></label>`:'<span class="text-slate-300">—</span>';
+ mp.insertAdjacentHTML('afterbegin',`<div id="accCard" class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-4 text-xs mb-4">
+ <div><h2 class="text-sm md:text-base font-bold text-slate-900">🔐 Pengaturan Buka / Tutup Modul</h2><p class="text-[11px] text-slate-500">Tutup modul tertentu untuk akun Karyawan atau Vendor saat ada pemeliharaan atau pembaruan. Admin tetap dapat mengakses semua modul. Perubahan berlaku otomatis di perangkat pengguna dalam ±45 detik.</p></div>
+ <div class="table-container border rounded-xl"><table class="w-full min-w-[420px]"><thead class="bg-slate-100 text-slate-600"><tr><th class="p-2 text-left">Modul</th><th class="p-2 text-left">Akun Karyawan</th><th class="p-2 text-left">Akun Vendor</th></tr></thead><tbody>${MODS.map(m=>`<tr class="border-t"><td class="p-2 font-semibold">${m[1]}</td><td class="p-2">${cell(m[0],'karyawan',m[2])}</td><td class="p-2">${cell(m[0],'vendor',m[3])}</td></tr>`).join('')}</tbody></table></div>
+ <div><label class="block font-semibold text-slate-600 mb-1">Pesan yang tampil kepada pengguna (opsional)</label><input id="accMsg" maxlength="200" placeholder="mis. Sedang pemeliharaan sistem, estimasi selesai pukul 15.00 WIB" class="w-full border rounded-xl px-3 py-2 outline-none focus:ring-2 focus:ring-red-500"></div>
+ <div class="flex flex-wrap gap-2"><button onclick="accSave()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold shadow">💾 Simpan Pengaturan</button><button onclick="accAll(false)" class="px-4 py-2 rounded-xl bg-red-100 text-red-700 font-bold">🔒 Tutup Semua</button><button onclick="accAll(true)" class="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 font-bold">🔓 Buka Semua</button></div>
+ <p class="text-[10px] text-slate-400">Work Permit &amp; JSA, Inspeksi Kendaraan, dan SOP &amp; IK juga dikunci di server. APAR, Temuan, dan APD ditutup pada tampilan aplikasi. Inspeksi Kendaraan khusus akun Karyawan.</p></div>`);fill()}
+window.accTone=cb=>{const t=cb.parentElement.querySelector('.accT');t.textContent=cb.checked?'Dibuka':'Ditutup';t.className='accT text-[11px] font-bold '+(cb.checked?'text-emerald-600':'text-red-600')};
+function fill(){if(!$('accCard'))return;document.querySelectorAll('.accCb').forEach(cb=>{cb.checked=!(ACC.tutup[cb.dataset.g]||[]).includes(cb.dataset.m);accTone(cb)});$('accMsg').value=ACC.pesan||''}
+window.accAll=v=>{document.querySelectorAll('.accCb').forEach(cb=>{cb.checked=v;accTone(cb)})};
+window.accSave=async()=>{const t={karyawan:[],vendor:[]};document.querySelectorAll('.accCb').forEach(cb=>{if(!cb.checked)t[cb.dataset.g].push(cb.dataset.m)});
+ try{const r=await post({action:'wpAksesSet',cfg:{tutup:t,pesan:$('accMsg').value.trim()}});ACC=r.cfg;toast('✅ Pengaturan akses modul disimpan.')}catch(e){toast(e.message,0)}};
+})();
 </script>
 </body>
 </html>
