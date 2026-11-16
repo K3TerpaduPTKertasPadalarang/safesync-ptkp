@@ -115,6 +115,42 @@
  <div class="border-b border-slate-100 pb-3"><h2 class="text-sm md:text-lg font-bold text-slate-900">🦺 Dashboard Safety Induction</h2><p class="text-[11px] text-slate-500">Tamu, karyawan baru, dan OS baru yang telah mengikuti safety induction. Masa berlaku 6 bulan sesuai SOP; setelah itu wajib induction ulang.</p></div>
  <div id="pubSiStat" class="grid grid-cols-3 gap-3"></div>
  <div class="table-container border rounded-xl"><table class="w-full text-xs min-w-[560px]"><thead class="bg-slate-100 text-slate-600"><tr><th class="px-2 py-2 text-left">No</th><th class="px-2 py-2 text-left">Nama Tamu / Perusahaan</th><th class="px-2 py-2 text-left">Kategori</th><th class="px-2 py-2 text-left">Tanggal &amp; Waktu Induction</th><th class="px-2 py-2 text-left">Berlaku s.d.</th><th class="px-2 py-2 text-center">Peserta Berlaku</th><th class="px-2 py-2 text-left">Status</th></tr></thead><tbody id="pubSi"><tr><td colspan="7" class="px-2 py-6 text-center text-slate-400">Memuat…</td></tr></tbody></table></div>
+
+ <div class="pt-5 mt-1 border-t-2 border-dashed border-slate-200 space-y-5">
+ <div class="border-b border-slate-100 pb-3"><h2 class="text-sm md:text-lg font-bold text-slate-900">🎬 Panduan Safety Induction Tamu</h2><p class="text-[11px] text-slate-500">Tonton video safety induction sesuai lokasi Anda, dan pastikan APD tamu dikenakan sebelum memasuki area produksi. Halaman tidak berpindah otomatis selama video diputar.</p></div>
+ <div class="grid md:grid-cols-2 gap-4">
+  <div class="siv group relative rounded-2xl overflow-hidden bg-slate-900 shadow-lg ring-1 ring-slate-200 aspect-video">
+   <video class="w-full h-full object-contain bg-black" preload="metadata" playsinline poster="poster-direksi.jpg"><source src="safety-induction-direksi.mp4" type="video/mp4"></video>
+   <button type="button" class="siv-play absolute inset-0 flex flex-col items-center justify-center gap-2 text-white bg-gradient-to-t from-slate-900/85 via-slate-900/25 to-slate-900/40" onclick="sivPlay(this)" aria-label="Putar video Ruang Rapat Direksi">
+    <span class="w-16 h-16 rounded-full bg-white/95 text-red-700 flex items-center justify-center text-2xl pl-1 shadow-2xl transition group-hover:scale-110">&#9654;</span>
+    <span class="text-xs font-semibold tracking-wide">Klik untuk memutar video</span>
+   </button>
+   <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[11px] font-bold text-red-700 shadow pointer-events-none">📍 Ruang Rapat Direksi</div>
+   <div class="siv-dur absolute bottom-3 right-3 bg-black/60 text-white px-2 py-0.5 rounded-md text-[10px] font-semibold pointer-events-none">4:04</div>
+  </div>
+  <div class="siv group relative rounded-2xl overflow-hidden bg-slate-900 shadow-lg ring-1 ring-slate-200 aspect-video">
+   <video class="w-full h-full object-contain bg-black" preload="metadata" playsinline poster="poster-setti.jpg"><source src="safety-induction-setti.mp4" type="video/mp4"></video>
+   <button type="button" class="siv-play absolute inset-0 flex flex-col items-center justify-center gap-2 text-white bg-gradient-to-t from-slate-900/85 via-slate-900/25 to-slate-900/40" onclick="sivPlay(this)" aria-label="Putar video Ruang Rapat Setti">
+    <span class="w-16 h-16 rounded-full bg-white/95 text-red-700 flex items-center justify-center text-2xl pl-1 shadow-2xl transition group-hover:scale-110">&#9654;</span>
+    <span class="text-xs font-semibold tracking-wide">Klik untuk memutar video</span>
+   </button>
+   <div class="absolute top-3 left-3 bg-white/90 backdrop-blur px-3 py-1 rounded-full text-[11px] font-bold text-red-700 shadow pointer-events-none">📍 Ruang Rapat Setti</div>
+   <div class="siv-dur absolute bottom-3 right-3 bg-black/60 text-white px-2 py-0.5 rounded-md text-[10px] font-semibold pointer-events-none">4:04</div>
+  </div>
+ </div>
+ <div class="rounded-2xl border border-slate-100 bg-gradient-to-br from-white to-red-50/40 p-4 md:p-5 grid md:grid-cols-[250px_1fr] gap-5 items-center">
+  <button type="button" onclick="sivZoom()" class="group relative block mx-auto w-full max-w-[250px] rounded-2xl overflow-hidden shadow-lg ring-1 ring-slate-200 bg-white" aria-label="Perbesar foto APD tamu"><img src="apd-tamu.jpg" alt="APD wajib tamu: helm visitor, toe guard, rompi safety" class="w-full h-auto block transition duration-300 group-hover:scale-105"><span class="absolute bottom-2 left-1/2 -translate-x-1/2 bg-slate-900/75 text-white text-[10px] font-semibold px-2.5 py-1 rounded-full whitespace-nowrap">🔍 Klik untuk memperbesar</span></button>
+  <div class="space-y-3">
+   <div><h3 class="text-sm md:text-base font-bold text-slate-900">⛑️ APD Wajib bagi Tamu</h3><p class="text-[11px] md:text-xs text-slate-500">Gunakan APD berikut saat memasuki area produksi atau area dengan risiko bahaya tinggi.</p></div>
+   <div class="grid sm:grid-cols-3 gap-2">
+    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5"><span class="w-10 h-10 shrink-0 rounded-xl bg-white shadow-sm flex items-center justify-center text-xl">⛑️</span><div><p class="text-xs font-bold text-slate-800">Helm Visitor</p><p class="text-[11px] text-slate-500">Pelindung kepala</p></div></div>
+    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5"><span class="w-10 h-10 shrink-0 rounded-xl bg-white shadow-sm flex items-center justify-center text-xl">🥾</span><div><p class="text-xs font-bold text-slate-800">Toe Guard</p><p class="text-[11px] text-slate-500">Pelindung ujung sepatu</p></div></div>
+    <div class="flex items-center gap-3 bg-slate-50 border border-slate-100 rounded-xl px-3 py-2.5"><span class="w-10 h-10 shrink-0 rounded-xl bg-white shadow-sm flex items-center justify-center text-xl">🦺</span><div><p class="text-xs font-bold text-slate-800">Rompi Safety</p><p class="text-[11px] text-slate-500">Identitas &amp; visibilitas</p></div></div>
+   </div>
+   <div class="flex gap-2 items-start rounded-xl bg-amber-50 border border-amber-200 px-3 py-2.5 text-[11px] md:text-xs text-amber-800"><span>⚠️</span><span><b>Wajib dikenakan</b> sebelum masuk area produksi atau area berisiko tinggi. Ikuti arahan petugas K3LH selama berada di area pabrik.</span></div>
+  </div>
+ </div>
+ </div>
 </div></div></div></div>
  <button class="pub-arrow left-2" aria-label="Sebelumnya" id="pubPrev">&#10094;</button>
  <button class="pub-arrow right-2" aria-label="Berikutnya" id="pubNext">&#10095;</button>
@@ -3460,11 +3496,11 @@ window.pjReport=async()=>{const w=window.open('','_blank');if(!w)return toast('P
 /* ---------- Carousel dashboard sebelum login ---------- */
 let ci=0,idle=0;const slides=[...document.querySelectorAll('.pub-slide')];
 const fit=()=>{$('pubViewport').style.height=slides[ci].offsetHeight+'px'};
-window.pubGo=i=>{ci=(i+slides.length)%slides.length;$('pubTrack').style.transform=`translateX(-${ci*100}%)`;document.querySelectorAll('.pub-dot').forEach((d,k)=>d.classList.toggle('on',k===ci));fit()};
+window.pubGo=i=>{ci=(i+slides.length)%slides.length;$('pubTrack').style.transform=`translateX(-${ci*100}%)`;document.querySelectorAll('.pub-dot').forEach((d,k)=>d.classList.toggle('on',k===ci));document.querySelectorAll('.siv video').forEach(v=>{if(!slides[ci].contains(v))v.pause()});fit()};
 slides.forEach(s=>new ResizeObserver(fit).observe(s));addEventListener('resize',fit);
 ['mousemove','mousedown','touchstart','keydown','wheel','scroll'].forEach(ev=>addEventListener(ev,()=>idle=0,{passive:true}));
 setInterval(()=>{if($('loginPage').classList.contains('hidden')||document.hidden)return;
- const busy=document.querySelector('.fixed.inset-0:not(.hidden)')||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+ const busy=document.querySelector('.fixed.inset-0:not(.hidden)')||[...document.querySelectorAll('.siv video')].some(v=>!v.paused&&!v.ended)||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
  if(busy){idle=0;return}if(++idle>=5){idle=0;pubGo(ci+1)}},1000);
 
 setInterval(()=>{if(document.hidden)return;const pub=!$('loginPage').classList.contains('hidden'),mod=currentUser&&!$('modulApd').classList.contains('hidden');if(pub||mod)apdLoad()},5000);
@@ -4519,6 +4555,15 @@ window.switchModule=function(m){mount();const ms=$('modulSi');
   document.querySelectorAll('#navButtonsContainer button').forEach(b=>{if(b.id!=='navProfile'&&/switchModule\(|sopOpen\(/.test(b.getAttribute('onclick')||''))b.className=CIN});const nb=$('navSi');if(nb)nb.className=CON;enter();return}
  if(ms)ms.classList.add('hidden');const nb=$('navSi');if(nb)nb.className=CIN;return SM.apply(this,arguments)};
 })();
+</script>
+<script>
+/* Video safety induction & foto APD tamu (dashboard sebelum login) */
+window.sivPlay=b=>{const v=b.parentElement.querySelector('video');document.querySelectorAll('.siv video').forEach(x=>{if(x!==v)x.pause()});v.controls=true;b.classList.add('hidden');v.play().catch(()=>{v.controls=true})};
+document.querySelectorAll('.siv video').forEach(v=>{const w=v.parentElement;
+ v.addEventListener('ended',()=>{v.controls=false;v.currentTime=0;w.querySelector('.siv-play').classList.remove('hidden')});
+ v.addEventListener('play',()=>{w.querySelector('.siv-play').classList.add('hidden');v.controls=true;const d=w.querySelector('.siv-dur');if(d)d.classList.add('hidden')})});
+window.sivZoom=()=>{if(document.getElementById('sivBox'))return;const o=document.createElement('div');o.id='sivBox';o.className='fixed inset-0 z-[110] bg-black/85 flex items-center justify-center p-4 cursor-zoom-out';o.innerHTML='<img src="apd-tamu.jpg" alt="APD wajib tamu" style="max-height:92vh;max-width:96vw" class="rounded-xl shadow-2xl"><button class="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 text-slate-800 font-bold text-lg">✕</button>';o.onclick=()=>o.remove();document.body.appendChild(o)};
+addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementById('sivBox');if(o)o.remove()}});
 </script>
 </body>
 </html>
