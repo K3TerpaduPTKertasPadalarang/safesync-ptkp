@@ -251,7 +251,7 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-                            <div><label class="block font-semibold text-slate-700 mb-1">Kapasitas (Kg) *</label><input type="number" id="capacity" required placeholder="Otomatis..." class="w-full px-3.5 py-2.5 border rounded-xl bg-slate-50 font-medium shadow-sm"></div>
+                            <div><label class="block font-semibold text-slate-700 mb-1">Kapasitas (Kg) *</label><input type="text" inputmode="decimal" autocomplete="off" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')" id="capacity" required placeholder="Otomatis..." class="w-full px-3.5 py-2.5 border rounded-xl bg-slate-50 font-medium shadow-sm"></div>
                             <div>
                                 <label class="block font-semibold text-slate-700 mb-1">Jenis Tekanan *</label>
                                 <select id="pressureTypeInput" class="w-full px-3.5 py-2.5 border rounded-xl bg-slate-50 font-medium shadow-sm">
@@ -1031,7 +1031,7 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Kapasitas (Kg) *</label>
-                        <input type="number" id="addMasterCap" value="6" required class="w-full px-3 py-2 border rounded-xl shadow-sm">
+                        <input type="text" inputmode="decimal" autocomplete="off" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')" id="addMasterCap" value="6" required class="w-full px-3 py-2 border rounded-xl shadow-sm">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -1083,7 +1083,7 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Kapasitas (Kg) *</label>
-                        <input type="number" id="modalQrCapText" class="w-full px-3 py-2 border rounded-xl shadow-sm">
+                        <input type="text" inputmode="decimal" autocomplete="off" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')" id="modalQrCapText" class="w-full px-3 py-2 border rounded-xl shadow-sm">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -1135,7 +1135,7 @@
                     </div>
                     <div>
                         <label class="block font-semibold text-slate-700 mb-1">Kapasitas (Kg) *</label>
-                        <input type="number" id="modalBackupCapText" class="w-full px-3 py-2 border rounded-xl shadow-sm">
+                        <input type="text" inputmode="decimal" autocomplete="off" oninput="this.value=this.value.replace(/[^0-9.,]/g,'')" id="modalBackupCapText" class="w-full px-3 py-2 border rounded-xl shadow-sm">
                     </div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
@@ -4599,5 +4599,357 @@ window.sivRetry=b=>{const w=b.closest('.siv'),v=w.querySelector('video');b.paren
 #loginModal>div::before{content:"";position:absolute;inset:0;z-index:-1;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 448 450'%3E%3Cg opacity='0.3'%3E%3Cg transform='translate(62,70) rotate(-10) scale(0.9)'%3E%3Cpath d='M-34 10A34 34 0 0 1 34 10Z' fill='%23F59E0B'/%3E%3Crect x='-44' y='10' width='88' height='8' rx='4' fill='%23D97706'/%3E%3Crect x='-5' y='-28' width='10' height='38' rx='3' fill='%23FCD34D'/%3E%3C/g%3E%3Cg transform='translate(390,98) rotate(10) scale(0.9)'%3E%3Crect x='-38' y='-14' width='34' height='28' rx='11' fill='%237DD3FC' stroke='%230369A1' stroke-width='4'/%3E%3Crect x='4' y='-14' width='34' height='28' rx='11' fill='%237DD3FC' stroke='%230369A1' stroke-width='4'/%3E%3Crect x='-6' y='-6' width='12' height='5' fill='%230369A1'/%3E%3Crect x='-46' y='-10' width='10' height='4' fill='%230369A1'/%3E%3Crect x='36' y='-10' width='10' height='4' fill='%230369A1'/%3E%3C/g%3E%3Cg transform='translate(50,208) rotate(6) scale(1.15)'%3E%3Cpath d='M10 -28Q34 -22 28 12' fill='none' stroke='%231F2937' stroke-width='4' stroke-linecap='round'/%3E%3Crect x='-14' y='-22' width='28' height='60' rx='11' fill='%23DC2626'/%3E%3Crect x='-6' y='-34' width='12' height='14' rx='3' fill='%231F2937'/%3E%3Cpath d='M-8 -34L14 -38 22 -31' fill='none' stroke='%231F2937' stroke-width='4' stroke-linecap='round'/%3E%3Crect x='-10' y='2' width='20' height='18' rx='2' fill='%23fff'/%3E%3Ccircle cx='0' cy='-8' r='4' fill='%23FBBF24'/%3E%3C/g%3E%3Cg transform='translate(402,226) rotate(-6) scale(0.85)'%3E%3Cpath d='M-28-36L-10-36 0-20 10-36 28-36 36-10 28-4 28 36-28 36-28-4-36-10Z' fill='%23F97316'/%3E%3Crect x='-28' y='8' width='56' height='7' fill='%239CA3AF'/%3E%3Crect x='-28' y='22' width='56' height='7' fill='%239CA3AF'/%3E%3C/g%3E%3Cg transform='translate(58,338) rotate(-6) scale(0.9)'%3E%3Cpath d='M-36-30L-8-30-8-6 26 4Q38 8 38 20L38 28-36 28Z' fill='%2392400E'/%3E%3Crect x='-38' y='28' width='78' height='9' rx='3' fill='%231F2937'/%3E%3C/g%3E%3Cg transform='translate(396,352) rotate(8) scale(0.85)'%3E%3Cpath d='M-32-10Q0-28 32-10L28 18Q0 36-28 18Z' fill='%2360A5FA'/%3E%3Ccircle cx='-22' cy='6' r='10' fill='%23F59E0B'/%3E%3Ccircle cx='22' cy='6' r='10' fill='%23F59E0B'/%3E%3Ccircle cx='-22' cy='6' r='4' fill='%23fff'/%3E%3Ccircle cx='22' cy='6' r='4' fill='%23fff'/%3E%3C/g%3E%3Cg transform='translate(148,418) rotate(-6) scale(0.8)'%3E%3Crect x='-18' y='-6' width='36' height='40' rx='8' fill='%23EAB308'/%3E%3Crect x='-18' y='-34' width='8' height='30' rx='4' fill='%23EAB308'/%3E%3Crect x='-8' y='-40' width='8' height='36' rx='4' fill='%23EAB308'/%3E%3Crect x='2' y='-38' width='8' height='34' rx='4' fill='%23EAB308'/%3E%3Crect x='12' y='-32' width='8' height='28' rx='4' fill='%23EAB308'/%3E%3Crect x='-32' y='6' width='16' height='9' rx='4' fill='%23EAB308'/%3E%3Crect x='-18' y='24' width='36' height='10' rx='3' fill='%231D4ED8'/%3E%3C/g%3E%3Cg transform='translate(234,420) rotate(0) scale(0.7)'%3E%3Cpath d='M10 -28Q34 -22 28 12' fill='none' stroke='%231F2937' stroke-width='4' stroke-linecap='round'/%3E%3Crect x='-14' y='-22' width='28' height='60' rx='11' fill='%23DC2626'/%3E%3Crect x='-6' y='-34' width='12' height='14' rx='3' fill='%231F2937'/%3E%3Cpath d='M-8 -34L14 -38 22 -31' fill='none' stroke='%231F2937' stroke-width='4' stroke-linecap='round'/%3E%3Crect x='-10' y='2' width='20' height='18' rx='2' fill='%23fff'/%3E%3Ccircle cx='0' cy='-8' r='4' fill='%23FBBF24'/%3E%3C/g%3E%3Cg transform='translate(326,418) rotate(10) scale(0.8)'%3E%3Cpath d='M-34 10A34 34 0 0 1 34 10Z' fill='%23F59E0B'/%3E%3Crect x='-44' y='10' width='88' height='8' rx='4' fill='%23D97706'/%3E%3Crect x='-5' y='-28' width='10' height='38' rx='3' fill='%23FCD34D'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;pointer-events:none}
 #loginModal input{background-color:rgba(255,255,255,.9)}
 </style>
+
+<!-- ===================== FITUR BARU: Tanya K3 (AI) + Terjemah ID/EN + Mode Terang/Gelap =====================
+     Semua kontrol baru HANYA tampil setelah login (class html.k3-in diatur dari status #appContainer). -->
+<style id="k3x-css">
+/* ---- kontrol (tersembunyi sebelum login) ---- */
+#k3AskBtn,#k3Tools{display:none}
+html.k3-in #k3AskBtn{display:inline-flex}
+html.k3-in #k3Tools{display:flex}
+#k3AskBtn{align-items:center;justify-content:center;gap:6px;height:38px;padding:0 14px;border-radius:9999px;border:0;cursor:pointer;background:#fff;color:#b91c1c;font-weight:800;font-size:12px;box-shadow:0 2px 8px rgba(0,0,0,.25);white-space:nowrap;flex:none;transition:transform .15s,background .15s}
+#k3AskBtn:hover{background:#fef2f2;transform:translateY(-1px)}
+#k3AskBtn .k3-ai{font-size:9px;font-weight:900;background:#b91c1c;color:#fff;border-radius:6px;padding:1px 5px;letter-spacing:.04em}
+@media (min-width:769px){html:not(.mob) #appContainer #k3AskBtn{margin-left:auto}}
+@media (min-width:769px) and (max-width:1023px){html:not(.mob) header>div>#k3AskBtn{order:2}}
+@media (min-width:1024px){html:not(.mob) #appContainer #k3AskBtn+#headerActions{margin-left:10px!important}}
+html.mob #k3AskBtn{display:none!important}
+#k3AskMini{display:none}
+html.mob #k3AskMini{display:inline-flex;background:#b91c1c;border-color:#b91c1c;color:#fff}
+html.mob #k3AskMini:hover{background:#991b1b}
+#k3Tools{position:fixed;z-index:60;left:10px;bottom:10px;gap:3px;align-items:center}
+@media (min-width:1024px){html:not(.mob) #k3Tools{left:142px;bottom:12px}}
+.k3t{display:inline-flex;align-items:center;justify-content:center;gap:4px;height:24px;min-width:24px;padding:0 6px;border-radius:9999px;border:1px solid #e2e8f0;background:#fff;color:#334155;font-size:10px;line-height:1;font-weight:800;cursor:pointer;box-shadow:0 1px 4px rgba(15,23,42,.12);transition:background .15s,transform .15s}
+.k3t:hover{background:#f1f5f9;transform:translateY(-1px)}
+.k3t svg{display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
+html.k3-dark .k3t{background:#1e293b;border-color:#334155;color:#e2e8f0}
+html.k3-dark .k3t:hover{background:#2b3a52}
+/* ---- panel chat ---- */
+#k3Chat{--c-bg:#fff;--c-bd:#e2e8f0;--c-tx:#0f172a;--c-mu:#64748b;--c-bub:#f1f5f9;--c-in:#f8fafc;
+ position:fixed;z-index:88;right:16px;top:76px;width:min(430px,calc(100vw - 32px));height:min(660px,calc(100vh - 96px));display:none;flex-direction:column;background:var(--c-bg);color:var(--c-tx);border:1px solid var(--c-bd);border-radius:20px;box-shadow:0 24px 60px -12px rgba(15,23,42,.45);overflow:hidden;font-size:13px}
+html.k3-dark #k3Chat{--c-bg:#111a2e;--c-bd:#27344b;--c-tx:#e2e8f0;--c-mu:#94a3b8;--c-bub:#1e293b;--c-in:#0f172a}
+#k3Chat.on{display:flex}
+@media (max-width:640px){#k3Chat{right:0;left:0;top:0;bottom:0;width:auto;height:100dvh;border-radius:0}}
+.k3c-h{display:flex;align-items:center;gap:10px;padding:12px 14px;background:linear-gradient(135deg,#b91c1c,#7f1d1d);color:#fff}
+.k3c-ic{width:34px;height:34px;border-radius:12px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;font-size:18px;flex:none}
+.k3c-h b{display:block;font-size:14px;line-height:1.1}.k3c-h small{font-size:10px;opacity:.85}
+.k3c-h div.k3c-t{flex:1;min-width:0}
+.k3c-h button{width:30px;height:30px;border-radius:9999px;border:0;background:rgba(255,255,255,.16);color:#fff;font-size:14px;cursor:pointer}
+.k3c-h button:hover{background:rgba(255,255,255,.3)}
+.k3c-m{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.k3c-b{max-width:92%;padding:9px 12px;border-radius:14px;line-height:1.5;word-wrap:break-word;overflow-wrap:anywhere}
+.k3c-b.u{align-self:flex-end;background:#b91c1c;color:#fff;border-bottom-right-radius:4px;white-space:pre-wrap}
+.k3c-b.a{align-self:flex-start;background:var(--c-bub);border-bottom-left-radius:4px;max-width:100%}
+.k3c-b.a p{margin:0 0 6px}.k3c-b.a p:last-child{margin:0}
+.k3c-b.a h4{font-weight:800;margin:8px 0 4px}
+.k3c-b.a ul,.k3c-b.a ol{margin:4px 0 6px 18px}.k3c-b.a ul{list-style:disc}.k3c-b.a ol{list-style:decimal}
+.k3c-b.a code{background:rgba(100,116,139,.2);padding:0 4px;border-radius:4px;font-size:12px}
+.k3c-b.a pre{background:#0f172a;color:#e2e8f0;padding:8px;border-radius:8px;overflow-x:auto;margin:6px 0}
+.k3c-b.a pre code{background:none;padding:0}
+.k3c-b.a hr{border:0;border-top:1px solid var(--c-bd);margin:8px 0}
+.k3-tw{overflow-x:auto;margin:6px 0}
+.k3-tw table{border-collapse:collapse;font-size:12px;min-width:100%}
+.k3-tw th,.k3-tw td{border:1px solid var(--c-bd);padding:4px 7px;text-align:left;vertical-align:top}
+.k3-tw th{background:rgba(185,28,28,.12);font-weight:800}
+.k3c-cp{margin-top:6px;border:1px solid var(--c-bd);background:transparent;color:var(--c-mu);font-size:10px;font-weight:700;border-radius:8px;padding:2px 8px;cursor:pointer}
+.k3c-cp:hover{background:rgba(100,116,139,.15)}
+.k3c-dots span{display:inline-block;width:6px;height:6px;margin:0 2px;border-radius:9999px;background:var(--c-mu);animation:k3d 1s infinite}
+.k3c-dots span:nth-child(2){animation-delay:.15s}.k3c-dots span:nth-child(3){animation-delay:.3s}
+@keyframes k3d{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
+.k3c-chips{display:flex;flex-wrap:wrap;gap:6px;padding:0 14px 8px}
+.k3c-chips button{font-size:11px;font-weight:600;border:1px solid var(--c-bd);background:var(--c-in);color:var(--c-tx);border-radius:9999px;padding:5px 10px;cursor:pointer;text-align:left}
+.k3c-chips button:hover{border-color:#b91c1c;color:#b91c1c}
+.k3c-f{display:flex;gap:8px;align-items:flex-end;padding:10px 12px;border-top:1px solid var(--c-bd)}
+.k3c-f textarea{flex:1;resize:none;max-height:110px;border:1px solid var(--c-bd)!important;background:var(--c-in)!important;color:var(--c-tx)!important;border-radius:14px;padding:9px 12px;font-size:16px;line-height:1.35;outline:none}
+@media (min-width:641px){.k3c-f textarea{font-size:13px}}
+.k3c-f textarea:focus{border-color:#b91c1c!important}
+.k3c-f button{width:40px;height:40px;border-radius:9999px;border:0;background:#b91c1c;color:#fff;font-size:16px;cursor:pointer;flex:none}
+.k3c-f button:disabled{opacity:.5;cursor:not-allowed}
+.k3c-n{padding:0 14px 10px;font-size:10px;color:var(--c-mu);text-align:center}
+/* ---- sembunyikan banner & tooltip bawaan Google Translate ---- */
+body{top:0!important;position:static!important}
+.goog-te-banner-frame,.goog-te-balloon-frame,#goog-gt-tt,.goog-tooltip,.goog-te-spinner-pos,iframe.skiptranslate{display:none!important;visibility:hidden!important}
+.goog-text-highlight{background:none!important;box-shadow:none!important}
+#k3_gt{position:fixed;left:-9999px;top:0;width:1px;height:1px;overflow:hidden}
+/* ---- mode gelap: hanya di layar (cetak/PDF tetap terang) ---- */
+@media print{#k3Chat,#k3Tools,#k3AskBtn{display:none!important}}
+</style>
+
+<script id="k3x-js">
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+
+/* ======================= TEKS (ID / EN) ======================= */
+const T={
+ id:{ask:'Tanya K3',sub:'Asisten AI · K3 & pertanyaan umum',ph:'Tanyakan apa saja…',send:'Kirim',clear:'Percakapan baru',close:'Tutup',copy:'📋 Salin',copied:'✓ Tersalin',
+  hello:'Halo! Saya **Tanya K3**, asisten AI Portal K3 Terpadu PT Kertas Padalarang.\n\nTanyakan apa saja: **K3**, panduan fitur aplikasi (Work Permit & JSA, APAR, APD, dll.), atau minta dibuatkan **surat, tabel, materi**, dan topik umum lainnya.',
+  note:'Jawaban AI dapat keliru — verifikasi ke Departemen K3LH untuk keputusan penting.',
+  err:'Maaf, terjadi kendala saat menghubungi server. Silakan coba lagi.',
+  refuse:'🚫 Maaf, permintaan ini tidak dapat diproses karena mengandung kata tidak pantas atau permintaan yang berpotensi merusak/berbahaya. Silakan ajukan pertanyaan dengan bahasa yang sopan.',
+  thL:'Aktifkan mode gelap',thD:'Aktifkan mode terang',lang:'Ganti bahasa ke English',
+  chips:['Bagaimana cara membuat Work Permit?','Jelaskan jenis APAR dan cara memakainya','Buatkan materi toolbox meeting kerja di ketinggian','Buatkan draft surat teguran pelanggaran APD']},
+ en:{ask:'Ask K3',sub:'AI assistant · OHS & general questions',ph:'Ask anything…',send:'Send',clear:'New chat',close:'Close',copy:'📋 Copy',copied:'✓ Copied',
+  hello:'Hello! I am **Tanya K3**, the AI assistant of the PT Kertas Padalarang Integrated OHS Portal.\n\nAsk me anything: **OHS**, app guides (Work Permit & JSA, fire extinguishers, PPE, etc.), or drafting **letters, tables, materials**, and general topics.',
+  note:'AI answers may be wrong — verify with the OHS Department for important decisions.',
+  err:'Sorry, there was a problem reaching the server. Please try again.',
+  refuse:'🚫 Sorry, this request cannot be processed because it contains inappropriate language or a potentially harmful request. Please rephrase politely.',
+  thL:'Switch to dark mode',thD:'Switch to light mode',lang:'Ganti bahasa ke Indonesia',
+  chips:['How do I create a Work Permit?','Explain fire extinguisher types and how to use them','Draft a toolbox meeting on working at height','Draft a warning letter for PPE violation']}
+};
+
+/* ======================= STATE ======================= */
+const ls={get(k,d){try{return localStorage.getItem(k)||d}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+let LANG=ls.get('k3_lang','id')==='en'?'en':'id';
+let DARK=ls.get('k3_theme','light')==='dark';
+let MSGS=[];let BUSY=false;
+try{MSGS=JSON.parse(sessionStorage.getItem('k3_chat')||'[]').filter(m=>m&&(m.r==='u'||m.r==='a')&&typeof m.t==='string').slice(-30)}catch(e){MSGS=[]}
+const tr=k=>T[LANG][k];
+
+/* ======================= FILTER PERMINTAAN (sisi klien; server tetap memeriksa ulang) ======================= */
+const BAD=/(\bhack(ing|er)?\b|\bretas\b|\bbobol|\bdeface|\bddos\b|sql\s*injection|\bxss\b|\bexploit|\bmalware|\bransomware|\bphishing|\bkeylogger|brute\s*force|\bjebol|curi\s+(data|password|akun|kata\s*sandi)|bypass\s+(login|password|auth|keamanan)|jailbreak|abaikan\s+(semua\s+)?(instruksi|perintah|aturan|petunjuk)|lupakan\s+(semua\s+)?(instruksi|perintah|aturan)|ignore\s+(all\s+|the\s+|your\s+)?(previous|above|prior|system)\s+(instruction|prompt|rule)|system\s*prompt|prompt\s*sistem|developer\s*mode|\bapi\s*key\b|password\s*admin|\bkontol|\bmemek\b|\bngentot|\bjancu?[ok]\b|\bbangsat|\bbajingan|\bfuck|\bbitch\b|\bporn|\bbunuh\s+diri\s+cara|cara\s+membuat\s+(bom|narkoba|senjata))/i;
+const blocked=s=>BAD.test(s);
+
+/* ======================= MARKDOWN RINGAN (aman: semua di-escape dulu) ======================= */
+function md(src){
+ const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+ const blocks=[];
+ src=String(src).replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g,(m,c)=>{blocks.push('<pre><code>'+esc(c.replace(/\n$/,''))+'</code></pre>');return '\u0000'+(blocks.length-1)+'\u0000'});
+ const inl=s=>esc(s).replace(/&lt;br\s*\/?&gt;/gi,'<br>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>');
+ const lines=src.split('\n');let out='',i=0,list=null;
+ const close=()=>{if(list){out+='</'+list+'>';list=null}};
+ const isRow=r=>/^\s*\|.*\|\s*$/.test(r);
+ const isSep=r=>/^\s*\|?\s*:?-{2,}:?\s*(\|\s*:?-{2,}:?\s*)*\|?\s*$/.test(r);
+ while(i<lines.length){
+  const L=lines[i];let m;
+  if(/^\u0000\d+\u0000$/.test(L.trim())){close();out+=blocks[+L.trim().slice(1,-1)];i++;continue}
+  if(isRow(L)&&i+1<lines.length&&isSep(lines[i+1])){
+   close();const cells=r=>r.trim().replace(/^\||\|$/g,'').split('|').map(c=>c.trim());
+   const head=cells(L);i+=2;const rows=[];
+   while(i<lines.length&&isRow(lines[i])){rows.push(cells(lines[i]));i++}
+   out+='<div class="k3-tw"><table><thead><tr>'+head.map(h=>'<th>'+inl(h)+'</th>').join('')+'</tr></thead><tbody>'+rows.map(r=>'<tr>'+head.map((_,k)=>'<td>'+inl(r[k]||'')+'</td>').join('')+'</tr>').join('')+'</tbody></table></div>';
+   continue}
+  if((m=L.match(/^#{1,4}\s+(.*)$/))){close();out+='<h4>'+inl(m[1])+'</h4>';i++;continue}
+  if((m=L.match(/^\s*[-*•]\s+(.*)$/))){if(list!=='ul'){close();out+='<ul>';list='ul'}out+='<li>'+inl(m[1])+'</li>';i++;continue}
+  if((m=L.match(/^\s*\d+[.)]\s+(.*)$/))){if(list!=='ol'){close();out+='<ol>';list='ol'}out+='<li>'+inl(m[1])+'</li>';i++;continue}
+  if(/^\s*(-{3,}|\*{3,})\s*$/.test(L)){close();out+='<hr>';i++;continue}
+  if(!L.trim()){close();i++;continue}
+  close();out+='<p>'+inl(L)+'</p>';i++;
+ }
+ close();return out;
+}
+
+/* untuk pengujian di luar browser */
+window.__k3x={md,blocked,BAD};
+if(!$('appContainer')||!document.querySelector('#appContainer>header>div'))return;
+
+/* ======================= KONTROL: tombol header, tombol bahasa/tema ======================= */
+const FLAG={
+ id:'<svg width="15" height="10" viewBox="0 0 18 12" aria-hidden="true"><rect width="18" height="6" fill="#e70011"/><rect y="6" width="18" height="6" fill="#fff"/></svg>',
+ en:'<svg width="15" height="10" viewBox="0 0 60 40" aria-hidden="true"><rect width="60" height="40" fill="#012169"/><path d="M0 0l60 40M60 0L0 40" stroke="#fff" stroke-width="8"/><path d="M0 0l60 40M60 0L0 40" stroke="#C8102E" stroke-width="3"/><path d="M30 0v40M0 20h60" stroke="#fff" stroke-width="12"/><path d="M30 0v40M0 20h60" stroke="#C8102E" stroke-width="7"/></svg>'
+};
+const hdr=document.querySelector('#appContainer>header>div');
+const askBtn=document.createElement('button');
+askBtn.id='k3AskBtn';askBtn.type='button';askBtn.className='notranslate';askBtn.setAttribute('translate','no');
+askBtn.innerHTML='<span aria-hidden="true">🤖</span><span class="k3-lbl"></span><span class="k3-ai">AI</span>';
+hdr.insertBefore(askBtn,$('headerActions')||null);
+
+const tools=document.createElement('div');
+tools.id='k3Tools';tools.className='notranslate';tools.setAttribute('translate','no');
+tools.innerHTML='<button type="button" id="k3AskMini" class="k3t"></button><button type="button" id="k3Lang" class="k3t"></button><button type="button" id="k3Theme" class="k3t"></button>';
+document.body.appendChild(tools);
+
+const chat=document.createElement('div');
+chat.id='k3Chat';chat.className='notranslate';chat.setAttribute('translate','no');chat.setAttribute('role','dialog');chat.setAttribute('aria-modal','false');
+chat.innerHTML='<div class="k3c-h"><div class="k3c-ic">🤖</div><div class="k3c-t"><b id="k3cTitle"></b><small id="k3cSub"></small></div><button type="button" id="k3cClr">⟲</button><button type="button" id="k3cX">✕</button></div>'
+ +'<div class="k3c-m" id="k3cMsgs"></div><div class="k3c-chips" id="k3cChips"></div>'
+ +'<div class="k3c-f"><textarea id="k3cIn" rows="1" maxlength="1500"></textarea><button type="button" id="k3cSend">➤</button></div><div class="k3c-n" id="k3cNote"></div>';
+document.body.appendChild(chat);
+const gt=document.createElement('div');gt.id='k3_gt';gt.className='notranslate';gt.setAttribute('translate','no');document.body.appendChild(gt);
+
+/* ======================= TAMPILAN LABEL ======================= */
+function refreshUi(){
+ askBtn.querySelector('.k3-lbl').textContent=tr('ask');askBtn.title=tr('ask');askBtn.setAttribute('aria-label',tr('ask'));
+ const mi=$('k3AskMini');mi.innerHTML='🤖<span>'+tr('ask')+'</span>';mi.title=tr('ask');mi.setAttribute('aria-label',tr('ask'));
+ const lb=$('k3Lang');lb.innerHTML=FLAG[LANG]+'<span>'+LANG.toUpperCase()+'</span>';lb.title=tr('lang');lb.setAttribute('aria-label',tr('lang'));
+ const tb=$('k3Theme');tb.textContent=DARK?'☀️':'🌙';tb.title=DARK?tr('thD'):tr('thL');tb.setAttribute('aria-label',tb.title);
+ $('k3cTitle').textContent=tr('ask');$('k3cSub').textContent=tr('sub');$('k3cIn').placeholder=tr('ph');
+ $('k3cClr').title=tr('clear');$('k3cX').title=tr('close');$('k3cSend').title=tr('send');$('k3cNote').textContent=tr('note');
+ renderChips();
+}
+
+/* ======================= MODE TERANG / GELAP ======================= */
+(()=>{
+ const N=':not(#printArea):not(#printArea *):not(#printAreaTemuan):not(#printAreaTemuan *):not(#printAreaQr):not(#printAreaQr *):not(.k3-paper):not(.k3-paper *):not(#k3Chat):not(#k3Chat *):not(#k3Tools):not(#k3Tools *):not(header):not(header *)';
+ const P='html.k3-dark';
+ const R=(sels,decl)=>sels.map(s=>P+' '+s+N).join(',')+'{'+decl+'}';
+ const noClr=':not([class*="bg-emerald"]):not([class*="bg-red"]):not([class*="bg-amber"]):not([class*="bg-blue"]):not([class*="bg-slate-9"]):not([class*="bg-black"])';
+ const plainB=':not([class*="border-red"]):not([class*="border-emerald"]):not([class*="border-amber"]):not([class*="border-blue"]):not([class*="border-white"]):not([class*="border-black"]):not([class*="border-orange"]):not([class*="border-slate-7"]):not([class*="border-slate-8"])';
+ let c='@media screen{html.k3-dark{color-scheme:dark}'
+ +P+' body{background:#0b1220!important;color:#e2e8f0}'
+ +P+' ::placeholder{color:#64748b!important}'
+ +R(['.bg-white','.bg-white\\/90','.bg-white\\/80','.bg-white\\/95'],'background-color:#1e293b')
+ +R(['.bg-slate-50'],'background-color:#182235')
+ +R(['.bg-slate-100'],'background-color:#243247')
+ +R(['.bg-slate-200'],'background-color:#334155')
+ +R(['.bg-slate-300'],'background-color:#475569')
+ +R(['.text-slate-900','.text-slate-800','.text-black'],'color:#f1f5f9')
+ +R(['.text-slate-700','.text-slate-600'],'color:#cbd5e1')
+ +R(['.text-slate-500'],'color:#94a3b8')
+ +R(['.text-slate-400'],'color:#8493a8')
+ +R(['.border-slate-100','.border-slate-200','.border-slate-300'],'border-color:#334155')
+ +R(['.border'+plainB,'.border-t'+plainB,'.border-b'+plainB,'.border-l'+plainB,'.border-r'+plainB,'.border-y'+plainB,'table','th','td','hr'],'border-color:#334155')
+ +R(['.bg-red-50'],'background-color:rgba(239,68,68,.12)')
+ +R(['.bg-red-100'],'background-color:rgba(239,68,68,.22)')
+ +R(['.text-red-600','.text-red-700','.text-red-800'],'color:#fca5a5')
+ +R(['.border-red-200','.border-red-300'],'border-color:rgba(248,113,113,.4)')
+ +R(['.bg-emerald-50','.bg-emerald-100'],'background-color:rgba(16,185,129,.14)')
+ +R(['.text-emerald-600','.text-emerald-700','.text-emerald-800'],'color:#6ee7b7')
+ +R(['.border-emerald-200','.border-emerald-300'],'border-color:rgba(52,211,153,.4)')
+ +R(['.bg-amber-50','.bg-amber-100'],'background-color:rgba(245,158,11,.15)')
+ +R(['.text-amber-600','.text-amber-700','.text-amber-800'],'color:#fcd34d')
+ +R(['.border-amber-200','.border-amber-300'],'border-color:rgba(251,191,36,.4)')
+ +R(['.bg-blue-50','.bg-blue-100'],'background-color:rgba(59,130,246,.16)')
+ +R(['.text-blue-700','.text-blue-800'],'color:#93c5fd')
+ +R(['input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=file]):not([type=color])'+noClr,'select'+noClr,'textarea'+noClr],'background-color:#0f172a;color:#e2e8f0;border-color:#334155')
+ +R(['input:disabled','select:disabled','textarea:disabled'],'opacity:.8')
+ +R(['.hover\\:bg-slate-50:hover'],'background-color:#243247')
+ +R(['.hover\\:bg-slate-100:hover'],'background-color:#2d3b52')
+ +R(['.hover\\:bg-slate-200:hover'],'background-color:#3a4a63')
+ +R(['.hover\\:bg-red-50:hover','.hover\\:bg-red-100:hover'],'background-color:rgba(239,68,68,.25)')
+ +R(['[style*="background:#fff"]','[style*="background: #fff"]','[style*="background:white"]','[style*="background:#f8fafc"]','[style*="background:#f1f5f9"]'],'background:#1e293b!important')
+ +R(['[style*="color:#0f172a"]','[style*="color:#111"]','[style*="color:#000"]'],'color:#e2e8f0!important')
+ /* sidebar desktop */
+ +P+':not(.mob) #appContainer #navButtonsContainer{background:#111a2e!important;border-right-color:#27344b!important}'
+ +P+':not(.mob) #appContainer #navButtonsContainer::after{border-top-color:#27344b!important}'
+ +P+':not(.mob) #appContainer #navButtonsContainer>button:not(.bg-red-700){color:#cbd5e1!important}'
+ +P+':not(.mob) #appContainer #navButtonsContainer>button:not(.bg-red-700):hover{background:#1e293b!important;color:#fff!important}'
+ /* drawer mobile */
+ +P+' .mn-drawer{background:#111a2e!important}'
+ +P+' .mn-drawer .mn-h{color:#fca5a5;border-bottom-color:#27344b}'
+ +P+' .mn-drawer button{background:#1e293b!important;color:#e2e8f0!important}'
+ +P+' .mn-drawer button[data-on="1"]{background:rgba(239,68,68,.22)!important;color:#fecaca!important}'
+ /* maskot */
+ +P+' .mascot-wrap{mix-blend-mode:normal!important}'
+ +P+' .mascot-wrap img{background:#fff;border-radius:18px;padding:4px}'
+ +'}';
+ const st=document.createElement('style');st.id='k3x-dark-css';st.textContent=c;document.head.appendChild(st);
+})();
+function applyTheme(){document.documentElement.classList.toggle('k3-dark',DARK&&document.documentElement.classList.contains('k3-in'));refreshUi()}
+
+/* ======================= TERJEMAH OTOMATIS (Google Website Translator) ======================= */
+let gtLoading=false;
+const translated=()=>document.documentElement.classList.contains('translated-ltr')||document.documentElement.classList.contains('translated-rtl');
+const combo=()=>document.querySelector('select.goog-te-combo');
+const setCk=v=>{try{document.cookie='googtrans='+v+';path=/';document.cookie='googtrans='+v+';path=/;domain='+location.hostname}catch(e){}};
+const clrCk=()=>{const e='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';try{document.cookie=e;document.cookie=e+';domain='+location.hostname;document.cookie=e+';domain=.'+location.hostname}catch(x){}};
+function loadGT(cb){
+ if(combo()){cb&&cb();return}
+ if(!gtLoading){
+  gtLoading=true;
+  window.k3GtInit=()=>{try{new google.translate.TranslateElement({pageLanguage:'id',includedLanguages:'en,id',autoDisplay:false},'k3_gt')}catch(e){}};
+  const s=document.createElement('script');s.src='https://translate.google.com/translate_a/element.js?cb=k3GtInit';s.async=true;s.onerror=()=>{gtLoading=false};document.head.appendChild(s);
+ }
+ let n=0;const t=setInterval(()=>{n++;if(combo()){clearInterval(t);cb&&cb()}else if(n>100){clearInterval(t)}},100);
+}
+function driveGT(v){const c=combo();if(!c)return false;const has=[...c.options].some(o=>o.value===v);c.value=has?v:'';c.dispatchEvent(new Event('change'));return true}
+function applyLang(){
+ const inApp=document.documentElement.classList.contains('k3-in');
+ document.documentElement.setAttribute('lang',LANG==='en'&&inApp?'en':'id');
+ refreshUi();
+ if(LANG==='en'&&inApp){setCk('/id/en');loadGT(()=>driveGT('en'))}
+ else{
+  clrCk();
+  if(translated()){
+   if(!driveGT('id'))location.reload();
+   else setTimeout(()=>{if(translated()){clrCk();location.reload()}},1500);
+  }
+ }
+}
+
+/* ======================= CHAT ======================= */
+const isOpen=()=>chat.classList.contains('on');
+const save=()=>{try{sessionStorage.setItem('k3_chat',JSON.stringify(MSGS.slice(-30)))}catch(e){}};
+function scrollEnd(){const m=$('k3cMsgs');m.scrollTop=m.scrollHeight}
+function bubble(m,i){
+ const d=document.createElement('div');d.className='k3c-b '+(m.r==='u'?'u':'a');
+ if(m.r==='u'){d.textContent=m.t}
+ else{d.innerHTML=md(m.t);const b=document.createElement('button');b.type='button';b.className='k3c-cp';b.textContent=tr('copy');
+  b.onclick=()=>{const done=()=>{b.textContent=tr('copied');setTimeout(()=>b.textContent=tr('copy'),1600)};
+   if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(m.t).then(done,()=>fb());else fb();
+   function fb(){const ta=document.createElement('textarea');ta.value=m.t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');done()}catch(e){}ta.remove()}};
+  d.appendChild(b)}
+ return d;
+}
+function renderMsgs(){
+ const box=$('k3cMsgs');box.innerHTML='';
+ const hi=document.createElement('div');hi.className='k3c-b a';hi.innerHTML=md(tr('hello'));box.appendChild(hi);
+ MSGS.forEach((m,i)=>box.appendChild(bubble(m,i)));
+ if(BUSY){const d=document.createElement('div');d.className='k3c-b a k3c-dots';d.id='k3cWait';d.innerHTML='<span></span><span></span><span></span>';box.appendChild(d)}
+ renderChips();scrollEnd();
+}
+function renderChips(){
+ const c=$('k3cChips');if(!c)return;c.innerHTML='';
+ if(MSGS.length||BUSY)return;
+ tr('chips').forEach(q=>{const b=document.createElement('button');b.type='button';b.textContent=q;b.onclick=()=>send(q);c.appendChild(b)});
+}
+function activeCtx(){
+ const L=[['modulApar','Rekap & Inspeksi APAR'],['modulTemuan','Temuan K3'],['modulApd','Peminjaman APD'],['modulWp','Work Permit & JSA'],['modulVeh','Inspeksi Kendaraan'],['modulLap','Laporan Bulanan'],['modulSi','Safety Induction'],['modulSop','SOP & IK'],['modulProfile','Profil & Pengaturan']];
+ for(const [id,n] of L){const e=$(id);if(e&&!e.classList.contains('hidden'))return n}
+ return '';
+}
+async function send(text){
+ text=String(text||'').trim().slice(0,1500);
+ if(!text||BUSY)return;
+ $('k3cIn').value='';$('k3cIn').style.height='auto';
+ MSGS.push({r:'u',t:text});
+ if(blocked(text)){MSGS.push({r:'a',t:tr('refuse')});save();renderMsgs();return}
+ BUSY=true;$('k3cSend').disabled=true;save();renderMsgs();
+ const hist=MSGS.slice(-10).map(m=>({role:m.r==='u'?'user':'assistant',text:m.t.slice(0,1500)}));
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),70000);
+ try{
+  const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},signal:ctl.signal,
+   body:JSON.stringify({action:'wpTanyaK3',token:ls.get('wpTok',''),messages:hist,lang:LANG,ctx:activeCtx()})});
+  const r=await res.json();
+  if(r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||'')))throw new Error('server-old');
+  if(!r.ok&&/Sesi/.test(r.msg||'')){setTimeout(()=>{alert(r.msg);if(typeof handleLogout==='function')handleLogout()},100)}
+  MSGS.push({r:'a',t:r.ok?(r.refused?tr('refuse'):r.answer):('⚠️ '+(r.msg||tr('err')))});
+ }catch(e){
+  MSGS.push({r:'a',t:e&&e.message==='server-old'?'⚠️ Server belum memuat fitur Tanya K3. Tempel Code.gs terbaru, lalu Deploy > Manage deployments > Edit > New version > Deploy.':'⚠️ '+tr('err')});
+ }finally{clearTimeout(to);BUSY=false;$('k3cSend').disabled=false;save();renderMsgs();if(isOpen())$('k3cIn').focus()}
+}
+function openChat(){chat.classList.add('on');renderMsgs();setTimeout(()=>$('k3cIn').focus(),50)}
+function closeChat(){chat.classList.remove('on')}
+askBtn.onclick=()=>isOpen()?closeChat():openChat();
+$('k3AskMini').onclick=()=>isOpen()?closeChat():openChat();
+$('k3cX').onclick=closeChat;
+$('k3cClr').onclick=()=>{if(BUSY)return;MSGS=[];save();renderMsgs()};
+$('k3cSend').onclick=()=>send($('k3cIn').value);
+$('k3cIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send($('k3cIn').value)}});
+$('k3cIn').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,110)+'px'});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen())closeChat()});
+
+/* ======================= TOMBOL BAHASA & TEMA ======================= */
+$('k3Lang').onclick=()=>{LANG=LANG==='id'?'en':'id';ls.set('k3_lang',LANG);applyLang();if(isOpen())renderMsgs()};
+$('k3Theme').onclick=()=>{DARK=!DARK;ls.set('k3_theme',DARK?'dark':'light');applyTheme()};
+
+/* ======================= SINKRON DENGAN STATUS LOGIN ======================= */
+let lastIn=null;
+function sync(){
+ const on=!$('appContainer').classList.contains('hidden');
+ if(on===lastIn)return;lastIn=on;
+ document.documentElement.classList.toggle('k3-in',on);
+ if(on){applyTheme();applyLang()}
+ else{
+  closeChat();MSGS=[];save();BUSY=false;
+  document.documentElement.classList.remove('k3-dark');
+  applyLang();                /* kembali ke Indonesia & terang di halaman login */
+ }
+}
+new MutationObserver(sync).observe($('appContainer'),{attributes:true,attributeFilter:['class']});
+refreshUi();sync();
+})();
+</script>
+
 </body>
 </html>
