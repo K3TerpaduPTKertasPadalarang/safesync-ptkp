@@ -4685,7 +4685,8 @@ html,body{overflow-x:clip!important}
 #appContainer>header{position:sticky!important;top:0!important;z-index:50!important}
 /* ---- maskot: tampil paling depan, bisa diseret, berjalan sendiri ---- */
 .mascot-wrap{z-index:80!important;pointer-events:none!important;mix-blend-mode:normal!important;background:transparent!important}
-.mascot-wrap img{background:transparent!important;border-radius:0!important;padding:0!important}
+.mascot-wrap img{background:transparent!important;border-radius:0!important;padding:0!important;width:auto!important;height:104px!important;max-width:none!important;image-rendering:auto}
+@media (max-width:640px){.mascot-wrap img{height:80px!important}}
 .mascot-wrap img{pointer-events:auto!important;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 .mascot-wrap.k3-drag img{cursor:grabbing}
 .mascot-wrap.k3-walk{transition:left 7s linear}
