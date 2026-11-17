@@ -2376,6 +2376,11 @@
             renderStatusMapMarkers(q);
         }
 
+        // Perangkat sentuh (HP/tablet): edit peta dengan "ketuk titik, lalu ketuk lokasi baru" (bukan geser)
+        function isMapTapMode() {
+            return (window.matchMedia && window.matchMedia('(pointer: coarse)').matches) || document.documentElement.classList.contains('mob');
+        }
+
         function toggleAdminEditMode() {
             isAdminMapEditMode = !isAdminMapEditMode;
             const btnEditMode = document.getElementById('toggleAdminEditModeBtn');
@@ -2386,7 +2391,9 @@
                 btnEditMode.className = "bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition shadow whitespace-nowrap";
                 btnEditMode.textContent = "🔓 Keluar Mode Edit Peta";
                 editTools.classList.remove('hidden');
-                desc.innerHTML = `<span class="text-amber-700 font-bold">⚠️ Mode Edit Peta Aktif: Geser titik APAR ke posisi aktual.</span>`;
+                desc.innerHTML = isMapTapMode()
+                    ? `<span class="text-amber-700 font-bold">⚠️ Mode Edit Peta Aktif: 1) Ketuk titik APAR yang ingin dipindah, 2) lalu ketuk lokasi baru di peta. Ketuk titik yang sama lagi untuk membatalkan pilihan.</span>`
+                    : `<span class="text-amber-700 font-bold">⚠️ Mode Edit Peta Aktif: Geser titik APAR ke posisi aktual.</span>`;
             } else {
                 btnEditMode.className = "bg-amber-600 hover:bg-amber-700 text-white px-3.5 py-2 rounded-xl text-xs font-semibold transition shadow whitespace-nowrap";
                 btnEditMode.textContent = "✏️ Masuk Mode Edit Peta";
@@ -2463,28 +2470,37 @@
                 marker.textContent = item.id; applyFloor(marker, item);
                 
                 if (isAdminMapEditMode) {
-                    marker.onmousedown = (e) => {
-                        e.stopPropagation();
-                        isDraggingMarker = true;
-                        draggedMarkerId = item.id;
-                        activeMapEditIndex = item.id;
-                        select.value = item.id;
-                        renderAdminMapMarkers();
-                    };
+                    const tapMode = isMapTapMode();
+                    if (!tapMode) {
+                        // Komputer: geser (drag) seperti semula
+                        marker.onmousedown = (e) => {
+                            e.stopPropagation();
+                            isDraggingMarker = true;
+                            draggedMarkerId = item.id;
+                            activeMapEditIndex = item.id;
+                            select.value = item.id;
+                            renderAdminMapMarkers();
+                        };
 
-                    marker.ontouchstart = (e) => {
-                        e.stopPropagation();
-                        isDraggingMarker = true;
-                        draggedMarkerId = item.id;
-                        activeMapEditIndex = item.id;
-                        select.value = item.id;
-                        renderAdminMapMarkers();
-                    };
+                        marker.ontouchstart = (e) => {
+                            e.stopPropagation();
+                            isDraggingMarker = true;
+                            draggedMarkerId = item.id;
+                            activeMapEditIndex = item.id;
+                            select.value = item.id;
+                            renderAdminMapMarkers();
+                        };
+                    }
 
                     marker.onclick = (e) => {
                         e.stopPropagation();
-                        activeMapEditIndex = item.id;
-                        select.value = item.id;
+                        if (tapMode && Number(activeMapEditIndex) === Number(item.id)) {
+                            activeMapEditIndex = null;   // ketuk titik yang sama lagi = batal pilih
+                            select.value = '';
+                        } else {
+                            activeMapEditIndex = item.id;
+                            select.value = item.id;
+                        }
                         renderAdminMapMarkers();
                     };
                 } else {
@@ -2500,6 +2516,22 @@
             if(activeMapEditIndex) {
                 select.value = activeMapEditIndex;
             }
+
+            // HP/tablet: titik terpilih langsung pindah ke lokasi yang diketuk di peta
+            canvas.onclick = (isAdminMapEditMode && isMapTapMode()) ? (e) => {
+                if (activeMapEditIndex === null || activeMapEditIndex === '' || activeMapEditIndex === undefined) return;
+                if (e.target.closest && e.target.closest('.fl-bar, button, select, a, input')) return;
+                const rect = canvas.getBoundingClientRect();
+                if (!rect.width || !rect.height) return;
+                const xPct = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
+                const yPct = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+                const target = qrList.find(q => Number(q.id) === Number(activeMapEditIndex));
+                if (target) {
+                    target.x = parseFloat(xPct.toFixed(1));
+                    target.y = parseFloat(yPct.toFixed(1));
+                    renderAdminMapMarkers();
+                }
+            } : null;
 
             canvas.onmousemove = (e) => {
                 if (!isAdminMapEditMode || !isDraggingMarker || draggedMarkerId === null) return;
