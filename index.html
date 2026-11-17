@@ -4618,7 +4618,8 @@ html.mob #k3AskBtn{display:none!important}
 html.mob #k3AskMini{display:inline-flex;background:#b91c1c;border-color:#b91c1c;color:#fff}
 html.mob #k3AskMini:hover{background:#991b1b}
 #k3Tools{position:fixed;z-index:60;left:10px;bottom:10px;gap:3px;align-items:center}
-@media (min-width:1024px){html:not(.mob) #k3Tools{left:142px;bottom:12px}}
+@media (min-width:1024px){html:not(.mob) #k3Tools{left:0;width:244px;box-sizing:border-box;padding-right:12px;justify-content:flex-end;bottom:12px;pointer-events:none}
+ html:not(.mob) #k3Tools .k3t{pointer-events:auto}}
 .k3t{display:inline-flex;align-items:center;justify-content:center;gap:4px;height:24px;min-width:24px;padding:0 6px;border-radius:9999px;border:1px solid #e2e8f0;background:#fff;color:#334155;font-size:10px;line-height:1;font-weight:800;cursor:pointer;box-shadow:0 1px 4px rgba(15,23,42,.12);transition:background .15s,transform .15s}
 .k3t:hover{background:#f1f5f9;transform:translateY(-1px)}
 .k3t svg{display:block;border-radius:2px;box-shadow:0 0 0 1px rgba(0,0,0,.15)}
@@ -4666,6 +4667,12 @@ html.k3-dark #k3Chat{--c-bg:#111a2e;--c-bd:#27344b;--c-tx:#e2e8f0;--c-mu:#94a3b8
 .k3c-f button{width:40px;height:40px;border-radius:9999px;border:0;background:#b91c1c;color:#fff;font-size:16px;cursor:pointer;flex:none}
 .k3c-f button:disabled{opacity:.5;cursor:not-allowed}
 .k3c-n{padding:0 14px 10px;font-size:10px;color:var(--c-mu);text-align:center}
+
+/* ---- maskot: tampil paling depan, bisa diseret, berjalan sendiri ---- */
+.mascot-wrap{z-index:80!important;pointer-events:none!important}
+.mascot-wrap img{pointer-events:auto!important;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
+.mascot-wrap.k3-drag img{cursor:grabbing}
+.mascot-wrap.k3-walk{transition:left 7s linear}
 /* ---- sembunyikan banner & tooltip bawaan Google Translate ---- */
 body{top:0!important;position:static!important}
 .goog-te-banner-frame,.goog-te-balloon-frame,#goog-gt-tt,.goog-tooltip,.goog-te-spinner-pos,iframe.skiptranslate{display:none!important;visibility:hidden!important}
@@ -4932,6 +4939,51 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen())closeChat(
 /* ======================= TOMBOL BAHASA & TEMA ======================= */
 $('k3Lang').onclick=()=>{LANG=LANG==='id'?'en':'id';ls.set('k3_lang',LANG);applyLang();if(isOpen())renderMsgs()};
 $('k3Theme').onclick=()=>{DARK=!DARK;ls.set('k3_theme',DARK?'dark':'light');applyTheme()};
+
+
+/* ======================= MASKOT: di depan, diseret manual, jalan sendiri ke kanan ======================= */
+(()=>{
+ let w=null,img=null,drag=null,pausedUntil=0,dir=1,ready=false,timer=null;
+ const setPos=(x,y)=>{w.style.setProperty('left',x+'px','important');w.style.setProperty('top',y+'px','important');w.style.setProperty('right','auto','important');w.style.setProperty('bottom','auto','important')};
+ const clamp=(x,y)=>{const r=w.getBoundingClientRect();return [Math.max(0,Math.min(innerWidth-r.width,x)),Math.max(0,Math.min(innerHeight-r.height,y))]};
+ function init(){
+  w=document.querySelector('.mascot-wrap');if(!w)return false;
+  const r=w.getBoundingClientRect();if(!r.width||!r.height)return false;
+  if(ready)return true;
+  img=w.querySelector('img');if(!img)return false;
+  img.draggable=false;w.style.setProperty('align-items','flex-start','important');
+  setPos(r.left,r.top);ready=true;
+  img.addEventListener('pointerdown',e=>{
+   const b=w.getBoundingClientRect();drag={dx:e.clientX-b.left,dy:e.clientY-b.top};
+   w.classList.remove('k3-walk');w.classList.add('k3-drag');
+   const cur=w.getBoundingClientRect();setPos(cur.left,cur.top);
+   try{img.setPointerCapture(e.pointerId)}catch(x){}e.preventDefault()});
+  img.addEventListener('pointermove',e=>{if(!drag)return;const [x,y]=clamp(e.clientX-drag.dx,e.clientY-drag.dy);setPos(x,y)});
+  const end=()=>{if(!drag)return;drag=null;w.classList.remove('k3-drag');pausedUntil=Date.now()+25000};
+  img.addEventListener('pointerup',end);img.addEventListener('pointercancel',end);
+  addEventListener('resize',()=>{if(!ready)return;const b=w.getBoundingClientRect();const [x,y]=clamp(b.left,b.top);setPos(x,y)});
+  return true;
+ }
+ function walk(){
+  if(!init()||drag||Date.now()<pausedUntil)return;
+  if(!document.documentElement.classList.contains('k3-in'))return;
+  const b=w.getBoundingClientRect();if(!b.width)return;
+  const minX=(innerWidth>=1024&&!document.documentElement.classList.contains('mob'))?256:8,maxX=innerWidth-b.width-8;
+  if(maxX<=minX)return;
+  /* berjalan bolak-balik: ke bagian kanan, lalu kembali ke kiri */
+  let tx;
+  if(dir>0){tx=maxX-Math.random()*Math.max(20,(maxX-minX)*.15);if(b.left>maxX-40)dir=-1}
+  else{tx=minX+Math.random()*Math.max(20,(maxX-minX)*.15)}
+  if(Math.abs(tx-b.left)<30){dir=-dir;return}
+  dir=tx>b.left?1:-1;
+  w.classList.add('k3-walk');
+  const t=b.top;setPos(Math.max(minX,Math.min(maxX,tx)),t);
+  /* setelah sampai, balik arah di giliran berikutnya */
+  setTimeout(()=>{if(!drag)w.classList.remove('k3-walk');dir=-dir},7200);
+ }
+ timer=setInterval(()=>{if(!document.hidden)walk()},15000);
+ setTimeout(walk,4000);
+})();
 
 /* ======================= SINKRON DENGAN STATUS LOGIN ======================= */
 let lastIn=null;
