@@ -214,7 +214,7 @@
                     <div class="bg-white/90 backdrop-blur-md px-3 py-1 rounded-full shadow-lg text-[10px] font-bold text-red-700 mb-1 border border-red-200 animate-bounce flex items-center gap-1.5">
                         <span>🔥</span> Siaga APAR PTKP
                     </div>
-                    <img src="firefighter-animation.gif" alt="Maskot Pemadam" class="w-20 md:w-32 h-auto object-contain pointer-events-none">
+                    <img src="firefighter-animation.webp" alt="Maskot Pemadam" class="w-20 md:w-32 h-auto object-contain pointer-events-none">
                 </div>
 
                 <div class="flex gap-2 no-print mb-3 overflow-x-auto pb-1" id="aparTabNav">
@@ -4647,6 +4647,8 @@ html.k3-dark #k3Chat{--c-bg:#111a2e;--c-bd:#27344b;--c-tx:#e2e8f0;--c-mu:#94a3b8
 .k3c-b.a code{background:rgba(100,116,139,.2);padding:0 4px;border-radius:4px;font-size:12px}
 .k3c-b.a pre{background:#0f172a;color:#e2e8f0;padding:8px;border-radius:8px;overflow-x:auto;margin:6px 0}
 .k3c-b.a pre code{background:none;padding:0}
+.k3c-b.a a{color:#2563eb;text-decoration:underline;word-break:break-all}
+html.k3-dark .k3c-b.a a{color:#93c5fd}
 .k3c-b.a hr{border:0;border-top:1px solid var(--c-bd);margin:8px 0}
 .k3-tw{overflow-x:auto;margin:6px 0}
 .k3-tw table{border-collapse:collapse;font-size:12px;min-width:100%}
@@ -4666,10 +4668,24 @@ html.k3-dark #k3Chat{--c-bg:#111a2e;--c-bd:#27344b;--c-tx:#e2e8f0;--c-mu:#94a3b8
 .k3c-f textarea:focus{border-color:#b91c1c!important}
 .k3c-f button{width:40px;height:40px;border-radius:9999px;border:0;background:#b91c1c;color:#fff;font-size:16px;cursor:pointer;flex:none}
 .k3c-f button:disabled{opacity:.5;cursor:not-allowed}
+.k3c-att{width:36px;height:36px;border-radius:9999px;border:1px solid var(--c-bd)!important;background:var(--c-in)!important;color:var(--c-mu)!important;font-size:16px;cursor:pointer;flex:none}
+.k3c-att:hover{border-color:#b91c1c!important;color:#b91c1c!important}
+.k3c-prev{display:none;gap:8px;flex-wrap:wrap;padding:8px 14px 0}
+.k3c-prev.on{display:flex}
+.k3c-prev div{position:relative;width:54px;height:54px;border-radius:10px;overflow:hidden;border:1px solid var(--c-bd)}
+.k3c-prev img{width:100%;height:100%;object-fit:cover}
+.k3c-prev button{position:absolute;top:1px;right:1px;width:18px;height:18px;border-radius:9999px;border:0;background:rgba(0,0,0,.65);color:#fff;font-size:10px;line-height:18px;cursor:pointer;padding:0}
+.k3c-b.u .k3c-th{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:5px}
+.k3c-th img{width:64px;height:64px;object-fit:cover;border-radius:8px}
+.k3c-drop{outline:2px dashed #b91c1c;outline-offset:-6px}
 .k3c-n{padding:0 14px 10px;font-size:10px;color:var(--c-mu);text-align:center}
 
+/* ---- header ikut saat halaman di-scroll ---- */
+html,body{overflow-x:clip!important}
+#appContainer>header{position:sticky!important;top:0!important;z-index:50!important}
 /* ---- maskot: tampil paling depan, bisa diseret, berjalan sendiri ---- */
-.mascot-wrap{z-index:80!important;pointer-events:none!important}
+.mascot-wrap{z-index:80!important;pointer-events:none!important;mix-blend-mode:normal!important;background:transparent!important}
+.mascot-wrap img{background:transparent!important;border-radius:0!important;padding:0!important}
 .mascot-wrap img{pointer-events:auto!important;cursor:grab;touch-action:none;user-select:none;-webkit-user-drag:none}
 .mascot-wrap.k3-drag img{cursor:grabbing}
 .mascot-wrap.k3-walk{transition:left 7s linear}
@@ -4689,15 +4705,15 @@ const $=id=>document.getElementById(id);
 
 /* ======================= TEKS (ID / EN) ======================= */
 const T={
- id:{ask:'Tanya K3',sub:'Asisten AI · K3 & pertanyaan umum',ph:'Tanyakan apa saja…',send:'Kirim',clear:'Percakapan baru',close:'Tutup',copy:'📋 Salin',copied:'✓ Tersalin',
-  hello:'Halo! Saya **Tanya K3**, asisten AI Portal K3 Terpadu PT Kertas Padalarang.\n\nTanyakan apa saja: **K3**, panduan fitur aplikasi (Work Permit & JSA, APAR, APD, dll.), atau minta dibuatkan **surat, tabel, materi**, dan topik umum lainnya.',
+ id:{ask:'Tanya K3',sub:'Asisten AI · K3 & pertanyaan umum',ph:'Tanyakan apa saja…',send:'Kirim',clear:'Percakapan baru',attach:'Lampirkan foto',imgdef:'Tolong analisis gambar ini.',imgerr:'Gambar tidak dapat dibaca.',close:'Tutup',copy:'📋 Salin',copied:'✓ Tersalin',
+  hello:'Halo! Saya **Tanya K3**, asisten AI Portal K3 Terpadu PT Kertas Padalarang.\n\nTanyakan apa saja: **K3**, peraturan terbaru, panduan fitur aplikasi, atau minta dibuatkan **surat, tabel, materi**. Anda juga bisa **mengirim link** atau **melampirkan foto/screenshot** (tombol 📎 atau tempel dengan Ctrl+V).',
   note:'Jawaban AI dapat keliru — verifikasi ke Departemen K3LH untuk keputusan penting.',
   err:'Maaf, terjadi kendala saat menghubungi server. Silakan coba lagi.',
   refuse:'🚫 Maaf, permintaan ini tidak dapat diproses karena mengandung kata tidak pantas atau permintaan yang berpotensi merusak/berbahaya. Silakan ajukan pertanyaan dengan bahasa yang sopan.',
   thL:'Aktifkan mode gelap',thD:'Aktifkan mode terang',lang:'Ganti bahasa ke English',
   chips:['Bagaimana cara membuat Work Permit?','Jelaskan jenis APAR dan cara memakainya','Buatkan materi toolbox meeting kerja di ketinggian','Buatkan draft surat teguran pelanggaran APD']},
- en:{ask:'Ask K3',sub:'AI assistant · OHS & general questions',ph:'Ask anything…',send:'Send',clear:'New chat',close:'Close',copy:'📋 Copy',copied:'✓ Copied',
-  hello:'Hello! I am **Tanya K3**, the AI assistant of the PT Kertas Padalarang Integrated OHS Portal.\n\nAsk me anything: **OHS**, app guides (Work Permit & JSA, fire extinguishers, PPE, etc.), or drafting **letters, tables, materials**, and general topics.',
+ en:{ask:'Ask K3',sub:'AI assistant · OHS & general questions',ph:'Ask anything…',send:'Send',clear:'New chat',attach:'Attach photo',imgdef:'Please analyze this image.',imgerr:'The image could not be read.',close:'Close',copy:'📋 Copy',copied:'✓ Copied',
+  hello:'Hello! I am **Tanya K3**, the AI assistant of the PT Kertas Padalarang Integrated OHS Portal.\n\nAsk me anything: **OHS**, latest regulations, app guides, or drafting **letters, tables, materials**. You can also **send a link** or **attach a photo/screenshot** (📎 button or paste with Ctrl+V).',
   note:'AI answers may be wrong — verify with the OHS Department for important decisions.',
   err:'Sorry, there was a problem reaching the server. Please try again.',
   refuse:'🚫 Sorry, this request cannot be processed because it contains inappropriate language or a potentially harmful request. Please rephrase politely.',
@@ -4722,7 +4738,7 @@ function md(src){
  const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
  const blocks=[];
  src=String(src).replace(/```[a-zA-Z]*\n?([\s\S]*?)```/g,(m,c)=>{blocks.push('<pre><code>'+esc(c.replace(/\n$/,''))+'</code></pre>');return '\u0000'+(blocks.length-1)+'\u0000'});
- const inl=s=>esc(s).replace(/&lt;br\s*\/?&gt;/gi,'<br>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>');
+ const inl=s=>esc(s).replace(/&lt;br\s*\/?&gt;/gi,'<br>').replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>').replace(/(^|[\s(])(https?:\/\/[^\s<)]+)/g,'$1<a href="$2" target="_blank" rel="noopener noreferrer">$2</a>').replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>').replace(/(^|[^*])\*([^*\s][^*]*)\*/g,'$1<i>$2</i>');
  const lines=src.split('\n');let out='',i=0,list=null;
  const close=()=>{if(list){out+='</'+list+'>';list=null}};
  const isRow=r=>/^\s*\|.*\|\s*$/.test(r);
@@ -4770,7 +4786,7 @@ const chat=document.createElement('div');
 chat.id='k3Chat';chat.className='notranslate';chat.setAttribute('translate','no');chat.setAttribute('role','dialog');chat.setAttribute('aria-modal','false');
 chat.innerHTML='<div class="k3c-h"><div class="k3c-ic">🤖</div><div class="k3c-t"><b id="k3cTitle"></b><small id="k3cSub"></small></div><button type="button" id="k3cClr">⟲</button><button type="button" id="k3cX">✕</button></div>'
  +'<div class="k3c-m" id="k3cMsgs"></div><div class="k3c-chips" id="k3cChips"></div>'
- +'<div class="k3c-f"><textarea id="k3cIn" rows="1" maxlength="1500"></textarea><button type="button" id="k3cSend">➤</button></div><div class="k3c-n" id="k3cNote"></div>';
+ +'<div class="k3c-prev" id="k3cPrev"></div><div class="k3c-f"><button type="button" class="k3c-att" id="k3cAtt">📎</button><input type="file" id="k3cFile" accept="image/*" multiple style="display:none"><textarea id="k3cIn" rows="1" maxlength="1500"></textarea><button type="button" id="k3cSend">➤</button></div><div class="k3c-n" id="k3cNote"></div>';
 document.body.appendChild(chat);
 const gt=document.createElement('div');gt.id='k3_gt';gt.className='notranslate';gt.setAttribute('translate','no');document.body.appendChild(gt);
 
@@ -4781,7 +4797,7 @@ function refreshUi(){
  const lb=$('k3Lang');lb.innerHTML=FLAG[LANG]+'<span>'+LANG.toUpperCase()+'</span>';lb.title=tr('lang');lb.setAttribute('aria-label',tr('lang'));
  const tb=$('k3Theme');tb.textContent=DARK?'☀️':'🌙';tb.title=DARK?tr('thD'):tr('thL');tb.setAttribute('aria-label',tb.title);
  $('k3cTitle').textContent=tr('ask');$('k3cSub').textContent=tr('sub');$('k3cIn').placeholder=tr('ph');
- $('k3cClr').title=tr('clear');$('k3cX').title=tr('close');$('k3cSend').title=tr('send');$('k3cNote').textContent=tr('note');
+ $('k3cClr').title=tr('clear');$('k3cAtt').title=tr('attach');$('k3cX').title=tr('close');$('k3cSend').title=tr('send');$('k3cNote').textContent=tr('note');
  renderChips();
 }
 
@@ -4837,9 +4853,7 @@ function refreshUi(){
  +P+' .mn-drawer button{background:#1e293b!important;color:#e2e8f0!important}'
  +P+' .mn-drawer button[data-on="1"]{background:rgba(239,68,68,.22)!important;color:#fecaca!important}'
  /* maskot */
- +P+' .mascot-wrap{mix-blend-mode:normal!important}'
- +P+' .mascot-wrap img{background:#fff;border-radius:18px;padding:4px}'
- +'}';
+  +'}';
  const st=document.createElement('style');st.id='k3x-dark-css';st.textContent=c;document.head.appendChild(st);
 })();
 function applyTheme(){document.documentElement.classList.toggle('k3-dark',DARK&&document.documentElement.classList.contains('k3-in'));refreshUi()}
@@ -4880,7 +4894,7 @@ const save=()=>{try{sessionStorage.setItem('k3_chat',JSON.stringify(MSGS.slice(-
 function scrollEnd(){const m=$('k3cMsgs');m.scrollTop=m.scrollHeight}
 function bubble(m,i){
  const d=document.createElement('div');d.className='k3c-b '+(m.r==='u'?'u':'a');
- if(m.r==='u'){d.textContent=m.t}
+ if(m.r==='u'){if(m.im&&m.im.length){const th=document.createElement('div');th.className='k3c-th';m.im.forEach(u=>{const i=document.createElement('img');i.src=u;th.appendChild(i)});d.appendChild(th)}d.appendChild(document.createTextNode(m.t))}
  else{d.innerHTML=md(m.t);const b=document.createElement('button');b.type='button';b.className='k3c-cp';b.textContent=tr('copy');
   b.onclick=()=>{const done=()=>{b.textContent=tr('copied');setTimeout(()=>b.textContent=tr('copy'),1600)};
    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(m.t).then(done,()=>fb());else fb();
@@ -4905,24 +4919,35 @@ function activeCtx(){
  for(const [id,n] of L){const e=$(id);if(e&&!e.classList.contains('hidden'))return n}
  return '';
 }
+let PEND=[];
+function renderPrev(){const p=$('k3cPrev');p.innerHTML='';PEND.forEach((x,i)=>{const d=document.createElement('div');const im=document.createElement('img');im.src=x.thumb;const b=document.createElement('button');b.type='button';b.textContent='✕';b.onclick=()=>{PEND.splice(i,1);renderPrev()};d.appendChild(im);d.appendChild(b);p.appendChild(d)});p.classList.toggle('on',PEND.length>0)}
+function shrink(file,max,q){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{const k=Math.min(1,max/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.max(1,Math.round(im.width*k));c.height=Math.max(1,Math.round(im.height*k));const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);res(c.toDataURL('image/jpeg',q))};im.src=fr.result};fr.readAsDataURL(file)})}
+async function addFiles(files){
+ for(const f of [...files]){
+  if(PEND.length>=3)break;if(!/^image\//.test(f.type))continue;
+  try{PEND.push({full:await shrink(f,1400,.82),thumb:await shrink(f,128,.6)});renderPrev()}catch(e){alert(tr('imgerr'))}
+ }
+}
 async function send(text){
  text=String(text||'').trim().slice(0,1500);
- if(!text||BUSY)return;
- $('k3cIn').value='';$('k3cIn').style.height='auto';
- MSGS.push({r:'u',t:text});
+ const imgs=PEND.slice();
+ if((!text&&!imgs.length)||BUSY)return;
+ if(!text)text=tr('imgdef');
+ $('k3cIn').value='';$('k3cIn').style.height='auto';PEND=[];renderPrev();
+ MSGS.push({r:'u',t:text,im:imgs.map(x=>x.thumb)});
  if(blocked(text)){MSGS.push({r:'a',t:tr('refuse')});save();renderMsgs();return}
  BUSY=true;$('k3cSend').disabled=true;save();renderMsgs();
  const hist=MSGS.slice(-10).map(m=>({role:m.r==='u'?'user':'assistant',text:m.t.slice(0,1500)}));
- const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),70000);
+ const ctl=new AbortController();const to=setTimeout(()=>ctl.abort(),90000);
  try{
   const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},signal:ctl.signal,
-   body:JSON.stringify({action:'wpTanyaK3',token:ls.get('wpTok',''),messages:hist,lang:LANG,ctx:activeCtx()})});
+   body:JSON.stringify({action:'wpTanyaK3',token:ls.get('wpTok',''),messages:hist,lang:LANG,ctx:activeCtx(),images:imgs.map(x=>({mime:'image/jpeg',data:x.full.split(',')[1]}))})});
   const r=await res.json();
   if(r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||'')))throw new Error('server-old');
   if(!r.ok&&/Sesi/.test(r.msg||'')){setTimeout(()=>{alert(r.msg);if(typeof handleLogout==='function')handleLogout()},100)}
-  MSGS.push({r:'a',t:r.ok?(r.refused?tr('refuse'):r.answer):('⚠️ '+(r.msg||tr('err')))});
+  MSGS.push({r:'a',t:r.ok?(r.refused?(tr('refuse')+(r.why?'\n\n_'+r.why+'_':'')):r.answer):('⚠️ '+(r.msg||tr('err')))});
  }catch(e){
-  MSGS.push({r:'a',t:e&&e.message==='server-old'?'⚠️ Server belum memuat fitur Tanya K3. Tempel Code.gs terbaru, lalu Deploy > Manage deployments > Edit > New version > Deploy.':'⚠️ '+tr('err')});
+  MSGS.push({r:'a',t:e&&e.message==='server-old'?'⚠️ Server belum memuat versi Tanya K3 terbaru. Tempel Code.gs terbaru, lalu Deploy > Manage deployments > Edit > New version > Deploy.':'⚠️ '+tr('err')});
  }finally{clearTimeout(to);BUSY=false;$('k3cSend').disabled=false;save();renderMsgs();if(isOpen())$('k3cIn').focus()}
 }
 function openChat(){chat.classList.add('on');renderMsgs();setTimeout(()=>$('k3cIn').focus(),50)}
@@ -4932,6 +4957,12 @@ $('k3AskMini').onclick=()=>isOpen()?closeChat():openChat();
 $('k3cX').onclick=closeChat;
 $('k3cClr').onclick=()=>{if(BUSY)return;MSGS=[];save();renderMsgs()};
 $('k3cSend').onclick=()=>send($('k3cIn').value);
+$('k3cAtt').onclick=()=>$('k3cFile').click();
+$('k3cFile').onchange=function(){addFiles(this.files);this.value=''};
+$('k3cIn').addEventListener('paste',e=>{const fs=[...(e.clipboardData&&e.clipboardData.items||[])].filter(i=>i.kind==='file'&&/^image\//.test(i.type)).map(i=>i.getAsFile()).filter(Boolean);if(fs.length){e.preventDefault();addFiles(fs)}});
+chat.addEventListener('dragover',e=>{e.preventDefault();chat.classList.add('k3c-drop')});
+chat.addEventListener('dragleave',()=>chat.classList.remove('k3c-drop'));
+chat.addEventListener('drop',e=>{e.preventDefault();chat.classList.remove('k3c-drop');if(e.dataTransfer&&e.dataTransfer.files)addFiles(e.dataTransfer.files)});
 $('k3cIn').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send($('k3cIn').value)}});
 $('k3cIn').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,110)+'px'});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&isOpen())closeChat()});
@@ -4943,15 +4974,17 @@ $('k3Theme').onclick=()=>{DARK=!DARK;ls.set('k3_theme',DARK?'dark':'light');appl
 
 /* ======================= MASKOT: di depan, diseret manual, jalan sendiri ke kanan ======================= */
 (()=>{
- let w=null,img=null,drag=null,pausedUntil=0,dir=1,ready=false,timer=null;
+ let w=null,img=null,drag=null,pausedUntil=0,dir=1,ready=false,timer=null,orig=null;
  const setPos=(x,y)=>{w.style.setProperty('left',x+'px','important');w.style.setProperty('top',y+'px','important');w.style.setProperty('right','auto','important');w.style.setProperty('bottom','auto','important')};
  const clamp=(x,y)=>{const r=w.getBoundingClientRect();return [Math.max(0,Math.min(innerWidth-r.width,x)),Math.max(0,Math.min(innerHeight-r.height,y))]};
  function init(){
-  w=document.querySelector('.mascot-wrap');if(!w)return false;
-  const r=w.getBoundingClientRect();if(!r.width||!r.height)return false;
+  w=w||document.querySelector('.mascot-wrap');if(!w)return false;
   if(ready)return true;
+  const r=w.getBoundingClientRect();if(!r.width||!r.height)return false;
+  orig=w.parentElement;
   img=w.querySelector('img');if(!img)return false;
   img.draggable=false;w.style.setProperty('align-items','flex-start','important');
+  document.body.appendChild(w);   /* pindah ke <body>: benar-benar paling depan */
   setPos(r.left,r.top);ready=true;
   img.addEventListener('pointerdown',e=>{
    const b=w.getBoundingClientRect();drag={dx:e.clientX-b.left,dy:e.clientY-b.top};
@@ -4981,6 +5014,8 @@ $('k3Theme').onclick=()=>{DARK=!DARK;ls.set('k3_theme',DARK?'dark':'light');appl
   /* setelah sampai, balik arah di giliran berikutnya */
   setTimeout(()=>{if(!drag)w.classList.remove('k3-walk');dir=-dir},7200);
  }
+ const vis=()=>!!orig&&orig.getClientRects().length>0&&document.documentElement.classList.contains('k3-in');
+ setInterval(()=>{if(ready&&w)w.style.setProperty('display',vis()?'':'none','important');if(!ready)init()},400);
  timer=setInterval(()=>{if(!document.hidden)walk()},15000);
  setTimeout(walk,4000);
 })();
@@ -4993,7 +5028,7 @@ function sync(){
  document.documentElement.classList.toggle('k3-in',on);
  if(on){applyTheme();applyLang()}
  else{
-  closeChat();MSGS=[];save();BUSY=false;
+  closeChat();MSGS=[];PEND=[];renderPrev();save();BUSY=false;
   document.documentElement.classList.remove('k3-dark');
   applyLang();                /* kembali ke Indonesia & terang di halaman login */
  }
