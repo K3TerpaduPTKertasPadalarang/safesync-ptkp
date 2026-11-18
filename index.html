@@ -5120,9 +5120,15 @@ async function detect(canvas){
  let r;
  try{
   const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},signal:ctl.signal,body:JSON.stringify({action:'wpSopSig',token:tok,images:[{mime:'image/jpeg',data}]})});
-  r=await res.json();
+  const txt=await res.text();
+  try{r=JSON.parse(txt)}catch(e){throw new Error('Balasan server bukan JSON (HTTP '+res.status+'): '+txt.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,160))}
  }finally{clearTimeout(to)}
- if(!r||r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||'')))throw new Error('Server belum memuat versi terbaru Code.gs (Deploy > New version).');
+ if(!r||r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||''))){
+  let v='';
+  try{const vr=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'wpVer'})})).json();
+   v=vr&&vr.ver?' [Server versi '+vr.ver+', fungsi blur: '+(vr.blur?'ada':'TIDAK ada')+', GEMINI_API_KEY: '+(vr.key?'terisi':'KOSONG')+']':' [Server tidak mengenal aksi wpVer = kode server LAMA di URL ini]'}catch(e){v=' [Gagal cek versi: '+e.message+']'}
+  throw new Error('Server belum memuat versi terbaru Code.gs (Deploy > New version). Balasan: '+JSON.stringify(r).slice(0,120)+v);
+ }
  if(!r.ok)throw new Error(r.msg||'Deteksi tanda tangan gagal.');
  return r.boxes||[];
 }
