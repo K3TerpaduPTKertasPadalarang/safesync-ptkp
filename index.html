@@ -3628,7 +3628,7 @@ function sopRender(){const adm=isAdm(),inF=k=>SOP_F==='all'||k===SOP_F||k.indexO
   const sec=j=>{const x=ds.filter(d=>d.jenis===j);return `<div><p class="font-bold text-slate-500 mb-1">${j==='SOP'?'SOP (Standar Operasional Prosedur)':'IK (Instruksi Kerja)'}</p><div class="space-y-1.5">${x.length?x.map(row).join(''):'<p class="text-slate-400 italic px-1">Belum ada dokumen.</p>'}</div></div>`};
   body+=`<div class="border rounded-2xl p-3 space-y-2"><p class="font-extrabold text-sm text-red-800">${l}</p>${sec('SOP')}${sec('IK')}</div>`});
  if(!body||(!adm&&!n))body='<p class="text-center text-slate-500 py-8">Belum ada SOP / IK yang diunggah admin untuk bagian ini.</p>';
- const up=adm?`<details class="border-2 border-dashed border-red-300 rounded-2xl p-3 bg-red-50/40"><summary class="font-bold text-red-700 cursor-pointer">⬆ Unggah SOP / IK baru (admin)</summary><div class="grid md:grid-cols-2 gap-2 mt-2"><div><label class="block font-semibold text-slate-600 mb-1">Fitur / modul *</label><select id="sopMod" class="w-full border rounded px-2 py-1.5">${SOPM.map(([k,l])=>`<option value="${k}"${k===SOP_F||k.indexOf(SOP_F+'_')===0?' selected':''}>${l}</option>`).join('')}</select></div><div><label class="block font-semibold text-slate-600 mb-1">Jenis *</label><select id="sopJenis" class="w-full border rounded px-2 py-1.5"><option value="SOP">SOP</option><option value="IK">IK (Instruksi Kerja)</option></select></div><div class="md:col-span-2"><label class="block font-semibold text-slate-600 mb-1">Judul dokumen *</label><input id="sopJudul" maxlength="120" class="w-full border rounded px-2 py-1.5" placeholder="mis. SOP Inspeksi APAR Rev.02"></div><div class="md:col-span-2"><label class="block font-semibold text-slate-600 mb-1">File * <span class="font-normal text-slate-500">(PDF disarankan agar bisa dibaca langsung · Word / Excel / PowerPoint / PNG / JPG · maks. 8 MB)</span></label><input id="sopFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" class="w-full border rounded px-2 py-1.5 bg-white"></div></div><button id="sopUpBtn" onclick="sopUp()" class="mt-2 px-4 py-2 rounded-xl bg-red-700 text-white font-bold">⬆ Unggah</button></details>`:'';
+ const up=adm?`<details class="border-2 border-dashed border-red-300 rounded-2xl p-3 bg-red-50/40"><summary class="font-bold text-red-700 cursor-pointer">⬆ Unggah SOP / IK baru (admin)</summary><div class="grid md:grid-cols-2 gap-2 mt-2"><div><label class="block font-semibold text-slate-600 mb-1">Fitur / modul *</label><select id="sopMod" class="w-full border rounded px-2 py-1.5">${SOPM.map(([k,l])=>`<option value="${k}"${k===SOP_F||k.indexOf(SOP_F+'_')===0?' selected':''}>${l}</option>`).join('')}</select></div><div><label class="block font-semibold text-slate-600 mb-1">Jenis *</label><select id="sopJenis" class="w-full border rounded px-2 py-1.5"><option value="SOP">SOP</option><option value="IK">IK (Instruksi Kerja)</option></select></div><div class="md:col-span-2"><label class="block font-semibold text-slate-600 mb-1">Judul dokumen *</label><input id="sopJudul" maxlength="120" class="w-full border rounded px-2 py-1.5" placeholder="mis. SOP Inspeksi APAR Rev.02"></div><div class="md:col-span-2"><label class="block font-semibold text-slate-600 mb-1">File * <span class="font-normal text-slate-500">(PDF disarankan agar bisa dibaca langsung · Word / Excel / PowerPoint / PNG / JPG · maks. 8 MB)</span></label><input id="sopFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" class="w-full border rounded px-2 py-1.5 bg-white"></div><label class="md:col-span-2 flex items-start gap-2 text-slate-700 font-semibold"><input type="checkbox" id="sopBlur" checked class="mt-0.5"><span>Blur tanda tangan otomatis <span class="font-normal text-slate-500">(PDF / PNG / JPG · dideteksi AI · Anda bisa memeriksa hasilnya sebelum diunggah)</span></span></label></div><button id="sopUpBtn" onclick="sopUp()" class="mt-2 px-4 py-2 rounded-xl bg-red-700 text-white font-bold">⬆ Unggah</button></details>`:'';
  $('sopB').innerHTML=`<div class="flex justify-between items-center"><h3 class="text-sm font-extrabold">📚 SOP & Instruksi Kerja (IK)</h3><button onclick="sopClose()" class="px-3 py-1.5 rounded-lg bg-slate-100 font-bold">← Kembali</button></div><div class="flex flex-wrap gap-1.5">${chips}</div><div id="sopPv" class="hidden border rounded-xl p-2 bg-slate-50"></div><div id="sopEd" class="hidden border-2 border-amber-300 rounded-2xl p-3 bg-amber-50"></div>${up}${body}`}
 window.sopRead=async id=>{try{toast('Membuka dokumen…');const r=await sopFetch(id),bl=sopBlob(r.data);if(SOP_PV)URL.revokeObjectURL(SOP_PV);SOP_PV=URL.createObjectURL(bl);const img=/^image\//.test(r.mime),pv=$('sopPv');pv.classList.remove('hidden');
  pv.innerHTML=`<div class="flex flex-wrap justify-between items-center gap-2 mb-2"><b class="truncate">${E(r.nama)}</b><span class="shrink-0 flex gap-1"><a href="${SOP_PV}" target="_blank" class="px-2 py-1 bg-slate-200 rounded font-bold">↗ Tab baru</a><a href="${SOP_PV}" download="${E(r.nama)}" class="px-2 py-1 bg-emerald-600 text-white rounded font-bold">⬇ Unduh</a><button onclick="sopClosePv()" class="px-2 py-1 bg-slate-200 rounded font-bold">Tutup</button></span></div>`+(img?`<img src="${SOP_PV}" class="max-w-full mx-auto rounded">`:`<iframe src="${SOP_PV}" class="w-full border rounded bg-white" style="height:68vh"></iframe><p class="text-[10px] text-slate-500 mt-1">Bila dokumen tidak tampil di perangkat Anda, gunakan tombol Tab baru atau Unduh.</p>`);
@@ -3641,19 +3641,21 @@ window.sopUp=async()=>{const f=$('sopFile').files[0],t=$('sopJudul').value.trim(
  const mime=SOPX[sopExt(f.name)];if(!mime)return toast('Format tidak didukung. Gunakan PDF, Word, Excel, PowerPoint, PNG atau JPG.',0);
  if(f.size>8*1024*1024)return toast('Ukuran file maksimal 8 MB.',0);
  const b=$('sopUpBtn');b.disabled=true;b.textContent='Mengunggah…';
- try{const u=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>no(new Error('Gagal membaca file.'));fr.readAsDataURL(f)});
+ try{let F2=f;if(window.sopBlurFile&&$('sopBlur')&&$('sopBlur').checked){F2=await sopBlurFile(f,b);if(!F2){b.disabled=false;b.textContent='⬆ Unggah';return}if(F2.size>8*1024*1024){b.disabled=false;b.textContent='⬆ Unggah';return toast('Ukuran file setelah blur melebihi 8 MB. Gunakan PDF yang lebih ringan.',0)}b.textContent='Mengunggah…'}
+  const u=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>no(new Error('Gagal membaca file.'));fr.readAsDataURL(F2)});
   const r=await post({action:'wpSopAdd',...auth(),modul:$('sopMod').value,jenis:$('sopJenis').value,judul:t,nama:f.name,data:'data:'+mime+';base64,'+String(u).split(',')[1]});
   if(!r.ok){expired(r.msg);throw new Error(r.msg)}toast('✅ Dokumen berhasil diunggah.');await sopLoad()}catch(e){toast(e.message||'Gagal mengunggah',0);b.disabled=false;b.textContent='⬆ Unggah'}};
 
 window.sopEdit=id=>{const d=SOP_L.find(x=>x.id===id);if(!d)return;const e=$('sopEd'),lb='block font-semibold text-slate-600 mb-1',ip='w-full border rounded px-2 py-1.5 bg-white';e.classList.remove('hidden');
- e.innerHTML=`<p class="font-bold text-amber-800 mb-1">♻️ Ganti / ubah dokumen</p><p class="text-slate-600 mb-2">File saat ini: <b>${E(d.nama)}</b> (${d.kb} KB)</p><div class="grid md:grid-cols-2 gap-2"><div><label class="${lb}">Fitur / modul *</label><select id="sopEMod" class="${ip}">${SOPM.map(([k,l])=>`<option value="${k}"${k===d.modul?' selected':''}>${l}</option>`).join('')}</select></div><div><label class="${lb}">Jenis *</label><select id="sopEJenis" class="${ip}"><option value="SOP"${d.jenis==='SOP'?' selected':''}>SOP</option><option value="IK"${d.jenis==='IK'?' selected':''}>IK (Instruksi Kerja)</option></select></div><div class="md:col-span-2"><label class="${lb}">Judul dokumen *</label><input id="sopEJudul" maxlength="120" value="${E(d.judul)}" class="${ip}"></div><div class="md:col-span-2"><label class="${lb}">File pengganti <span class="font-normal text-slate-500">(kosongkan bila hanya mengubah judul / kategori · maks. 8 MB)</span></label><input id="sopEFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" class="${ip}"></div></div><div class="flex gap-2 mt-2"><button id="sopESave" onclick="sopEditSave('${d.id}')" class="px-4 py-2 rounded-xl bg-amber-600 text-white font-bold">💾 Simpan</button><button onclick="sopEditCancel()" class="px-4 py-2 rounded-xl bg-slate-200 font-bold">Batal</button></div>`;e.scrollIntoView({behavior:'smooth',block:'start'})};
+ e.innerHTML=`<p class="font-bold text-amber-800 mb-1">♻️ Ganti / ubah dokumen</p><p class="text-slate-600 mb-2">File saat ini: <b>${E(d.nama)}</b> (${d.kb} KB)</p><div class="grid md:grid-cols-2 gap-2"><div><label class="${lb}">Fitur / modul *</label><select id="sopEMod" class="${ip}">${SOPM.map(([k,l])=>`<option value="${k}"${k===d.modul?' selected':''}>${l}</option>`).join('')}</select></div><div><label class="${lb}">Jenis *</label><select id="sopEJenis" class="${ip}"><option value="SOP"${d.jenis==='SOP'?' selected':''}>SOP</option><option value="IK"${d.jenis==='IK'?' selected':''}>IK (Instruksi Kerja)</option></select></div><div class="md:col-span-2"><label class="${lb}">Judul dokumen *</label><input id="sopEJudul" maxlength="120" value="${E(d.judul)}" class="${ip}"></div><div class="md:col-span-2"><label class="${lb}">File pengganti <span class="font-normal text-slate-500">(kosongkan bila hanya mengubah judul / kategori · maks. 8 MB)</span></label><input id="sopEFile" type="file" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.png,.jpg,.jpeg" class="${ip}"></div><label class="md:col-span-2 flex items-start gap-2 text-slate-700 font-semibold"><input type="checkbox" id="sopEBlur" checked class="mt-0.5"><span>Blur tanda tangan otomatis <span class="font-normal text-slate-500">(berlaku bila memilih file pengganti)</span></span></label></div><div class="flex gap-2 mt-2"><button id="sopESave" onclick="sopEditSave('${d.id}')" class="px-4 py-2 rounded-xl bg-amber-600 text-white font-bold">💾 Simpan</button><button onclick="sopEditCancel()" class="px-4 py-2 rounded-xl bg-slate-200 font-bold">Batal</button></div>`;e.scrollIntoView({behavior:'smooth',block:'start'})};
 window.sopEditCancel=()=>{const e=$('sopEd');if(e){e.classList.add('hidden');e.innerHTML=''}};
 window.sopEditSave=async id=>{const t=$('sopEJudul').value.trim(),f=$('sopEFile').files[0];
  if(t.length<3)return toast('Judul dokumen wajib diisi (min. 3 karakter).',0);
  const p={action:'wpSopEdit',...auth(),id,modul:$('sopEMod').value,jenis:$('sopEJenis').value,judul:t};
  if(f){const mime=SOPX[sopExt(f.name)];if(!mime)return toast('Format tidak didukung. Gunakan PDF, Word, Excel, PowerPoint, PNG atau JPG.',0);if(f.size>8*1024*1024)return toast('Ukuran file maksimal 8 MB.',0)}
  const b=$('sopESave');b.disabled=true;b.textContent='Menyimpan…';
- try{if(f){const u=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>no(new Error('Gagal membaca file.'));fr.readAsDataURL(f)});p.nama=f.name;p.data='data:'+SOPX[sopExt(f.name)]+';base64,'+String(u).split(',')[1]}
+ try{if(f){let F2=f;if(window.sopBlurFile&&$('sopEBlur')&&$('sopEBlur').checked){F2=await sopBlurFile(f,b);if(!F2){b.disabled=false;b.textContent='💾 Simpan';return}if(F2.size>8*1024*1024){b.disabled=false;b.textContent='💾 Simpan';return toast('Ukuran file setelah blur melebihi 8 MB. Gunakan PDF yang lebih ringan.',0)}b.textContent='Menyimpan…'}
+  const u=await new Promise((ok,no)=>{const fr=new FileReader();fr.onload=()=>ok(fr.result);fr.onerror=()=>no(new Error('Gagal membaca file.'));fr.readAsDataURL(F2)});p.nama=f.name;p.data='data:'+SOPX[sopExt(f.name)]+';base64,'+String(u).split(',')[1]}
   const r=await post(p);if(!r.ok){expired(r.msg);throw new Error(r.msg)}toast('✅ Dokumen diperbarui.');await sopLoad()}catch(e){toast(e.message||'Gagal menyimpan',0);b.disabled=false;b.textContent='💾 Simpan'}};
 window.sopDel=async id=>{const d=SOP_L.find(x=>x.id===id);if(!d||!confirm('Hapus dokumen "'+d.judul+'"? Tindakan ini tidak dapat dibatalkan.'))return;
  try{const r=await post({action:'wpSopDel',...auth(),id});if(!r.ok){expired(r.msg);throw new Error(r.msg)}toast('Dokumen dihapus.');await sopLoad()}catch(e){toast(e.message||'Gagal menghapus',0)}};
@@ -5068,6 +5070,170 @@ function sync(){
 }
 new MutationObserver(sync).observe($('appContainer'),{attributes:true,attributeFilter:['class']});
 refreshUi();sync();
+})();
+</script>
+
+
+<!-- ===================== BLUR TANDA TANGAN OTOMATIS (SOP & IK) ===================== -->
+<style id="k3x-sig-css">
+.k3sig{position:fixed;inset:0;z-index:96;background:rgba(15,23,42,.65);display:flex;align-items:center;justify-content:center;padding:14px}
+.k3sig-box{background:#fff;color:#0f172a;border-radius:18px;max-width:760px;width:100%;max-height:92vh;display:flex;flex-direction:column;box-shadow:0 24px 60px rgba(0,0,0,.4);overflow:hidden;font-size:13px}
+html.k3-dark .k3sig-box{background:#111a2e;color:#e2e8f0}
+.k3sig-h{padding:14px 16px;font-weight:800;border-bottom:1px solid rgba(100,116,139,.3)}
+.k3sig-b{padding:12px 16px;overflow:auto;flex:1}
+.k3sig-g{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+.k3sig-g figure{margin:0;width:150px}
+.k3sig-g img{width:100%;border:1px solid rgba(100,116,139,.4);border-radius:8px;background:#fff}
+.k3sig-g figcaption{font-size:10px;text-align:center;margin-top:2px;opacity:.75}
+.k3sig-f{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;padding:12px 16px;border-top:1px solid rgba(100,116,139,.3)}
+.k3sig-f button{padding:8px 14px;border-radius:12px;border:0;font-weight:800;cursor:pointer;font-size:12px}
+.k3sig-ok{background:#b91c1c;color:#fff}.k3sig-sk{background:#e2e8f0;color:#0f172a}
+</style>
+<script id="k3x-sig-js">
+(()=>{
+'use strict';
+const PDFJS='https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/legacy/build/pdf.min.mjs';
+const PDFJS_W='https://cdn.jsdelivr.net/npm/pdfjs-dist@6.2.108/legacy/build/pdf.worker.min.mjs';
+const PDFLIB='https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js';
+const KEY=/(disusun|diperiksa|disetujui|disahkan|mengetahui|pengesahan|tanda\s*tangan|paraf|dibuat\s*oleh|approved|prepared|reviewed|checked)/i;
+const ext=n=>(String(n||'').split('.').pop()||'').toLowerCase();
+const MAXPAGES=8;
+
+function loadScript(src){return new Promise((ok,no)=>{if(window.PDFLib)return ok();const s=document.createElement('script');s.src=src;s.onload=ok;s.onerror=()=>no(new Error('Gagal memuat pustaka PDF. Periksa koneksi internet.'));document.head.appendChild(s)})}
+let pdfjsP=null;
+function getPdfjs(){
+ if(!pdfjsP)pdfjsP=(async()=>{
+  const m=await import(PDFJS);let w=PDFJS_W;
+  try{const t=await (await fetch(PDFJS_W)).text();w=URL.createObjectURL(new Blob([t],{type:'text/javascript'}))}catch(e){}
+  m.GlobalWorkerOptions.workerSrc=w;return m})();
+ return pdfjsP;
+}
+
+/* ---- deteksi tanda tangan lewat server (Gemini) ---- */
+async function detect(canvas){
+ const k=Math.min(1,1400/Math.max(canvas.width,canvas.height));
+ const c=document.createElement('canvas');c.width=Math.max(1,Math.round(canvas.width*k));c.height=Math.max(1,Math.round(canvas.height*k));
+ const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(canvas,0,0,c.width,c.height);
+ const data=c.toDataURL('image/jpeg',.82).split(',')[1];
+ let tok='';try{tok=localStorage.getItem('wpTok')||''}catch(e){}
+ const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),60000);
+ let r;
+ try{
+  const res=await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},signal:ctl.signal,body:JSON.stringify({action:'wpSopSig',token:tok,images:[{mime:'image/jpeg',data}]})});
+  r=await res.json();
+ }finally{clearTimeout(to)}
+ if(!r||r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||'')))throw new Error('Server belum memuat versi terbaru Code.gs (Deploy > New version).');
+ if(!r.ok)throw new Error(r.msg||'Deteksi tanda tangan gagal.');
+ return r.boxes||[];
+}
+
+/* ---- blur (pikselasi halus: tidak bisa dibalikkan) ---- */
+function blurBoxes(canvas,boxes){
+ const ctx=canvas.getContext('2d');let n=0;
+ boxes.forEach(b=>{
+  if(!Array.isArray(b)||b.length<4)return;
+  let [y0,x0,y1,x1]=b.map(Number);if([y0,x0,y1,x1].some(v=>!isFinite(v)))return;
+  const ph=(y1-y0)*.08,pw=(x1-x0)*.05;               /* beri margin agar goresan tepi ikut tertutup */
+  y0=Math.max(0,y0-ph);y1=Math.min(1000,y1+ph);x0=Math.max(0,x0-pw);x1=Math.min(1000,x1+pw);
+  if((x1-x0)*(y1-y0)>1000*1000*.45)return;            /* kotak terlalu besar = salah deteksi */
+  const x=Math.floor(x0/1000*canvas.width),y=Math.floor(y0/1000*canvas.height),w=Math.ceil((x1-x0)/1000*canvas.width),h=Math.ceil((y1-y0)/1000*canvas.height);
+  if(w<6||h<6)return;
+  const f=Math.max(8,Math.round(Math.min(w,h)/4));
+  const t=document.createElement('canvas');t.width=Math.max(2,Math.round(w/f));t.height=Math.max(2,Math.round(h/f));
+  t.getContext('2d').drawImage(canvas,x,y,w,h,0,0,t.width,t.height);
+  ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality='high';
+  ctx.drawImage(t,0,0,t.width,t.height,x,y,w,h);ctx.restore();n++;
+ });
+ return n;
+}
+const thumb=(canvas,w)=>{const c=document.createElement('canvas');c.width=w;c.height=Math.round(canvas.height*w/canvas.width);c.getContext('2d').drawImage(canvas,0,0,c.width,c.height);return c.toDataURL('image/jpeg',.7)};
+const toBlob=(canvas,type,q)=>new Promise(ok=>canvas.toBlob(ok,type,q));
+
+/* ---- gambar PNG/JPG ---- */
+async function doImage(f,btn){
+ btn.textContent='Mendeteksi tanda tangan…';
+ const url=URL.createObjectURL(f);
+ try{
+  const im=await new Promise((ok,no)=>{const i=new Image();i.onload=()=>ok(i);i.onerror=()=>no(new Error('Gambar tidak dapat dibaca.'));i.src=url});
+  const k=Math.min(1,3500/Math.max(im.naturalWidth,im.naturalHeight));
+  const c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);
+  const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);
+  const boxes=await detect(c);
+  if(!blurBoxes(c,boxes))return {changed:0};
+  const png=ext(f.name)==='png';
+  const blob=await toBlob(c,png?'image/png':'image/jpeg',.92);
+  return {changed:1,file:new File([blob],f.name,{type:png?'image/png':'image/jpeg'}),previews:[thumb(c,300)],labels:['Gambar']};
+ }finally{URL.revokeObjectURL(url)}
+}
+
+/* ---- PDF: halaman bertanda tangan diubah menjadi gambar ber-blur; halaman lain tetap asli ---- */
+async function doPdf(f,btn){
+ btn.textContent='Membaca PDF…';
+ const [pdfjs]=await Promise.all([getPdfjs(),loadScript(PDFLIB)]);
+ const buf=await f.arrayBuffer();
+ const doc=await pdfjs.getDocument({data:new Uint8Array(buf.slice(0))}).promise;
+ const n=doc.numPages,kw=[],scan=[];
+ for(let i=1;i<=Math.min(n,80);i++){
+  const pg=await doc.getPage(i),tc=await pg.getTextContent(),t=tc.items.map(o=>o.str||'').join(' ');
+  if(KEY.test(t))kw.push(i);else if(t.replace(/\s/g,'').length<8)scan.push(i);
+ }
+ let cand=[...kw,...scan];
+ if(!cand.length)cand=n>1?[1,n]:[1];
+ cand=[...new Set(cand)].slice(0,MAXPAGES);
+ const changed={},previews=[],labels=[];
+ for(let j=0;j<cand.length;j++){
+  const i=cand[j];btn.textContent='Memeriksa halaman '+i+' ('+(j+1)+'/'+cand.length+')…';
+  const pg=await doc.getPage(i),v1=pg.getViewport({scale:1}),s=Math.min(2,2200/Math.max(v1.width,v1.height)),vp=pg.getViewport({scale:s});
+  const c=document.createElement('canvas');c.width=Math.round(vp.width);c.height=Math.round(vp.height);
+  const ctx=c.getContext('2d');ctx.fillStyle='#fff';ctx.fillRect(0,0,c.width,c.height);
+  await pg.render({canvasContext:ctx,viewport:vp,canvas:c}).promise;
+  const boxes=await detect(c);
+  if(blurBoxes(c,boxes)){
+   const blob=await toBlob(c,'image/jpeg',.88);
+   changed[i]={bytes:new Uint8Array(await blob.arrayBuffer()),w:v1.width,h:v1.height};
+   previews.push(thumb(c,300));labels.push('Halaman '+i);
+  }
+ }
+ const cnt=Object.keys(changed).length;
+ if(!cnt)return {changed:0};
+ btn.textContent='Menyusun PDF…';
+ const {PDFDocument}=window.PDFLib,src=await PDFDocument.load(buf,{ignoreEncryption:true}),out=await PDFDocument.create();
+ for(let i=1;i<=n;i++){
+  if(changed[i]){const img=await out.embedJpg(changed[i].bytes),p=out.addPage([changed[i].w,changed[i].h]);p.drawImage(img,{x:0,y:0,width:changed[i].w,height:changed[i].h})}
+  else{const [cp]=await out.copyPages(src,[i-1]);out.addPage(cp)}
+ }
+ const bytes=await out.save();
+ return {changed:cnt,file:new File([bytes],f.name,{type:'application/pdf'}),previews,labels};
+}
+
+/* ---- dialog konfirmasi hasil ---- */
+function review(res,origName){
+ return new Promise(ok=>{
+  const o=document.createElement('div');o.className='k3sig notranslate';
+  o.innerHTML='<div class="k3sig-box"><div class="k3sig-h">🔏 Tanda tangan terdeteksi &amp; di-blur otomatis</div><div class="k3sig-b"><p>Periksa hasilnya. Halaman PDF yang berisi tanda tangan diubah menjadi gambar ber-blur (tidak bisa dikembalikan), halaman lain tidak diubah.</p><div class="k3sig-g"></div></div><div class="k3sig-f"><button class="k3sig-sk" data-a="cancel">Batal</button><button class="k3sig-sk" data-a="orig">Unggah file asli (tanpa blur)</button><button class="k3sig-ok" data-a="blur">✔ Pakai hasil blur &amp; unggah</button></div></div>';
+  const g=o.querySelector('.k3sig-g');
+  res.previews.forEach((u,i)=>{const fg=document.createElement('figure');const im=document.createElement('img');im.src=u;const c=document.createElement('figcaption');c.textContent=res.labels[i]||'';fg.appendChild(im);fg.appendChild(c);g.appendChild(fg)});
+  o.addEventListener('click',e=>{const a=e.target&&e.target.getAttribute&&e.target.getAttribute('data-a');if(a){o.remove();ok(a)}});
+  document.body.appendChild(o);
+ });
+}
+
+/* ---- titik masuk: dipanggil saat admin mengunggah / mengganti dokumen ---- */
+window.sopBlurFile=async function(f,btn){
+ const e=ext(f.name);
+ if(!['pdf','png','jpg','jpeg'].includes(e)){
+  return confirm('Blur otomatis hanya untuk PDF, PNG, dan JPG.\nFile "'+f.name+'" akan diunggah apa adanya (tanda tangan, jika ada, tidak di-blur). Lanjutkan?')?f:null;
+ }
+ let res;
+ try{res=e==='pdf'?await doPdf(f,btn):await doImage(f,btn)}
+ catch(err){
+  console.warn('blur gagal',err);
+  return confirm('Blur otomatis gagal: '+(err&&err.message||err)+'\n\nUnggah file asli tanpa blur?')?f:null;
+ }
+ if(!res.changed)return confirm('Tidak ada tanda tangan yang terdeteksi.\nUnggah file apa adanya?')?f:null;
+ const a=await review(res,f.name);
+ return a==='blur'?res.file:(a==='orig'?f:null);
+};
 })();
 </script>
 
