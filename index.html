@@ -1217,10 +1217,14 @@
 
             // POLLING BACKGROUND YANG AMAN
             setInterval(async () => {
-                if (isAdminMapEditMode || isDraggingMarker || Date.now() < (window.masterHold||0)) return;
+                if (document.hidden || isAdminMapEditMode || isDraggingMarker || Date.now() < (window.masterHold||0)) return;
                 try {
-                    const resMaster = await fetch(SCRIPT_URL + "?action=masterApar");
-                    const jsonMaster = await resMaster.json();
+                    // [PERF] cek tanda perubahan (kecil); data penuh (termasuk foto) hanya diunduh bila memang berubah
+                    const sg = await fetch(SCRIPT_URL + "?action=sig").then(r => r.json()).catch(() => ({}));
+                    const sameM = sg.m !== undefined && sg.m === window._sigM, sameA = sg.a !== undefined && sg.a === window._sigA;
+                    if (sameM && sameA) return;
+                    const jsonMaster = sameM ? {} : await fetch(SCRIPT_URL + "?action=masterApar").then(r => r.json());
+                    if (!sameM) window._sigM = sg.m;
                     if (jsonMaster.records && jsonMaster.records.length > 0) {
                         let newServerList = jsonMaster.records.map(normExpRec);
                         newServerList.sort((a, b) => Number(a.id) - Number(b.id));
@@ -1241,8 +1245,8 @@
                         }
                     }
 
-                    const resApar = await fetch(SCRIPT_URL + "?action=apar");
-                    const jsonApar = await resApar.json();
+                    const jsonApar = sameA ? {} : await fetch(SCRIPT_URL + "?action=apar").then(r => r.json());
+                    if (!sameA) window._sigA = sg.a;
                     if (jsonApar.records) {
                         let newAparRecords = jsonApar.records;
                         if (JSON.stringify(newAparRecords) !== JSON.stringify(globalAparList)) {
@@ -1260,7 +1264,7 @@
                         }
                     }
                 } catch(err) {}
-            }, 8000);
+            }, 6000);
 
             window.addEventListener('keydown', async (e) => {
                 if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'z') {
@@ -1556,7 +1560,7 @@
             event.preventDefault();
             const u = document.getElementById('loginUser').value.trim();
             const p = document.getElementById('loginPass').value.trim();
-            const btn = event.submitter || null; if (btn) btn.disabled = true;
+            const btn = event.submitter || null; const btnTxt = btn ? btn.textContent : ''; if (btn) { btn.disabled = true; btn.textContent = 'Memproses…'; }
             try {
                 const r = await (await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'appLogin', username: u, password: p, dev: navigator.userAgent }) })).json();
                 if (r.ok === undefined) { alert('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.'); return; }
@@ -1569,7 +1573,7 @@
                 alert("Login Berhasil!");
                 if (r.defPass) setTimeout(() => alert("Keamanan akun: Anda masih memakai password awal (nomor register). Silakan ganti melalui menu \"Ganti Password\"."), 300);
             } catch (e) { alert('Tidak dapat terhubung ke server. Periksa koneksi internet.'); }
-            finally { if (btn) btn.disabled = false; }
+            finally { if (btn) { btn.disabled = false; btn.textContent = btnTxt; } }
         }
 
         function handleLogout() {
@@ -2727,8 +2731,24 @@
             return new Promise((res, rej) => {
                 const reader = new FileReader();
                 reader.readAsDataURL(file);
-                reader.onload = () => res(reader.result);
                 reader.onerror = err => rej(err);
+                reader.onload = () => {
+                    const raw = reader.result;
+                    // [PERF] foto dikecilkan (maks 1100 px, JPEG) sebelum dikirim: unggah jauh lebih cepat & data lebih ringan
+                    if (!/^image\/(jpeg|png|webp)/.test(file.type || '')) return res(raw);
+                    const im = new Image();
+                    im.onerror = () => res(raw);
+                    im.onload = () => {
+                        try {
+                            const k = Math.min(1, 1100 / Math.max(im.width, im.height)), c = document.createElement('canvas');
+                            c.width = Math.round(im.width * k); c.height = Math.round(im.height * k);
+                            const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+                            const out = c.toDataURL('image/jpeg', 0.7);
+                            res(out.length < raw.length ? out : raw);
+                        } catch (e) { res(raw); }
+                    };
+                    im.src = raw;
+                };
             });
         }
 
@@ -3615,10 +3635,14 @@ const sopExt=n=>(String(n||'').split('.').pop()||'').toLowerCase();
 const sopIcon=n=>({pdf:'📕',doc:'📘',docx:'📘',xls:'📗',xlsx:'📗',ppt:'📙',pptx:'📙',png:'🖼️',jpg:'🖼️',jpeg:'🖼️'})[sopExt(n)]||'📄';
 const sopCanRead=n=>['pdf','png','jpg','jpeg'].includes(sopExt(n));
 function sopBox(){if($('modulSop'))return;const w=$('modulWp');if(w)w.insertAdjacentHTML('afterend','<div id="modulSop" class="hidden space-y-4"><div id="sopB" class="bg-white rounded-2xl shadow-lg p-4 md:p-5 border border-slate-100 space-y-3 text-xs"></div></div>')}
-function sopBlob(u){const m=String(u).match(/^data:(.+?);base64,(.+)$/),b=atob(m[2]),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:m[1]})}
+function sopBlob(u){u=String(u);const p=u.indexOf(';base64,'),mt=u.slice(5,p),b=atob(u.slice(p+8)),n=b.length,a=new Uint8Array(n);for(let i=0;i<n;i++)a[i]=b.charCodeAt(i);return new Blob([a],{type:mt})}
 window.sopClose=()=>{if(SOP_PV){URL.revokeObjectURL(SOP_PV);SOP_PV=''}const p=window.SOP_PREV;switchModule(p&&p!=='sop'?p:'apar')};
 window.sopOpen=async mod=>{SOP_F=SOPF.some(f=>f[0]===mod)?mod:(SOPF.some(f=>f[0]===window.SOP_PREV)?window.SOP_PREV:'all');sopBox();switchModule('sop');$('sopB').innerHTML='<p class="text-center text-slate-500 py-10">Memuat dokumen…</p>';await sopLoad()};
-async function sopLoad(){try{const r=await post({action:'wpSopList',...auth()});if(!r.ok){expired(r.msg);throw new Error(r.msg)}SOP_L=r.list||[];sopRender()}catch(e){$('sopB').innerHTML=`<div class="flex justify-between"><b>📚 SOP & IK</b><button onclick="sopClose()" class="px-3 py-1.5 rounded-lg bg-slate-100 font-bold">← Kembali</button></div><p class="text-red-600 py-6 text-center">${E(e.message||'Gagal memuat dokumen.')}</p>`}}
+function sopIdb(){return new Promise(res=>{try{const q=indexedDB.open('k3sop',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}})}
+async function sopCget(k){const db=await sopIdb();if(!db)return null;return new Promise(r=>{try{const g=db.transaction('d').objectStore('d').get(k);g.onsuccess=()=>r(g.result||null);g.onerror=()=>r(null)}catch(e){r(null)}})}
+async function sopCset(k,v){const db=await sopIdb();if(!db)return;try{const st=db.transaction('d','readwrite').objectStore('d'),c=st.count();c.onsuccess=()=>{if(c.result>20)st.clear();st.put(v,k)}}catch(e){}}
+async function sopLoad(){try{try{const c=JSON.parse(localStorage.getItem('k3_sop_list')||'null');if(c&&c.length&&!SOP_L.length){SOP_L=c;sopRender()}}catch(e){}   /* tampilkan daftar tersimpan dulu, lalu perbarui */
+ const r=await post({action:'wpSopList',...auth()});if(!r.ok){expired(r.msg);throw new Error(r.msg)}SOP_L=r.list||[];try{localStorage.setItem('k3_sop_list',JSON.stringify(SOP_L))}catch(e){}sopRender()}catch(e){$('sopB').innerHTML=`<div class="flex justify-between"><b>📚 SOP & IK</b><button onclick="sopClose()" class="px-3 py-1.5 rounded-lg bg-slate-100 font-bold">← Kembali</button></div><p class="text-red-600 py-6 text-center">${E(e.message||'Gagal memuat dokumen.')}</p>`}}
 window.sopFilter=f=>{SOP_F=f;sopRender()};
 function sopRender(){const adm=isAdm(),inF=k=>SOP_F==='all'||k===SOP_F||k.indexOf(SOP_F+'_')===0;
  const chips=SOPF.map(([k,l])=>`<button onclick="sopFilter('${k}')" class="px-3 py-1 rounded-full font-bold border ${SOP_F===k?'bg-red-700 text-white border-red-700':'bg-white text-slate-600'}">${l}</button>`).join(' ');
@@ -3634,7 +3658,8 @@ window.sopRead=async id=>{try{toast('Membuka dokumen…');const r=await sopFetch
  pv.innerHTML=`<div class="flex flex-wrap justify-between items-center gap-2 mb-2"><b class="truncate">${E(r.nama)}</b><span class="shrink-0 flex gap-1"><a href="${SOP_PV}" target="_blank" class="px-2 py-1 bg-slate-200 rounded font-bold">↗ Tab baru</a><a href="${SOP_PV}" download="${E(r.nama)}" class="px-2 py-1 bg-emerald-600 text-white rounded font-bold">⬇ Unduh</a><button onclick="sopClosePv()" class="px-2 py-1 bg-slate-200 rounded font-bold">Tutup</button></span></div>`+(img?`<img src="${SOP_PV}" class="max-w-full mx-auto rounded">`:`<iframe src="${SOP_PV}" class="w-full border rounded bg-white" style="height:68vh"></iframe><p class="text-[10px] text-slate-500 mt-1">Bila dokumen tidak tampil di perangkat Anda, gunakan tombol Tab baru atau Unduh.</p>`);
  pv.scrollIntoView({behavior:'smooth',block:'start'})}catch(e){toast(e.message||'Gagal membuka dokumen',0)}};
 window.sopClosePv=()=>{const pv=$('sopPv');if(pv){pv.classList.add('hidden');pv.innerHTML=''}if(SOP_PV){URL.revokeObjectURL(SOP_PV);SOP_PV=''}};
-async function sopFetch(id){const r=await post({action:'wpSopGet',...auth(),id});if(!r.ok){expired(r.msg);throw new Error(r.msg||'Dokumen tidak ditemukan.')}return r}
+async function sopFetch(id){const d=SOP_L.find(x=>x.id===id),key=d?id+'|'+d.waktu+'|'+d.kb:'',hit=key?await sopCget(key):null;if(hit&&hit.data)return hit;   /* sudah pernah dibuka: langsung dari perangkat */
+ const r=await post({action:'wpSopGet',...auth(),id});if(!r.ok){expired(r.msg);throw new Error(r.msg||'Dokumen tidak ditemukan.')}if(key)sopCset(key,r);return r}
 window.sopDl=async id=>{try{toast('Menyiapkan unduhan…');const r=await sopFetch(id),u=URL.createObjectURL(sopBlob(r.data)),a=document.createElement('a');a.href=u;a.download=r.nama||'dokumen';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}catch(e){toast(e.message||'Gagal mengunduh',0)}};
 window.sopUp=async()=>{const f=$('sopFile').files[0],t=$('sopJudul').value.trim();
  if(t.length<3)return toast('Judul dokumen wajib diisi (min. 3 karakter).',0);if(!f)return toast('Pilih file terlebih dahulu.',0);
