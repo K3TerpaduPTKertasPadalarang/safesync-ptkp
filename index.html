@@ -47,6 +47,31 @@
 
         .pub-arrow{position:absolute;top:50%;transform:translateY(-50%);z-index:20;width:40px;height:40px;border-radius:9999px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;background:rgba(15,23,42,.18);opacity:.4;transition:all .2s;border:0;cursor:pointer}
         .pub-arrow:hover,.pub-arrow:focus-visible,.pub-arrow:active{opacity:1;background:#b91c1c;font-weight:900;box-shadow:0 4px 14px rgba(0,0,0,.35);transform:translateY(-50%) scale(1.12)}
+.nw-box{border:1px solid #e2e8f0;border-radius:16px;background:#fff;overflow:hidden;display:flex;flex-direction:column;min-width:0}
+.nw-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 14px;background:linear-gradient(90deg,#991b1b,#dc2626);color:#fff}
+.nw-head h3{font-size:13px;font-weight:800;margin:0}
+.nw-badge{font-size:10px;background:rgba(255,255,255,.22);border-radius:9999px;padding:2px 8px;font-weight:700}
+.nw-pinned{font-size:10px;font-weight:700;background:rgba(0,0,0,.28);border-radius:9999px;padding:2px 8px}
+.nw-auto{font-size:10px;font-weight:700;background:#fff;color:#b91c1c;border:0;border-radius:9999px;padding:3px 10px;cursor:pointer}
+.nw-ttl{padding:10px 14px 2px;display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.nw-ttl b{font-size:14px;color:#0f172a;line-height:1.3;display:block}.nw-ttl small{display:block;font-size:10px;color:#64748b;font-weight:600;margin-top:2px}
+.nw-src{flex-shrink:0;font-size:11px;font-weight:700;color:#b91c1c;border:1px solid #fecaca;background:#fef2f2;border-radius:9999px;padding:4px 10px;text-decoration:none;white-space:nowrap}
+.nw-view{position:relative;margin:8px 14px;height:clamp(300px,58vh,600px);border-radius:12px;background:#f1f5f9;overflow:hidden;touch-action:pan-y}
+.nw-view img{width:100%;height:100%;object-fit:contain;display:block}
+.nw-zoom{position:absolute;top:8px;right:8px;z-index:3;font-size:10px;font-weight:700;background:rgba(15,23,42,.72);color:#fff;border:0;border-radius:9999px;padding:4px 10px;cursor:pointer}
+.nw-pdf{height:100%;overflow-y:auto;overflow-x:hidden;padding:6px;-webkit-overflow-scrolling:touch}
+.nw-pdf canvas{display:block;width:100%;height:auto;background:#fff;margin:0 0 8px;box-shadow:0 1px 4px rgba(15,23,42,.18)}
+.nw-open{position:absolute;top:8px;right:20px;z-index:3;font-size:10px;font-weight:700;background:rgba(15,23,42,.72);color:#fff;border-radius:9999px;padding:4px 10px;text-decoration:none}
+.nw-more{font-size:11px;color:#64748b;text-align:center;padding:6px}
+.nw-txt{height:100%;overflow:auto;padding:18px;font-size:14px;line-height:1.65;color:#334155;white-space:pre-wrap}
+.nw-msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:#64748b;font-size:12px;text-align:center;padding:16px}
+.nw-spin{width:22px;height:22px;border:3px solid #e2e8f0;border-top-color:#b91c1c;border-radius:9999px;animation:nwsp .8s linear infinite}@keyframes nwsp{to{transform:rotate(360deg)}}
+.nw-desc{padding:0 14px 6px;font-size:12px;color:#475569;line-height:1.5}
+.nw-ctl{display:flex;align-items:center;gap:6px;padding:2px 10px 12px}
+.nw-nav{flex:0 0 auto;width:30px;height:30px;border-radius:9999px;border:1px solid #e2e8f0;background:#fff;color:#b91c1c;font-size:18px;font-weight:800;line-height:1;cursor:pointer}
+.nw-chips{display:flex;gap:6px;overflow-x:auto;flex:1;scrollbar-width:none;position:relative}.nw-chips::-webkit-scrollbar{display:none}
+.nw-chip{flex:0 0 auto;max-width:200px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:11px;font-weight:600;border:1px solid #e2e8f0;background:#f8fafc;color:#475569;border-radius:9999px;padding:5px 11px;cursor:pointer}
+.nw-chip.on{background:#b91c1c;border-color:#b91c1c;color:#fff}
         .pub-dot{width:8px;height:8px;border-radius:9999px;background:#cbd5e1;transition:all .3s;border:0;cursor:pointer}.pub-dot.on{width:22px;background:#b91c1c}
         .pj-flash{animation:pjf 3s ease-out}@keyframes pjf{0%{background:#bbf7d0}100%{background:transparent}}
     </style>
@@ -151,10 +176,13 @@
   </div>
  </div>
  </div>
+</div></div><div class="pub-slide w-full min-w-full shrink-0" id="nwSlide" data-dwell="5"><div class="bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-4">
+ <div class="border-b border-slate-100 pb-3"><h2 class="text-sm md:text-lg font-bold text-slate-900">📰 Berita &amp; Sosialisasi K3</h2><p class="text-[11px] text-slate-500">Informasi dan materi K3 terbaru. Geser atau klik untuk membaca; tampilan berpindah otomatis bila tidak ada aktivitas.</p></div>
+ <div class="grid lg:grid-cols-2 gap-4"><div id="nwP_berita"></div><div id="nwP_sosialisasi"></div></div>
 </div></div></div></div>
  <button class="pub-arrow left-2" aria-label="Sebelumnya" id="pubPrev">&#10094;</button>
  <button class="pub-arrow right-2" aria-label="Berikutnya" id="pubNext">&#10095;</button>
- <div class="flex justify-center gap-2 mt-3"><button class="pub-dot on" onclick="pubGo(0)" aria-label="Dashboard APAR"></button><button class="pub-dot" onclick="pubGo(1)" aria-label="Dashboard Peminjaman APD"></button><button class="pub-dot" onclick="pubGo(2)" aria-label="Dashboard Safety Induction"></button></div></div>
+ <div class="flex justify-center gap-2 mt-3"><button class="pub-dot on" onclick="pubGo(0)" aria-label="Dashboard APAR"></button><button class="pub-dot" onclick="pubGo(1)" aria-label="Dashboard Peminjaman APD"></button><button class="pub-dot" onclick="pubGo(2)" aria-label="Dashboard Safety Induction"></button><button class="pub-dot" onclick="pubGo(3)" aria-label="Berita dan Sosialisasi K3"></button></div></div>
 </main>
     </div>
 
@@ -3503,9 +3531,10 @@ const fit=()=>{$('pubViewport').style.height=slides[ci].offsetHeight+'px'};
 window.pubGo=i=>{ci=(i+slides.length)%slides.length;$('pubTrack').style.transform=`translateX(-${ci*100}%)`;document.querySelectorAll('.pub-dot').forEach((d,k)=>d.classList.toggle('on',k===ci));document.querySelectorAll('.siv video').forEach(v=>{if(!slides[ci].contains(v))v.pause()});fit()};
 slides.forEach(s=>new ResizeObserver(fit).observe(s));addEventListener('resize',fit);
 ['mousemove','mousedown','touchstart','keydown','wheel','scroll'].forEach(ev=>addEventListener(ev,()=>idle=0,{passive:true}));
+document.addEventListener('scroll',()=>idle=0,{capture:true,passive:true});window.pubIdx=()=>ci;
 setInterval(()=>{if($('loginPage').classList.contains('hidden')||document.hidden)return;
  const busy=document.querySelector('.fixed.inset-0:not(.hidden)')||[...document.querySelectorAll('.siv video')].some(v=>!v.paused&&!v.ended)||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
- if(busy){idle=0;return}if(++idle>=5){idle=0;pubGo(ci+1)}},1000);
+ if(busy){idle=0;return}if(++idle>=(Number(slides[ci].dataset.dwell)||5)){idle=0;pubGo(ci+1)}},1000);
 
 setInterval(()=>{if(document.hidden)return;const pub=!$('loginPage').classList.contains('hidden'),mod=currentUser&&!$('modulApd').classList.contains('hidden');if(pub||mod)apdLoad()},5000);
 $('pubPrev').onclick=()=>pubGo(ci-1);$('pubNext').onclick=()=>pubGo(ci+1);pubGo(0);apdLoad();
@@ -4433,7 +4462,7 @@ html:not(.mob) #navButtonsContainer>button[data-g=u]{order:2}
 html:not(.mob) #navButtonsContainer>button[data-g=m]{order:4;flex:1 1 120px;max-width:215px;justify-content:center}
 }`;
 document.head.appendChild(st);
-const MOD=/switchModule\('(apar|temuan|apd|wp|veh|lap|si)'\)|sopOpen\(/;
+const MOD=/switchModule\('(apar|temuan|apd|wp|veh|lap|si)'\)|sopOpen\(|nwAdminOpen\(/;
 const tag=()=>{const c=document.getElementById('navButtonsContainer');if(!c)return;[...c.children].forEach(b=>{if(b.tagName==='BUTTON')b.dataset.g=MOD.test(b.getAttribute('onclick')||'')?'m':'u'})};
 const c=document.getElementById('navButtonsContainer');if(c){new MutationObserver(tag).observe(c,{childList:true});tag()}
 })();
@@ -5096,5 +5125,191 @@ refreshUi();sync();
 })();
 </script>
 
+<script>
+/* ===== Berita K3 & Sosialisasi K3 (dashboard awal) ===== */
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const KAT={berita:{t:'📰 Berita K3',kosong:'Belum ada berita K3 saat ini.'},sosialisasi:{t:'📢 Sosialisasi K3',kosong:'Belum ada materi sosialisasi K3 saat ini.'}};
+const KS=['berita','sosialisasi'];
+const S={berita:{items:[],i:0,pin:false,idle:0,tok:0,blob:''},sosialisasi:{items:[],i:0,pin:false,idle:0,tok:0,blob:''}};
+let sig=null;
+const pub=async o=>(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(o)})).json();
+/* cache berkas di perangkat: materi yang sudah pernah dibuka langsung tampil */
+const idb=()=>new Promise(res=>{try{const q=indexedDB.open('k3news',1);q.onupgradeneeded=()=>q.result.createObjectStore('d');q.onsuccess=()=>res(q.result);q.onerror=()=>res(null)}catch(e){res(null)}});
+const cGet=async k=>{const db=await idb();if(!db)return null;return new Promise(r=>{try{const g=db.transaction('d').objectStore('d').get(k);g.onsuccess=()=>r(g.result||null);g.onerror=()=>r(null)}catch(e){r(null)}})};
+const cSet=async(k,v)=>{const db=await idb();if(!db)return;try{const st=db.transaction('d','readwrite').objectStore('d'),c=st.count();c.onsuccess=()=>{if(c.result>14)st.clear();st.put(v,k)}}catch(e){}};
+const MEM={};
+async function getFile(it){const k=it.id+'|'+it.ver;if(MEM[k])return MEM[k];const h=await cGet(k);if(h&&h.data)return MEM[k]=h;
+ const r=await pub({action:'wpNewsFile',id:it.id});if(!r.ok)throw new Error(r.msg||'Gagal memuat materi.');MEM[k]=r;cSet(k,r);return r}
+const toBytes=u=>{const b=atob(u.slice(u.indexOf(',')+1)),a=new Uint8Array(b.length);for(let i=0;i<b.length;i++)a[i]=b.charCodeAt(i);return a};
+const tgl=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})/.exec(s||'');return m?new Date(+m[1],+m[2]-1,+m[3]).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'}):''};
+const okUrl=u=>/^https?:\/\/[^\s"'<>]+$/i.test(u||'');
+let pj=null;
+const loadPdfJs=()=>window.pdfjsLib?Promise.resolve():(pj=pj||new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js';
+ s.onload=()=>{try{pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';res()}catch(e){rej(e)}};s.onerror=()=>{pj=null;rej(new Error('pdf.js'))};document.head.appendChild(s)}));
+function lightbox(src){const o=document.createElement('div');o.className='fixed inset-0 z-[300] bg-black/90 flex items-center justify-center p-3';o.style.cursor='zoom-out';
+ o.innerHTML='<img alt="" style="max-width:100%;max-height:100%;object-fit:contain"><button type="button" style="position:absolute;top:12px;right:14px;color:#fff;font-size:26px;background:none;border:0;cursor:pointer" aria-label="Tutup">✕</button>';
+ o.querySelector('img').src=src;let tm;const x=()=>{clearTimeout(tm);o.remove();document.removeEventListener('keydown',kd)},kd=e=>{if(e.key==='Escape')x()},arm=()=>{clearTimeout(tm);tm=setTimeout(x,20000)};   /* menutup sendiri bila 20 detik tanpa gerakan, agar dashboard tidak tertahan */
+ ['mousemove','touchstart','wheel','pointerdown'].forEach(ev=>o.addEventListener(ev,arm,{passive:true}));arm();o.onclick=x;document.addEventListener('keydown',kd);document.body.appendChild(o)}
+async function renderPdf(view,f,st,my){
+ const wrap=document.createElement('div');wrap.className='nw-pdf';view.innerHTML='';view.appendChild(wrap);
+ const bytes=toBytes(f.data);
+ try{const bl=new Blob([bytes],{type:'application/pdf'});if(st.blob)URL.revokeObjectURL(st.blob);st.blob=URL.createObjectURL(bl);
+  const a=document.createElement('a');a.href=st.blob;a.target='_blank';a.rel='noopener';a.className='nw-open';a.textContent='↗ Buka PDF penuh';view.appendChild(a)}catch(e){}
+ try{await loadPdfJs();
+  const pdf=await pdfjsLib.getDocument({data:bytes.slice()}).promise,max=Math.min(pdf.numPages,25),w=(wrap.clientWidth||view.clientWidth||700)-12,dpr=Math.min(2,window.devicePixelRatio||1);
+  for(let p=1;p<=max;p++){if(my!==st.tok||!wrap.isConnected)return;
+   const pg=await pdf.getPage(p),v0=pg.getViewport({scale:1}),vp=pg.getViewport({scale:(w/v0.width)*dpr}),cv=document.createElement('canvas');
+   cv.width=Math.floor(vp.width);cv.height=Math.floor(vp.height);wrap.appendChild(cv);await pg.render({canvasContext:cv.getContext('2d'),viewport:vp}).promise}
+  if(pdf.numPages>max){const m=document.createElement('p');m.className='nw-more';m.textContent='… dan '+(pdf.numPages-max)+' halaman lainnya. Gunakan "Buka PDF penuh".';wrap.appendChild(m)}
+ }catch(e){if(my===st.tok&&wrap.isConnected)wrap.innerHTML='<div class="nw-msg" style="position:static;height:100%">Pratinjau PDF tidak dapat ditampilkan di perangkat ini.<br>Gunakan tombol "Buka PDF penuh".</div>'}
+}
+function pinSet(kat,v){const st=S[kat],box=$('nwP_'+kat);st.pin=v;if(!box)return;const a=box.querySelector('.nw-pinned'),b=box.querySelector('.nw-auto');if(a)a.hidden=!v;if(b)b.hidden=!v}
+function go(kat,idx){const st=S[kat],n=st.items.length;if(!n)return;st.i=((idx%n)+n)%n;st.idle=0;show(kat)}
+function show(kat){
+ const st=S[kat],box=$('nwP_'+kat);if(!box||!st.items.length)return;const it=st.items[st.i],n=st.items.length,my=++st.tok;
+ box.querySelector('.nw-badge').textContent=(st.i+1)+' / '+n;
+ box.querySelector('.nw-ttl b').textContent=it.judul;box.querySelector('.nw-ttl small').textContent=tgl(it.tgl);
+ const src=box.querySelector('.nw-src');if(okUrl(it.link)){src.href=it.link;src.hidden=false}else{src.hidden=true;src.removeAttribute('href')}
+ const d=box.querySelector('.nw-desc');d.textContent=it.mime?it.desk:'';d.hidden=!(it.mime&&it.desk);
+ const ch=box.querySelector('.nw-chips');ch.innerHTML=st.items.map((x,k)=>'<button type="button" class="nw-chip'+(k===st.i?' on':'')+'" data-k="'+k+'" title="'+esc(x.judul)+'">'+esc(x.judul)+'</button>').join('');
+ const on=ch.querySelector('.on');if(on){const l=on.offsetLeft-ch.clientWidth/2+on.clientWidth/2;ch.scrollLeft=Math.max(0,l)}
+ const view=box.querySelector('.nw-view');
+ if(!it.mime){view.innerHTML='<div class="nw-txt">'+esc(it.desk)+'</div>';return}
+ view.innerHTML='<div class="nw-msg"><div class="nw-spin"></div>Memuat…</div>';
+ getFile(it).then(f=>{if(my!==st.tok)return;
+  if(/^image\//.test(f.mime)){view.innerHTML='';const im=document.createElement('img');im.alt=it.judul;im.src=f.data;view.appendChild(im);const z=document.createElement('button');z.type='button';z.className='nw-zoom';z.textContent='⤢ Perbesar';z.onclick=()=>lightbox(f.data);view.appendChild(z)}
+  else renderPdf(view,f,st,my);
+  const nx=st.items[(st.i+1)%n];if(nx&&nx.mime&&nx.id!==it.id)setTimeout(()=>getFile(nx).catch(()=>{}),1500)
+ }).catch(e=>{if(my===st.tok)view.innerHTML='<div class="nw-msg">'+esc(e.message||'Materi tidak dapat dimuat.')+'<br><button type="button" class="nw-retry" style="margin-top:6px;color:#b91c1c;font-weight:700;background:none;border:0;cursor:pointer">Coba lagi</button></div>'})
+}
+function draw(kat){
+ const st=S[kat],root=$('nwP_'+kat);if(!root)return;
+ if(!st.items.length){root.innerHTML='<div class="nw-box"><div class="nw-head"><h3>'+KAT[kat].t+'</h3></div><div class="nw-view" style="height:160px"><div class="nw-msg">'+KAT[kat].kosong+'</div></div></div>';return}
+ root.innerHTML='<div class="nw-box"><div class="nw-head"><h3>'+KAT[kat].t+'</h3><span style="display:flex;align-items:center;gap:6px"><span class="nw-pinned" hidden>📌 Dikunci</span><button type="button" class="nw-auto" hidden>▶ Putar otomatis</button><span class="nw-badge"></span></span></div>'
+  +'<div class="nw-ttl"><div><b></b><small></small></div><a class="nw-src" target="_blank" rel="noopener noreferrer" hidden>🔗 Baca sumber ↗</a></div><div class="nw-view"></div><p class="nw-desc" hidden></p>'
+  +'<div class="nw-ctl"><button type="button" class="nw-nav" data-d="-1" aria-label="Sebelumnya">‹</button><div class="nw-chips"></div><button type="button" class="nw-nav" data-d="1" aria-label="Berikutnya">›</button></div></div>';
+ const box=root.firstElementChild,act=()=>{st.idle=0};
+ ['mousemove','touchstart','touchmove','wheel','keydown'].forEach(e=>box.addEventListener(e,act,{passive:true}));
+ box.addEventListener('scroll',act,true);
+ box.addEventListener('pointerdown',e=>{if(e.target.closest('.nw-auto'))return;st.idle=0;pinSet(kat,true)},true);
+ box.addEventListener('click',e=>{
+  if(e.target.closest('.nw-auto')){pinSet(kat,false);st.idle=0;return}
+  const nv=e.target.closest('.nw-nav');if(nv){go(kat,st.i+Number(nv.dataset.d));return}
+  const cp=e.target.closest('.nw-chip');if(cp){go(kat,Number(cp.dataset.k));return}
+  if(e.target.closest('.nw-retry'))show(kat)});
+ let x0=0,y0=0;const vw=box.querySelector('.nw-view');
+ vw.addEventListener('touchstart',e=>{x0=e.touches[0].clientX;y0=e.touches[0].clientY},{passive:true});
+ vw.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-x0,dy=t.clientY-y0;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.5)go(kat,st.i+(dx<0?1:-1))},{passive:true});
+ pinSet(kat,st.pin);show(kat)
+}
+async function load(first){
+ try{const r=await pub({action:'wpNewsPub'});if(!r||!r.ok)throw new Error();
+  const ns=JSON.stringify(r.list.map(x=>[x.id,x.ver,x.kat,x.judul,x.link,x.desk]));if(ns===sig)return;sig=ns;
+  KS.forEach(k=>{const st=S[k],cur=st.items[st.i]&&st.items[st.i].id;st.items=r.list.filter(x=>x.kat===k);
+   const ix=st.items.findIndex(x=>x.id===cur);if(ix>=0)st.i=ix;else{st.i=0;st.pin=false}draw(k)});
+  const sl=$('nwSlide');if(sl)sl.dataset.dwell=r.list.length?'20':'5';
+ }catch(e){if(first)KS.forEach(k=>{const root=$('nwP_'+k);if(root)root.innerHTML='<div class="nw-box"><div class="nw-head"><h3>'+KAT[k].t+'</h3></div><div class="nw-view" style="height:160px"><div class="nw-msg">Tidak dapat memuat saat ini.</div></div></div>'})}
+}
+KS.forEach(k=>{const root=$('nwP_'+k);if(root)root.innerHTML='<div class="nw-box"><div class="nw-head"><h3>'+KAT[k].t+'</h3></div><div class="nw-view" style="height:160px"><div class="nw-msg"><div class="nw-spin"></div>Memuat…</div></div></div>'});
+load(true);setInterval(()=>{if(!document.hidden&&!$('loginPage').classList.contains('hidden'))load(false)},180000);
+/* Geser otomatis antar berita/materi: hanya saat slide ini tampil, tidak ada gerakan, dan belum diklik */
+let was=false;
+setInterval(()=>{
+ if(document.hidden||$('loginPage').classList.contains('hidden')||!window.pubIdx){was=false;return}
+ const sl=$('nwSlide'),idx=[...document.querySelectorAll('.pub-slide')].indexOf(sl);
+ if(!sl||window.pubIdx()!==idx){was=false;return}
+ if(!was){was=true;KS.forEach(k=>S[k].idle=0);return}
+ if(document.querySelector('.fixed.inset-0:not(.hidden)')){KS.forEach(k=>S[k].idle=0);return}
+ KS.forEach(k=>{const st=S[k];if(st.items.length<2||st.pin)return;if(++st.idle>=5){st.idle=0;go(k,st.i+1)}})
+},1000);
+window.__nw=S;
+})();
+
+/* ===== Kelola Berita K3 & Sosialisasi K3 (khusus admin) ===== */
+(function(){
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const api=async o=>(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...o,token:localStorage.getItem('wpTok')||''})})).json();
+const isAdmin=()=>{try{return typeof currentUser!=='undefined'&&currentUser&&currentUser.role==='admin'}catch(e){return false}};
+function toast(m,bad){const t=document.createElement('div');t.textContent=m;t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:400;padding:10px 16px;border-radius:12px;color:#fff;font-size:13px;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.3);background:'+(bad?'#b91c1c':'#15803d');document.body.appendChild(t);setTimeout(()=>t.remove(),3200)}
+function comp(file){return new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>{const raw=fr.result,im=new Image();im.onerror=()=>res(raw);
+ im.onload=()=>{try{const k=Math.min(1,1600/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,c.width,c.height);x.drawImage(im,0,0,c.width,c.height);const o=c.toDataURL('image/jpeg',0.82);res(o.length<raw.length?o:raw)}catch(e){res(raw)}};im.src=raw};fr.readAsDataURL(file)})}
+const raw64=f=>new Promise((res,rej)=>{const fr=new FileReader();fr.onerror=rej;fr.onload=()=>res(fr.result);fr.readAsDataURL(f)});
+let L=[],FL='all',EDIT='';
+const KN={berita:'Berita K3',sosialisasi:'Sosialisasi K3'};
+const sz=kb=>kb>=1024?(kb/1024).toFixed(1)+' MB':kb+' KB';
+const ic=m=>/pdf/.test(m)?'📕 PDF':/^image/.test(m)?'🖼️ Foto':'📝 Teks';
+function rows(){
+ const l=L.filter(x=>FL==='all'||x.kat===FL);
+ if(!l.length)return '<p class="text-xs text-slate-400 text-center py-6">Belum ada data.</p>';
+ return l.map(x=>{const per=(x.mulai||x.sampai)?(x.mulai||'…')+' s.d. '+(x.sampai||'…'):'Tanpa batas waktu';
+  const st=x.status==='DRAF'?'<span class="px-2 py-0.5 rounded-full bg-slate-200 text-slate-600 text-[10px] font-bold">DRAF</span>':(x.live?'<span class="px-2 py-0.5 rounded-full bg-green-100 text-green-700 text-[10px] font-bold">TAYANG</span>':'<span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">DI LUAR MASA TAYANG</span>');
+  return '<div class="flex flex-wrap items-center justify-between gap-2 border border-slate-200 rounded-xl px-3 py-2.5 bg-white"><div class="min-w-0 flex-1"><p class="text-sm font-bold text-slate-800 truncate">'+(x.pin?'📌 ':'')+esc(x.judul)+'</p>'
+   +'<p class="text-[11px] text-slate-500 mt-0.5">'+KN[x.kat]+' · '+ic(x.mime)+(x.kb?' ('+sz(x.kb)+')':'')+' · '+esc(per)+(x.link?' · 🔗 ada link':'')+'</p></div>'
+   +'<div class="flex items-center gap-1.5 shrink-0">'+st+'<button type="button" data-e="'+esc(x.id)+'" class="px-2.5 py-1 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold">Ubah</button><button type="button" data-d="'+esc(x.id)+'" class="px-2.5 py-1 rounded-lg bg-red-50 text-red-700 text-xs font-semibold">Hapus</button></div></div>'}).join('')
+}
+function paintList(){const b=$('nwaL');if(b)b.innerHTML=rows();document.querySelectorAll('#nwAdm [data-f]').forEach(t=>{const on=t.dataset.f===FL;t.className='px-3 py-1 rounded-full text-xs font-semibold '+(on?'bg-red-700 text-white':'bg-slate-100 text-slate-600')})}
+async function reload(){const b=$('nwaL');if(b&&!L.length)b.innerHTML='<p class="text-xs text-slate-400 text-center py-6">Memuat…</p>';
+ try{const r=await api({action:'wpNewsList'});if(!r.ok){toast(r.msg||'Gagal memuat.',1);return}L=r.list||[];paintList()}catch(e){toast('Tidak dapat terhubung ke server.',1)}}
+function resetForm(){EDIT='';const f=$('nwaF');if(!f)return;f.reset();$('nwaT').textContent='➕ Tambah baru';$('nwaCur').textContent='';$('nwaCancel').hidden=true}
+function fillForm(x){EDIT=x.id;const f=$('nwaF');f.kat.value=x.kat;f.judul.value=x.judul;f.desk.value=x.desk||'';f.link.value=x.link||'';f.mulai.value=x.mulai||'';f.sampai.value=x.sampai||'';f.status.value=x.status;f.pin.checked=!!x.pin;f.file.value='';
+ $('nwaT').textContent='✏️ Ubah: '+x.judul;$('nwaCur').textContent=x.mime?'File saat ini: '+ic(x.mime)+' ('+sz(x.kb)+'). Pilih file baru hanya bila ingin menggantinya.':'';$('nwaCancel').hidden=false;$('nwAdm').scrollTo({top:0,behavior:'smooth'})}
+async function submit(e){e.preventDefault();const f=e.target,btn=$('nwaSave');
+ const item={id:EDIT,kat:f.kat.value,judul:f.judul.value.trim(),desk:f.desk.value.trim(),link:f.link.value.trim(),mulai:f.mulai.value,sampai:f.sampai.value,status:f.status.value,pin:f.pin.checked};
+ if(item.judul.length<3){toast('Judul minimal 3 karakter.',1);return}
+ if(item.link&&!/^https?:\/\/\S+$/i.test(item.link)){toast('Link harus diawali http:// atau https://',1);return}
+ const file=f.file.files[0];btn.disabled=true;const t0=btn.textContent;btn.textContent='Memproses…';
+ try{
+  if(file){
+   if(file.type==='application/pdf'){if(file.size>6*1024*1024){toast('Ukuran PDF maksimal 6 MB.',1);return}item.data=await raw64(file)}
+   else if(/^image\//.test(file.type)){item.data=await comp(file)}
+   else{toast('File harus foto (JPG/PNG) atau PDF.',1);return}
+   item.nama=file.name}
+  btn.textContent='Menyimpan…';
+  const r=await api({action:'wpNewsSave',item});
+  if(!r.ok){toast(r.msg||'Gagal menyimpan.',1);return}
+  toast(EDIT?'Perubahan disimpan.':'Berhasil ditambahkan.');resetForm();await reload()
+ }catch(err){toast('Gagal menyimpan. Periksa koneksi lalu coba lagi.',1)}
+ finally{btn.disabled=false;btn.textContent=t0}
+}
+function open(){
+ if($('nwAdm')){$('nwAdm').hidden=false;reload();return}
+ const o=document.createElement('div');o.id='nwAdm';o.className='fixed inset-0 z-[250] bg-slate-900/60 overflow-y-auto p-2 md:p-6';
+ const inp='w-full border border-slate-300 rounded-lg px-3 py-2 text-sm bg-white';
+ o.innerHTML='<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-2xl overflow-hidden"><div class="flex items-center justify-between px-5 py-3 bg-gradient-to-r from-red-800 to-red-600 text-white"><b class="text-sm md:text-base">📰 Kelola Berita &amp; Sosialisasi K3</b><button type="button" id="nwaX" class="text-2xl leading-none" aria-label="Tutup">✕</button></div>'
+ +'<div class="p-4 md:p-5 space-y-5"><p class="text-[11px] text-slate-500">Tampil di slide dashboard awal. Foto dan PDF langsung terbuka di dashboard tanpa perlu diklik. PPT: ubah dulu menjadi PDF sebelum diunggah.</p>'
+ +'<form id="nwaF" class="space-y-3 border border-slate-200 rounded-xl p-4 bg-slate-50"><h3 id="nwaT" class="text-sm font-bold text-slate-800">➕ Tambah baru</h3>'
+ +'<div class="grid sm:grid-cols-2 gap-3"><label class="text-xs font-semibold text-slate-600">Jenis<select name="kat" class="'+inp+'"><option value="berita">Berita K3</option><option value="sosialisasi">Sosialisasi K3</option></select></label>'
+ +'<label class="text-xs font-semibold text-slate-600">Status<select name="status" class="'+inp+'"><option value="TERBIT">Terbit (tampil di dashboard)</option><option value="DRAF">Draf (belum tampil)</option></select></label></div>'
+ +'<label class="block text-xs font-semibold text-slate-600">Judul<input name="judul" maxlength="120" required class="'+inp+'" placeholder="Judul berita / materi"></label>'
+ +'<label class="block text-xs font-semibold text-slate-600">Deskripsi singkat (opsional bila ada file)<textarea name="desk" maxlength="600" rows="2" class="'+inp+'"></textarea></label>'
+ +'<label class="block text-xs font-semibold text-slate-600">Link sumber berita (opsional)<input name="link" type="url" class="'+inp+'" placeholder="https://..."></label>'
+ +'<label class="block text-xs font-semibold text-slate-600">File foto atau PDF<input name="file" type="file" accept="image/*,application/pdf" class="'+inp+'"><span id="nwaCur" class="block text-[11px] text-slate-500 mt-1"></span></label>'
+ +'<div class="grid sm:grid-cols-2 gap-3"><label class="text-xs font-semibold text-slate-600">Tayang mulai (opsional)<input name="mulai" type="date" class="'+inp+'"></label><label class="text-xs font-semibold text-slate-600">Tayang sampai (opsional)<input name="sampai" type="date" class="'+inp+'"></label></div>'
+ +'<label class="flex items-center gap-2 text-xs font-semibold text-slate-700"><input name="pin" type="checkbox"> 📌 Sematkan (tampil paling awal)</label>'
+ +'<div class="flex gap-2"><button id="nwaSave" type="submit" class="bg-red-700 hover:bg-red-800 text-white px-4 py-2 rounded-lg text-sm font-bold">Simpan</button><button id="nwaCancel" type="button" hidden class="bg-slate-200 text-slate-700 px-4 py-2 rounded-lg text-sm font-semibold">Batal ubah</button></div></form>'
+ +'<div><div class="flex gap-1.5 mb-3"><button type="button" data-f="all">Semua</button><button type="button" data-f="berita">Berita K3</button><button type="button" data-f="sosialisasi">Sosialisasi K3</button></div><div id="nwaL" class="space-y-2"></div></div></div></div>';
+ document.body.appendChild(o);
+ $('nwaX').onclick=()=>{o.hidden=true};
+ $('nwaF').onsubmit=submit;$('nwaCancel').onclick=resetForm;
+ o.addEventListener('click',e=>{
+  const fb=e.target.closest('[data-f]');if(fb){FL=fb.dataset.f;paintList();return}
+  const eb=e.target.closest('[data-e]');if(eb){const x=L.find(v=>v.id===eb.dataset.e);if(x)fillForm(x);return}
+  const db=e.target.closest('[data-d]');if(db){const x=L.find(v=>v.id===db.dataset.d);if(!x||!confirm('Hapus "'+x.judul+'"? File juga akan dihapus.'))return;
+   db.disabled=true;api({action:'wpNewsDel',id:x.id}).then(r=>{if(!r.ok)toast(r.msg||'Gagal menghapus.',1);else{toast('Dihapus.');if(EDIT===x.id)resetForm()}return reload()}).catch(()=>toast('Tidak dapat terhubung ke server.',1))}});
+ paintList();reload()
+}
+window.nwAdminOpen=open;
+/* tombol menu untuk admin */
+const BTN='<button id="navNews" type="button" onclick="nwAdminOpen()" class="bg-red-800/80 hover:bg-red-700 text-white px-3 py-1.5 rounded-xl text-xs font-semibold shadow transition-all duration-200 whitespace-nowrap flex items-center gap-1">📰 Berita &amp; Sosialisasi K3</button>';
+function inject(){const c=$('navButtonsContainer');if(!c)return;const ex=$('navNews');
+ if(!isAdmin()){if(ex)ex.remove();return}
+ if(ex)return;c.insertAdjacentHTML('beforeend',BTN)}
+const c0=$('navButtonsContainer');
+if(c0){new MutationObserver(()=>{setTimeout(inject,60);setTimeout(inject,500)}).observe(c0,{childList:true});inject()}
+})();
+</script>
 </body>
 </html>
