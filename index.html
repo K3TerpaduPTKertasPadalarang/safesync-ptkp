@@ -321,6 +321,8 @@
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Kondisi Tabung</label><select id="body" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Bagus / Bersih">Bagus / Bersih</option><option value="Penyok / Berkarat">Penyok / Berkarat</option></select></div>
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Hanger / Bracket</label><select id="hanger" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Kuat / Terpasang Baik">Kuat</option><option value="Longgar / Rusak">Longgar / Rusak</option></select></div>
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Stiker Kartu Kendali</label><select id="tag" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Hilang">Hilang</option></select></div>
+                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Segitiga APAR</label><select id="triangle" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option></select></div>
+                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Cara Penggunaan APAR</label><select id="howto" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option></select></div>
                                 <div class="md:col-span-2"><label class="block font-[11px] font-semibold text-slate-600 mb-1">Aksesibilitas APAR</label><select id="access" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Bebas / Tidak Terhalang">Bebas / Tidak Terhalang</option><option value="Terhalang Barang / Material">Terhalang Barang</option></select></div>
                             </div>
                         </div>
@@ -1358,6 +1360,8 @@
                                     notes: lastDeleted[15] || '',
                                     inspector: lastDeleted[16] || 'Admin',
                                     paraf: lastDeleted[18] || '',
+                                    segitiga: lastDeleted[19] || '',
+                                    caraPakai: lastDeleted[20] || '',
                                     photoBase64: lastDeleted[17] || ''
                                 };
                                 fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", headers: { "Content-Type": "text/plain;charset=utf-8" }, body: JSON.stringify(payload) });
@@ -2854,7 +2858,9 @@
             [10, 'body',     'Kondisi Tabung',      ['Penyok / Berkarat']],
             [11, 'hanger',   'Hanger / Bracket',    ['Longgar / Rusak']],
             [12, 'tag',      'Stiker Kartu Kendali',['Hilang', 'Tidak Ada / Kosong']],   // 'Tidak Ada / Kosong' = nilai lama
-            [13, 'access',   'Aksesibilitas APAR',  ['Terhalang Barang / Material']]
+            [13, 'access',   'Aksesibilitas APAR',  ['Terhalang Barang / Material']],
+            [19, 'triangle', 'Tanda Segitiga APAR', ['Tidak Ada']],
+            [20, 'howto',    'Tanda Cara Penggunaan APAR', ['Tidak Ada']]
         ];
         function aparMismatches(rec) {
             if (!rec) return [];
@@ -3068,6 +3074,8 @@
                     hanger: document.getElementById('hanger').value,
                     tag: document.getElementById('tag').value,
                     access: document.getElementById('access').value,
+                    segitiga: document.getElementById('triangle').value,
+                    caraPakai: document.getElementById('howto').value,
                     status: document.getElementById('status').value,
                     notes: document.getElementById('notes').value,
                     inspector: document.getElementById('inspector').value,
@@ -3299,6 +3307,8 @@
                 if (r[10] && !r[10].toLowerCase().includes('bagus')) conditions.push(`Tabung: <b>${r[10]}</b>`);
                 if (r[11] && !r[11].toLowerCase().includes('kuat')) conditions.push(`Bracket: <b>${r[11]}</b>`);
                 if (r[12] && /hilang|kosong/i.test(r[12])) conditions.push(`Kartu: <b>${r[12]}</b>`);
+                if (r[19] && /tidak/i.test(r[19])) conditions.push(`Segitiga APAR: <b>${r[19]}</b>`);
+                if (r[20] && /tidak/i.test(r[20])) conditions.push(`Cara Penggunaan: <b>${r[20]}</b>`);
 
                 let kondisiFisikStr = conditions.length > 0 ? conditions.join(' | ') : '<span class="text-emerald-600 font-semibold">Normal / Layak</span>';
 
@@ -3368,6 +3378,8 @@
                     body: "Bagus / Bersih",
                     hanger: "Kuat / Terpasang Baik",
                     tag: "Ada",
+                    segitiga: "Ada",
+                    caraPakai: "Ada",
                     access: document.getElementById('manualAccess').value,
                     status: document.getElementById('manualStatus').value,
                     notes: document.getElementById('manualNotes').value,
@@ -3544,6 +3556,8 @@
                         notes: finalNotes,
                         inspector: data[16] || "Admin",
                         paraf: data[18] || "",
+                        segitiga: data[19] || "",
+                        caraPakai: data[20] || "",
                         photoBase64: photoBase64
                     };
 
@@ -4231,14 +4245,17 @@ html.mob input,html.mob select,html.mob textarea{font-size:16px!important}
  const isMob=()=>Math.min(innerWidth,screen.width)<=768;
  function mnClose(){$('mnDrawer').classList.remove('on');$('mnBack').classList.remove('on')}
  window.mnOpen=()=>{$('mnDrawer').classList.add('on');$('mnBack').classList.add('on')};
- function ensure(){if($('mnDrawer'))return;const d=document.createElement('div');d.id='mnDrawer';d.className='mn-drawer';d.onclick=e=>{const bt=e.target.closest('button');if(bt){d.querySelectorAll('button').forEach(x=>x.dataset.on=x===bt?'1':'');mnClose()}};document.body.appendChild(d);
+ function ensure(){if($('mnDrawer'))return;const d=document.createElement('div');d.id='mnDrawer';d.className='mn-drawer';d.onclick=e=>{const bt=e.target.closest('button');if(bt){if(bt.id!=='navNews')d.querySelectorAll('button').forEach(x=>x.dataset.on=x===bt?'1':'');mnClose()}};document.body.appendChild(d);
   const b=document.createElement('div');b.id='mnBack';b.className='mn-back';b.onclick=mnClose;document.body.appendChild(b);
   const c=$('navButtonsContainer'),btn=document.createElement('button');btn.id='mnBtn';btn.innerHTML='<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';btn.onclick=mnOpen;btn.setAttribute('aria-label','Menu');c.parentElement.insertBefore(btn,c.parentElement.firstChild)}
  let busy=false;
  function layout(){const c=$('navButtonsContainer');if(!c||busy)return;ensure();busy=true;const d=$('mnDrawer'),mob=isMob();document.documentElement.classList.toggle('mob',mob);
-  const mods=[...c.querySelectorAll('button')].filter(b=>MOD.test(b.getAttribute('onclick')||''));
-  if(mob&&mods.length){d.innerHTML='<div class="mn-h">☰ Menu — Portal K3 Terpadu</div>';mods.forEach(b=>{b.classList.add('mn-i');d.appendChild(b)})}
-  else if(!mob){[...d.querySelectorAll('button')].forEach(b=>{b.classList.remove('mn-i');delete b.dataset.on;c.insertBefore(b,c.firstChild)});d.innerHTML=''}
+  const mods=[...c.querySelectorAll('button')].filter(b=>MOD.test(b.getAttribute('onclick')||'')||b.id==='navNews');
+  if(mob&&mods.length){const keepNews=d.querySelector('#navNews');
+   if(mods.some(b=>b.id!=='navNews')||!d.querySelector('.mn-h'))d.innerHTML='<div class="mn-h">☰ Menu — Portal K3 Terpadu</div>';
+   mods.forEach(b=>{b.classList.add('mn-i');d.appendChild(b)});
+   if(keepNews&&!d.contains(keepNews))d.appendChild(keepNews)}
+  else if(!mob){[...d.querySelectorAll('button')].forEach(b=>{b.classList.remove('mn-i');delete b.dataset.on;if(b.id==='navNews')c.appendChild(b);else c.insertBefore(b,c.firstChild)});d.innerHTML=''}
   busy=false}
  document.documentElement.classList.toggle('mob',isMob());
  const c=$('navButtonsContainer');if(c){new MutationObserver(()=>setTimeout(layout,0)).observe(c,{childList:true});layout()}
