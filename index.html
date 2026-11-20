@@ -3411,11 +3411,22 @@
 
                     alert(`Perintah hapus untuk APAR ${aparCode} dikirim ke server...`);
                     
-                    setTimeout(async () => {
+                    // Server tidak bisa dibaca langsung (no-cors), jadi pastikan lewat data terbaru: baris harus benar-benar hilang
+                    const stillThere = () => (globalAparList || []).some(r => String(r[1]) === String(aparCode) && String(r[0]) === String(waktuInput));
+                    let terhapus = false;
+                    for (let attempt = 0; attempt < 4 && !terhapus; attempt++) {
+                        await new Promise(res => setTimeout(res, attempt === 0 ? 1500 : 2000));
                         await loadReportData(true);
-                        await fetchAparDataAndRenderMaps();
+                        terhapus = !stillThere();
+                    }
+                    await fetchAparDataAndRenderMaps();
+                    if (terhapus) {
                         alert(`Data pengecekan ${aparCode} berhasil dihapus dari Spreadsheet & Webapps! (Tekan Ctrl+Z jika ingin membatalkan/Undo)`);
-                    }, 1500);
+                    } else {
+                        deletedAparHistoryStack = deletedAparHistoryStack.filter(x => x !== data);
+                        localStorage.setItem('k3_deleted_apar_stack', JSON.stringify(deletedAparHistoryStack));
+                        alert(`Data pengecekan ${aparCode} BELUM terhapus di server. Pastikan Anda login sebagai admin dan Code.gs terbaru sudah di-deploy (New version), lalu coba lagi.`);
+                    }
 
                 } catch(e) {
                     alert("Gagal menghapus data dari server.");
