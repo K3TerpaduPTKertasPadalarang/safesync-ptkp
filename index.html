@@ -321,8 +321,8 @@
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Kondisi Tabung</label><select id="body" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Bagus / Bersih">Bagus / Bersih</option><option value="Penyok / Berkarat">Penyok / Berkarat</option></select></div>
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Hanger / Bracket</label><select id="hanger" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Kuat / Terpasang Baik">Kuat</option><option value="Longgar / Rusak">Longgar / Rusak</option></select></div>
                                 <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Stiker Kartu Kendali</label><select id="tag" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Hilang">Hilang</option></select></div>
-                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Segitiga APAR</label><select id="triangle" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option></select></div>
-                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Cara Penggunaan APAR</label><select id="howto" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option></select></div>
+                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Segitiga APAR</label><select id="triangle" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option><option value="Rusak">Rusak</option></select></div>
+                                <div><label class="block font-[11px] font-semibold text-slate-600 mb-1">Tanda Cara Penggunaan APAR</label><select id="howto" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Ada">Ada</option><option value="Tidak Ada">Tidak Ada</option><option value="Rusak">Rusak</option></select></div>
                                 <div class="md:col-span-2"><label class="block font-[11px] font-semibold text-slate-600 mb-1">Aksesibilitas APAR</label><select id="access" class="w-full px-3 py-2 border rounded-xl shadow-sm bg-slate-50"><option value="Bebas / Tidak Terhalang">Bebas / Tidak Terhalang</option><option value="Terhalang Barang / Material">Terhalang Barang</option></select></div>
                             </div>
                         </div>
@@ -2859,8 +2859,8 @@
             [11, 'hanger',   'Hanger / Bracket',    ['Longgar / Rusak']],
             [12, 'tag',      'Stiker Kartu Kendali',['Hilang', 'Tidak Ada / Kosong']],   // 'Tidak Ada / Kosong' = nilai lama
             [13, 'access',   'Aksesibilitas APAR',  ['Terhalang Barang / Material']],
-            [19, 'triangle', 'Tanda Segitiga APAR', ['Tidak Ada']],
-            [20, 'howto',    'Tanda Cara Penggunaan APAR', ['Tidak Ada']]
+            [19, 'triangle', 'Tanda Segitiga APAR', ['Tidak Ada', 'Rusak']],
+            [20, 'howto',    'Tanda Cara Penggunaan APAR', ['Tidak Ada', 'Rusak']]
         ];
         function aparMismatches(rec) {
             if (!rec) return [];
@@ -3307,8 +3307,8 @@
                 if (r[10] && !r[10].toLowerCase().includes('bagus')) conditions.push(`Tabung: <b>${r[10]}</b>`);
                 if (r[11] && !r[11].toLowerCase().includes('kuat')) conditions.push(`Bracket: <b>${r[11]}</b>`);
                 if (r[12] && /hilang|kosong/i.test(r[12])) conditions.push(`Kartu: <b>${r[12]}</b>`);
-                if (r[19] && /tidak/i.test(r[19])) conditions.push(`Segitiga APAR: <b>${r[19]}</b>`);
-                if (r[20] && /tidak/i.test(r[20])) conditions.push(`Cara Penggunaan: <b>${r[20]}</b>`);
+                if (r[19] && /tidak|rusak/i.test(r[19])) conditions.push(`Segitiga APAR: <b>${r[19]}</b>`);
+                if (r[20] && /tidak|rusak/i.test(r[20])) conditions.push(`Cara Penggunaan: <b>${r[20]}</b>`);
 
                 let kondisiFisikStr = conditions.length > 0 ? conditions.join(' | ') : '<span class="text-emerald-600 font-semibold">Normal / Layak</span>';
 
