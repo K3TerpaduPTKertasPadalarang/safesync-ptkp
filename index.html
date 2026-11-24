@@ -877,7 +877,10 @@
         <div class="bg-white w-full max-w-sm rounded-3xl shadow-2xl p-6 space-y-3.5 relative animate-in fade-in zoom-in duration-200 border border-slate-100 max-h-[90vh] overflow-y-auto">
             <button onclick="closeAparDetailModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-700 bg-slate-100 hover:bg-slate-200 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm transition">✕</button>
             <div class="flex items-center gap-3 border-b pb-3">
-                <div class="w-10 h-10 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center font-bold text-sm shadow-inner" id="modalAparIdNum">01</div>
+                <div class="relative shrink-0">
+                    <div onclick="aparFotoBoxClick()" title="Foto eksisting APAR" style="padding:3px;overflow:hidden;cursor:pointer" class="w-14 h-14 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow-inner" id="modalAparIdNum">🧯</div>
+                    <button id="modalAparFotoEdit" type="button" onclick="aparFotoPick()" title="Unggah / ganti foto eksisting (admin)" style="display:none;position:absolute;right:-6px;bottom:-6px;width:24px;height:24px;border-radius:9999px;background:#0f172a;color:#fff;font-size:12px;line-height:24px;text-align:center;border:2px solid #fff;cursor:pointer;padding:0">📷</button>
+                </div>
                 <div>
                     <h3 class="text-sm font-bold text-slate-900" id="modalAparCodeTitle">APAR-001</h3>
                     <p class="text-[11px] font-semibold text-red-700" id="modalAparLocationText">Lokasi Area</p>
@@ -2166,7 +2169,7 @@
             if(!item) item = backupQrList.find(q => q.code.toLowerCase() === aparCode.toLowerCase());
             if(!item) return;
 
-            document.getElementById('modalAparIdNum').textContent = item.id || 'C';
+            aparFotoApply(item);
             document.getElementById('modalAparCodeTitle').textContent = item.code;
             document.getElementById('modalAparLocationText').textContent = item.location;
             document.getElementById('modalAparTypeText').textContent = item.type;
@@ -2271,21 +2274,137 @@
                 if(currentStatusKelayakan === 'LAYAK') {
                     kelayakanEl.innerHTML = `<span class="text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full text-[10px] font-bold">LAYAK</span>`;
                     renderPopupDetails(false, monthRec, catatanPerbaikan);
-                    idNumEl.className = "w-10 h-10 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shadow-inner";
+                    idNumEl.className = "w-14 h-14 rounded-2xl bg-emerald-500 text-white flex items-center justify-center font-bold text-sm shadow-inner";
                 } else {
                     kelayakanEl.innerHTML = `<span class="text-red-700 bg-red-100 px-2.5 py-0.5 rounded-full text-[10px] font-bold">PERLU PERBAIKAN</span>`;
                     renderPopupDetails(true, monthRec, catatanPerbaikan);
-                    idNumEl.className = "w-10 h-10 rounded-2xl bg-red-600 text-white flex items-center justify-center font-bold text-sm shadow-inner animate-fast-blink";
+                    idNumEl.className = "w-14 h-14 rounded-2xl bg-red-600 text-white flex items-center justify-center font-bold text-sm shadow-inner animate-fast-blink";
                 }
             } else {
                 badgeEl.innerHTML = `<span class="text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full text-[10px] font-bold">🟡 Belum Dicek Bulan Ini</span>`;
                 kelayakanEl.innerHTML = `<span class="text-slate-500 bg-slate-100 px-2.5 py-0.5 rounded-full text-[10px] font-bold">BELUM ADA DATA</span>`;
                 detailContainer.classList.add('hidden');
-                idNumEl.className = "w-10 h-10 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow-inner";
+                idNumEl.className = "w-14 h-14 rounded-2xl bg-amber-400 text-slate-900 flex items-center justify-center font-bold text-sm shadow-inner";
             }
         }
 
         function closeAparDetailModal() { document.getElementById('aparDetailModal').classList.add('hidden'); }
+
+        /* ===================== FOTO EKSISTING APAR (popup profil) ===================== */
+        const AF_MEMO = {};
+        function afIsAdmin() { try { return !!(typeof currentUser !== 'undefined' && currentUser && currentUser.role === 'admin'); } catch (e) { return false; } }
+        function afTok() { try { return localStorage.getItem('wpTok') || ''; } catch (e) { return ''; } }
+        async function afGet(code) {
+            const m = AF_MEMO[code];
+            if (m && Date.now() - m.t < 45000) return m.v;
+            const r = await (await fetch(SCRIPT_URL + '?action=aparFoto&code=' + encodeURIComponent(code))).json();
+            AF_MEMO[code] = { t: Date.now(), v: r };
+            return r;
+        }
+        function aparFotoApply(item) {
+            const box = document.getElementById('modalAparIdNum');
+            const edit = document.getElementById('modalAparFotoEdit');
+            box.innerHTML = '<span style="font-size:22px">🧯</span>';
+            box.dataset.code = item.code; box.dataset.fotoId = ''; box.dataset.thumb = '';
+            box.title = afIsAdmin() ? 'Belum ada foto — klik untuk mengunggah' : 'Foto eksisting APAR';
+            if (edit) edit.style.display = afIsAdmin() ? 'block' : 'none';
+            afGet(item.code).then(r => {
+                if (box.dataset.code !== item.code) return;
+                if (r && r.ok && r.thumb) {
+                    box.dataset.fotoId = r.id || ''; box.dataset.thumb = r.thumb;
+                    box.innerHTML = '<img src="' + r.thumb + '" alt="Foto APAR" style="width:100%;height:100%;object-fit:cover;border-radius:13px;display:block">';
+                    box.title = 'Klik untuk melihat foto lebih besar';
+                }
+            }).catch(() => {});
+        }
+        function aparFotoBoxClick() {
+            const box = document.getElementById('modalAparIdNum');
+            if (box.dataset.fotoId) return aparFotoOpenViewer(box.dataset.code, box.dataset.fotoId, box.dataset.thumb);
+            if (afIsAdmin()) return aparFotoPick();
+            if (typeof showToast === 'function') showToast('Foto eksisting APAR ini belum diunggah admin.'); else alert('Foto eksisting APAR ini belum diunggah admin.');
+        }
+        function afEnsureUi() {
+            if (document.getElementById('aparFotoViewer')) return;
+            const d = document.createElement('div');
+            d.id = 'aparFotoViewer';
+            d.className = 'no-print';
+            d.style.cssText = 'display:none;position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.92);flex-direction:column;align-items:center;justify-content:center;padding:12px';
+            d.innerHTML = '<div style="width:100%;max-width:900px;display:flex;align-items:center;justify-content:space-between;gap:8px;color:#fff;margin-bottom:8px;flex-wrap:wrap">'
+                + '<b id="afvTitle" style="font-size:14px"></b><div style="display:flex;gap:6px">'
+                + '<button id="afvChange" type="button" style="display:none;background:#334155;color:#fff;border:0;border-radius:10px;padding:6px 10px;font-weight:700;font-size:12px;cursor:pointer">📷 Ganti foto</button>'
+                + '<button id="afvDel" type="button" style="display:none;background:#b91c1c;color:#fff;border:0;border-radius:10px;padding:6px 10px;font-weight:700;font-size:12px;cursor:pointer">🗑 Hapus</button>'
+                + '<button id="afvClose" type="button" style="background:#fff;color:#0f172a;border:0;border-radius:10px;padding:6px 12px;font-weight:800;font-size:12px;cursor:pointer">✕ Tutup</button></div></div>'
+                + '<div style="position:relative;max-width:100%;max-height:82vh;display:flex;align-items:center;justify-content:center">'
+                + '<img id="afvImg" alt="Foto eksisting APAR" style="max-width:100%;max-height:82vh;object-fit:contain;border-radius:14px;background:#111;filter:blur(2px);transition:filter .3s">'
+                + '<span id="afvLoad" style="position:absolute;color:#fff;font-size:12px;background:rgba(0,0,0,.55);padding:4px 10px;border-radius:9999px">Memuat foto…</span></div>'
+                + '<input type="file" id="afvFile" accept="image/*" style="display:none">';
+            document.body.appendChild(d);
+            d.addEventListener('click', e => { if (e.target === d) aparFotoCloseViewer(); });
+            document.getElementById('afvClose').onclick = aparFotoCloseViewer;
+            document.getElementById('afvChange').onclick = aparFotoPick;
+            document.getElementById('afvDel').onclick = aparFotoDelete;
+            document.getElementById('afvFile').onchange = function () { if (this.files[0]) aparFotoUpload(this.files[0]); this.value = ''; };
+            document.addEventListener('keydown', e => { if (e.key === 'Escape') aparFotoCloseViewer(); });
+        }
+        async function aparFotoOpenViewer(code, id, thumb) {
+            afEnsureUi();
+            const v = document.getElementById('aparFotoViewer'), img = document.getElementById('afvImg'), ld = document.getElementById('afvLoad');
+            v.dataset.code = code; v.style.display = 'flex';
+            document.getElementById('afvTitle').textContent = 'Foto eksisting · ' + code;
+            document.getElementById('afvChange').style.display = afIsAdmin() ? 'inline-block' : 'none';
+            document.getElementById('afvDel').style.display = afIsAdmin() ? 'inline-block' : 'none';
+            img.style.filter = 'blur(2px)'; img.src = thumb || ''; ld.style.display = 'block';
+            try {
+                const r = await (await fetch(SCRIPT_URL + '?action=aparFotoFull&id=' + encodeURIComponent(id))).json();
+                if (v.dataset.code !== code || v.style.display === 'none') return;
+                if (r && r.ok && r.data) { img.src = r.data; img.style.filter = 'none'; ld.style.display = 'none'; }
+                else { ld.textContent = (r && r.msg) || 'Foto tidak dapat dimuat.'; }
+            } catch (e) { ld.textContent = 'Foto tidak dapat dimuat. Periksa koneksi.'; }
+        }
+        function aparFotoCloseViewer() { const v = document.getElementById('aparFotoViewer'); if (v) v.style.display = 'none'; }
+        function aparFotoPick() { if (!afIsAdmin()) return; afEnsureUi(); document.getElementById('afvFile').click(); }
+        function afShrink(file, max, q) {
+            return new Promise((ok, no) => {
+                const fr = new FileReader(); fr.onerror = no;
+                fr.onload = () => {
+                    const im = new Image(); im.onerror = no;
+                    im.onload = () => {
+                        const k = Math.min(1, max / Math.max(im.width, im.height));
+                        const c = document.createElement('canvas'); c.width = Math.max(1, Math.round(im.width * k)); c.height = Math.max(1, Math.round(im.height * k));
+                        const x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(im, 0, 0, c.width, c.height);
+                        ok(c.toDataURL('image/jpeg', q));
+                    };
+                    im.src = fr.result;
+                };
+                fr.readAsDataURL(file);
+            });
+        }
+        async function aparFotoUpload(file) {
+            const box = document.getElementById('modalAparIdNum'), code = box.dataset.code;
+            if (!code || !afIsAdmin()) return;
+            if (!/^image\//.test(file.type)) return alert('File harus berupa foto (JPG/PNG/WEBP).');
+            const old = box.innerHTML; box.innerHTML = '<span style="font-size:11px">⏳</span>';
+            try {
+                const full = await afShrink(file, 1280, 0.82), th = await afShrink(file, 160, 0.7);
+                const r = await (await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    body: JSON.stringify({ action: 'wpAparFotoSet', token: afTok(), code: code, image: full.split(',')[1], thumb: th.split(',')[1] }) })).json();
+                if (!r || !r.ok) throw new Error((r && r.msg) || 'Gagal mengunggah foto.');
+                delete AF_MEMO[code];
+                aparFotoApply({ code: code });
+                const v = document.getElementById('aparFotoViewer');
+                if (v && v.style.display !== 'none') setTimeout(() => aparFotoOpenViewer(code, r.id, r.thumb), 150);
+            } catch (e) { box.innerHTML = old; alert((e && e.message) || 'Gagal mengunggah foto.'); }
+        }
+        async function aparFotoDelete() {
+            const v = document.getElementById('aparFotoViewer'), code = v && v.dataset.code;
+            if (!code || !afIsAdmin() || !confirm('Hapus foto eksisting ' + code + '?')) return;
+            try {
+                const r = await (await fetch(SCRIPT_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ action: 'wpAparFotoDel', token: afTok(), code: code }) })).json();
+                if (!r || !r.ok) throw new Error((r && r.msg) || 'Gagal menghapus foto.');
+                delete AF_MEMO[code]; aparFotoCloseViewer(); aparFotoApply({ code: code });
+            } catch (e) { alert((e && e.message) || 'Gagal menghapus foto.'); }
+        }
+
 
         function downloadPopupPhoto() {
             if(popupCurrentPhotoBase64) {
