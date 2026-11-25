@@ -5853,7 +5853,8 @@ window.spbTpl=async()=>{
   <div class="space-y-2"><p class="font-bold">3. Area &amp; kertas</p>
   <div class="grid grid-cols-3 gap-2">${I('sc_rg','Area cetak (opsional)',c.range,'mis. A1:H45')}
   <label class="block"><span class="font-semibold">Kertas</span><select id="sc_pp" class="w-full border rounded-lg px-2 py-1.5 mt-0.5">${['A4','A3','A5','Letter','Legal'].map(x=>`<option ${(c.paper||'A4')===x?'selected':''}>${x}</option>`).join('')}</select></label>
-  <label class="block"><span class="font-semibold">Orientasi</span><select id="sc_ls" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"><option value="0">Potret</option><option value="1" ${c.land?'selected':''}>Lanskap</option></select></label></div></div>
+  <label class="block"><span class="font-semibold">Orientasi</span><select id="sc_ls" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"><option value="0">Potret</option><option value="1" ${c.land?'selected':''}>Lanskap</option></select></label></div>
+  <div class="grid grid-cols-2 gap-2">${[['sc_vi','Rata vertikal baris barang',c.vItem],['sc_vk','Rata vertikal Keterangan',c.vKet]].map(([id,l,v])=>`<label class="block"><span class="font-semibold">${l}</span><select id="${id}" class="w-full border rounded-lg px-2 py-1.5 mt-0.5">${[['','Ikuti format sheet'],['top','Atas'],['middle','Tengah'],['bottom','Bawah']].map(([o,t])=>`<option value="${o}" ${(v||'')===o?'selected':''}>${t}</option>`).join('')}</select></label>`).join('')}</div></div>
   <div class="flex flex-wrap gap-2 justify-end"><button onclick="this.closest('.fixed').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Tutup</button>
   <button id="sc_reset" class="px-4 py-2 rounded-xl bg-slate-100 font-bold text-red-600">Pakai format bawaan</button>
   <a href="${esc(r.url)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Buka sheet ↗</a>
@@ -5861,7 +5862,7 @@ window.spbTpl=async()=>{
   document.body.appendChild(d);
   d.querySelector('#sc_save').onclick=async()=>{
    const map={},cols={};H.forEach(([x])=>map[x]=$('sm_'+x).value.trim());C.forEach(([x])=>cols[x]=$('sk_'+x).value.trim());
-   const cfg={link:$('sc_link').value.trim(),map,cols,itemRow:$('sc_ir').value.trim(),itemRows:$('sc_in').value.trim(),range:$('sc_rg').value.trim(),paper:$('sc_pp').value,land:$('sc_ls').value==='1'};
+   const cfg={link:$('sc_link').value.trim(),map,cols,itemRow:$('sc_ir').value.trim(),itemRows:$('sc_in').value.trim(),range:$('sc_rg').value.trim(),paper:$('sc_pp').value,land:$('sc_ls').value==='1',vItem:$('sc_vi').value,vKet:$('sc_vk').value};
    try{await post({action:'wpSpbCfgSave',cfg});toast('Pengaturan format cetak disimpan.');d.remove()}catch(e){toast(e.message,0)}};
   d.querySelector('#sc_reset').onclick=async()=>{if(!confirm('Kembali memakai sheet TEMPLATE_SPB bawaan?'))return;
    try{await post({action:'wpSpbCfgSave',cfg:{reset:true}});toast('Kembali ke format bawaan.');d.remove()}catch(e){toast(e.message,0)}};
