@@ -3815,10 +3815,10 @@ window.pubTop=m=>{topMode=m;renderAll()};
 
 /* ---------- Shell modul APD (beda tampilan karyawan vs admin) ---------- */
 const card='bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-3';
-const TABS=['Peminjaman APD','Permintaan APD','Serah Terima APD','SPB APD','Safety Stock APD'];
+const TABS=['Peminjaman APD','SPB APD','Permintaan APD','Serah Terima APD','Safety Stock APD'];
 function buildShell(){
  shellRole=currentUser.role;const adm=isAdm();
- const tabs=`<div class="${card} !p-3 flex gap-2 overflow-x-auto text-xs">${TABS.map((t,i)=>`<button onclick="pjTab(${i})" id="pjT${i}" class="whitespace-nowrap px-3.5 py-2 rounded-xl font-bold">${t}${i?' 🚧':''}</button>`).join('')}</div><div id="pjDev" class="${card} hidden text-center py-10"><p class="text-4xl">🚧</p><p class="font-bold text-slate-700 mt-2" id="pjDevName"></p><p class="text-xs text-slate-500">Fitur ini masih dalam tahap pengembangan.</p></div>`;
+ const tabs=`<div class="${card} !p-3 flex gap-2 overflow-x-auto text-xs">${TABS.map((t,i)=>`<button onclick="pjTab(${i})" id="pjT${i}" class="whitespace-nowrap px-3.5 py-2 rounded-xl font-bold">${t}${i>1?' 🚧':''}</button>`).join('')}</div><div id="pjDev" class="${card} hidden text-center py-10"><p class="text-4xl">🚧</p><p class="font-bold text-slate-700 mt-2" id="pjDevName"></p><p class="text-xs text-slate-500">Fitur ini masih dalam tahap pengembangan.</p></div>`;
  const live=`<div class="${card}"><div class="flex justify-between items-center flex-wrap gap-1"><h2 class="text-sm md:text-base font-bold text-slate-800">🔴 Live Record Peminjaman APD</h2><span class="text-[10px] font-bold text-emerald-600">● realtime (auto-refresh 5 dtk)</span></div><p class="text-[11px] text-slate-500">${adm?'Klik baris untuk melihat detail, bukti pengembalian, atau membatalkan.':'Data Anda langsung muncul di sini. Untuk mengembalikan APD, <b>klik baris Anda</b> berstatus Dipinjam.'}</p><div class="table-container"><table class="w-full text-xs min-w-[640px]">${TH(1)}<tbody id="pjLive"></tbody></table></div></div>`;
  const stock=`<div class="${card}"><h2 class="text-sm md:text-base font-bold text-slate-800">📦 Ketersediaan APD <span class="text-[10px] text-emerald-600">● realtime</span></h2><div id="pjStock" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div></div>`;
  const form=`<div class="${card}"><div class="flex justify-between items-center flex-wrap gap-1"><h2 class="text-sm md:text-base font-bold text-slate-800">📝 Formulir Peminjaman APD</h2><span class="text-[11px] text-slate-500">⏱ <span id="pjClock"></span></span></div>
@@ -3839,7 +3839,7 @@ function buildShell(){
  if(!adm){const w=JSON.parse(localStorage.getItem('pjWho')||'null');if(w){$('pjNama').value=w.n;$('pjReg').value=w.r;$('pjTipe').value=w.t;pjTipeCh();if(w.t==='Vendor')$('pjDept').value=w.d;else $('pjDeptSel').value=DEPTS.includes(w.d)?w.d:''}pjTipeCh();pjAddRow()}
 }
 window.apdEnter=()=>{if(shellRole!==currentUser.role||!$('pjMain'))buildShell();dirty=false;pjTab(0);apdLoad()};
-window.pjTab=i=>{TABS.forEach((_,k)=>{$('pjT'+k).className='whitespace-nowrap px-3.5 py-2 rounded-xl font-bold '+(k===i?'bg-red-600 text-white shadow':k?'bg-slate-100 text-slate-400':'bg-slate-100 text-slate-700')});$('pjMain').classList.toggle('hidden',i>0);$('pjDev').classList.toggle('hidden',i===0);$('pjDevName').textContent=TABS[i]};
+window.pjTab=i=>{TABS.forEach((_,k)=>{$('pjT'+k).className='whitespace-nowrap px-3.5 py-2 rounded-xl font-bold '+(k===i?'bg-red-600 text-white shadow':k>1?'bg-slate-100 text-slate-400':'bg-slate-100 text-slate-700')});$('pjMain').classList.toggle('hidden',i>0);$('pjDev').classList.toggle('hidden',i<2);$('pjDevName').textContent=TABS[i];if(window.spbShow)window.spbShow(i===1)};
 window.pjDirty=()=>dirty=true;
 setInterval(()=>{const c=$('pjClock');if(c)c.textContent=new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta',dateStyle:'full',timeStyle:'medium',hour12:false}).replace(/\./g,':')},1000);
 
@@ -5024,8 +5024,8 @@ addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementB
 const $=id=>document.getElementById(id),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const post=async p=>{const r=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...p,token:localStorage.getItem('wpTok')||''})})).json();if(r.ok===undefined)throw new Error('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.');if(!r.ok)throw new Error(r.msg||'Gagal.');return r};
 const toast=(m,ok=1)=>{const t=document.createElement('div');t.className='fixed top-16 left-1/2 -translate-x-1/2 z-[120] text-white text-xs rounded-xl shadow-2xl px-4 py-2.5 '+(ok?'bg-emerald-700':'bg-red-700');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3800)};
-const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['hdr','⛑️ Modul APD'],['apd_pinjam','Peminjaman APD',1,1,1],['apd_minta','Permintaan APD',1,0,1],['apd_serah','Serah Terima APD',1,0,1],['apd_spb','SPB APD',1,0,1],['apd_stok','Safety Stock APD',1,0,1],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
-const APDS=['apd_pinjam','apd_minta','apd_serah','apd_spb','apd_stok'];
+const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['hdr','⛑️ Modul APD'],['apd_pinjam','Peminjaman APD',1,1,1],['apd_spb','SPB APD',1,0,1],['apd_minta','Permintaan APD',1,0,1],['apd_serah','Serah Terima APD',1,0,1],['apd_stok','Safety Stock APD',1,0,1],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
+const APDS=['apd_pinjam','apd_spb','apd_minta','apd_serah','apd_stok'];
 const keyOf=b=>{const o=b.getAttribute('onclick')||'',m=o.match(/^switchModule\('(apar|temuan|apd|wp|veh)'\)/);return m?m[1]:/^sopOpen\(/.test(o)?'sop':null};
 const NAMA=Object.assign(Object.fromEntries(MODS.map(m=>[m[0],m[1]])),{apd:'⛑️ APD'});
 let ACC={tutup:{karyawan:[],vendor:[]},pesan:''},CURM=null,SHOWN=false;
@@ -5045,7 +5045,7 @@ window.accRefresh=async()=>{await load();if(CURM&&!closed(CURM)){hideTutup();win
 
 /* ---- tombol menu: tanda gembok ---- */
 function closedTab(i){const k=APDS[i];let c=$('pjClosed');if(!c){const m=$('pjMain');if(!m)return;m.insertAdjacentHTML('beforebegin','<div id="pjClosed" class="hidden bg-white rounded-2xl shadow-lg border border-slate-100 p-8 text-center space-y-2"></div>');c=$('pjClosed')}
- if(closedK(k)){c.innerHTML=`<div class="text-4xl">🛠️</div><h3 class="font-bold text-sm">Fitur ${E(NAMA[k])} Sedang Ditutup Sementara</h3><p class="text-xs text-slate-600">${E(ACC.pesan||'Fitur ini ditutup sementara oleh admin untuk pemeliharaan atau pembaruan sistem.')}</p>`;c.classList.remove('hidden');$('pjMain').classList.add('hidden');if($('pjDev'))$('pjDev').classList.add('hidden')}else c.classList.add('hidden')}
+ if(closedK(k)){c.innerHTML=`<div class="text-4xl">🛠️</div><h3 class="font-bold text-sm">Fitur ${E(NAMA[k])} Sedang Ditutup Sementara</h3><p class="text-xs text-slate-600">${E(ACC.pesan||'Fitur ini ditutup sementara oleh admin untuk pemeliharaan atau pembaruan sistem.')}</p>`;c.classList.remove('hidden');$('pjMain').classList.add('hidden');if($('pjDev'))$('pjDev').classList.add('hidden');if($('spbMain'))$('spbMain').classList.add('hidden')}else c.classList.add('hidden')}
 function tabs(){APDS.forEach((k,i)=>{const b=$('pjT'+i);if(!b)return;const c=closedK(k),l=b.querySelector('.accL');if(c&&!l)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&l)l.remove();b.style.display=(grp()==='vendor'&&!isAdm()&&i>0)?'none':''});const cur=APDS.findIndex((k,i)=>$('pjT'+i)&&$('pjT'+i).className.includes('bg-red-600'));if(cur>=0)closedTab(cur)}
 function apply(){document.querySelectorAll('button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
  tabs();if(!isAdm()&&CURM&&closed(CURM))showTutup(CURM);else if(SHOWN&&CURM&&!closed(CURM))accRefresh()}
@@ -5723,5 +5723,126 @@ const c0=$('navButtonsContainer');
 if(c0){new MutationObserver(()=>{setTimeout(inject,60);setTimeout(inject,500)}).observe(c0,{childList:true});inject()}
 })();
 </script>
+
+<!-- ===================== SPB APD (Pengadaan) — antarmuka ===================== -->
+<script id="spb-ui-js">
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const post=async p=>{const r=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...p,token:localStorage.getItem('wpTok')||''})})).json();
+ if(r.ok===undefined||(r.ok===false&&/Aksi tidak dikenal/.test(r.msg||'')))throw new Error('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.');
+ if(!r.ok)throw new Error(r.msg||'Gagal.');return r};
+const toast=(m,ok=1)=>{const t=document.createElement('div');t.className='fixed top-16 left-1/2 -translate-x-1/2 z-[130] text-white text-xs rounded-xl shadow-2xl px-4 py-2.5 '+(ok?'bg-emerald-700':'bg-red-700');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3800)};
+const card='bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-3';
+const inp='w-full px-3 py-2 border rounded-xl text-xs bg-white shadow-sm focus:ring-2 focus:ring-red-500 outline-none';
+const isAdm=()=>typeof currentUser!=='undefined'&&currentUser&&currentUser.role==='admin';
+const ST={Draft:'bg-slate-100 text-slate-700',Diajukan:'bg-blue-100 text-blue-700',Disetujui:'bg-emerald-100 text-emerald-700',Selesai:'bg-teal-100 text-teal-800',Dibatalkan:'bg-red-100 text-red-700'};
+let LIST=[],NEXT='',MASTER=[],TPL='',loading=false;
+const todayISO=()=>{const d=new Date(),z=n=>('0'+n).slice(-2);return d.getFullYear()+'-'+z(d.getMonth()+1)+'-'+z(d.getDate())};
+const fmtTgl=s=>{const m=/^(\d{4})-(\d{2})-(\d{2})$/.exec(s||'');return m?(+m[3])+'/'+m[2]+'/'+m[1]:esc(s)};
+
+function ensure(){
+ let m=$('spbMain');if(m)return m;
+ const dev=$('pjDev');if(!dev)return null;
+ dev.insertAdjacentHTML('afterend','<div id="spbMain" class="hidden space-y-4"></div>');return $('spbMain');
+}
+function shell(){
+ const m=ensure();if(!m)return;
+ if(!isAdm()){m.innerHTML=`<div class="${card} text-center py-10"><p class="text-4xl">🔒</p><p class="font-bold text-slate-700 mt-2">SPB APD</p><p class="text-xs text-slate-500">Fitur ini khusus admin K3LH.</p></div>`;return}
+ m.innerHTML=`<div class="${card}">
+  <div class="flex justify-between items-start gap-2 flex-wrap border-b border-slate-100 pb-3">
+   <div><h2 class="text-sm md:text-lg font-bold text-slate-900">📦 Pengadaan / SPB APD</h2><p class="text-[11px] text-slate-500">Surat Permintaan Barang APD. Cetak PDF memakai format template di spreadsheet (format tidak berubah).</p></div>
+   <div class="flex gap-2 flex-wrap"><button onclick="spbForm()" class="bg-red-700 hover:bg-red-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow">➕ SPB Baru</button>
+   <button onclick="spbLoad(1)" class="bg-slate-900 text-white font-bold px-3.5 py-2 rounded-xl text-xs">🔄 Muat Ulang</button>
+   <button onclick="spbTpl()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs">🧾 Template Cetak</button></div></div>
+  <div class="table-container"><table class="w-full text-xs min-w-[680px]"><thead class="bg-slate-100 text-slate-600"><tr><th class="px-2 py-2 text-left">No. SPB</th><th class="px-2 py-2 text-left">Tanggal</th><th class="px-2 py-2 text-left">Unit / Perihal</th><th class="px-2 py-2 text-left">Barang</th><th class="px-2 py-2 text-left">Status</th><th class="px-2 py-2 text-right">Aksi</th></tr></thead><tbody id="spbRows"><tr><td colspan="6" class="px-2 py-6 text-center text-slate-400">Memuat…</td></tr></tbody></table></div></div>`;
+}
+function rows(){
+ const b=$('spbRows');if(!b)return;
+ b.innerHTML=LIST.length?LIST.map((x,i)=>`<tr class="border-t"><td class="px-2 py-2 font-bold whitespace-nowrap">${esc(x.no)}</td><td class="px-2 py-2 whitespace-nowrap">${fmtTgl(x.tanggal)}</td>
+  <td class="px-2 py-2"><b>${esc(x.unit)}</b><div class="text-[10px] text-slate-500">${esc(x.perihal)}</div></td>
+  <td class="px-2 py-2">${x.items.slice(0,3).map(t=>esc(t.nama)+' ×'+t.qty).join(', ')}${x.items.length>3?' <span class="text-slate-400">+'+(x.items.length-3)+' lagi</span>':''}<div class="text-[10px] text-slate-400">Total ${x.total} item</div></td>
+  <td class="px-2 py-2"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${ST[x.status]||ST.Draft}">${esc(x.status)}</span></td>
+  <td class="px-2 py-2 text-right whitespace-nowrap"><button onclick="spbPrint(${i})" class="px-2 py-1 rounded-lg bg-slate-900 text-white font-bold text-[11px]">🖨️ Cetak</button> <button onclick="spbForm(${i})" class="px-2 py-1 rounded-lg bg-slate-100 font-bold text-[11px]">✏️</button> <button onclick="spbDel(${i})" class="px-2 py-1 rounded-lg bg-red-50 text-red-700 font-bold text-[11px]">🗑</button></td></tr>`).join('')
+  :'<tr><td colspan="6" class="px-2 py-8 text-center text-slate-400">Belum ada SPB. Klik “➕ SPB Baru”.</td></tr>';
+}
+window.spbLoad=async(force)=>{
+ if(!isAdm()||loading)return;loading=true;
+ try{const r=await post({action:'wpSpbList'});LIST=r.list||[];NEXT=r.next||'';rows()}
+ catch(e){const b=$('spbRows');if(b)b.innerHTML=`<tr><td colspan="6" class="px-2 py-6 text-center text-red-600">${esc(e.message)}</td></tr>`}
+ finally{loading=false}
+ if(!MASTER.length){try{const s=await(await fetch(SCRIPT_URL+'?action=apdState&_='+Date.now())).json();MASTER=((s&&s.master)||[]).filter(m=>m.aktif!==false).map(m=>m.kategori+(m.varian&&m.varian!=='-'?' '+m.varian:''))}catch(e){}}
+};
+window.spbShow=on=>{const m=ensure();if(!m)return;m.classList.toggle('hidden',!on);if(on){if(!$('spbRows'))shell();spbLoad()}};
+
+/* ---------- form ---------- */
+let EDIT=null;
+function itemRow(it){it=it||{};return `<div class="spb-it grid grid-cols-12 gap-1.5 items-center"><input class="${inp} col-span-12 md:col-span-4 it-n" list="spbDL" placeholder="Nama barang *" value="${esc(it.nama||'')}"><input class="${inp} col-span-4 md:col-span-2 it-u" placeholder="Ukuran" value="${esc(it.ukuran||'')}"><input type="number" min="1" class="${inp} col-span-3 md:col-span-1 it-q text-center" value="${it.qty||1}"><input class="${inp} col-span-3 md:col-span-1 it-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-10 md:col-span-3 it-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-2 md:col-span-1 text-red-600 font-bold">✕</button></div>`}
+window.spbAddItem=()=>$('spbItems').insertAdjacentHTML('beforeend',itemRow());
+window.spbForm=i=>{
+ const x=i==null?null:LIST[i];EDIT=x;
+ let sg={};try{sg=JSON.parse(localStorage.getItem('spbSign')||'{}')}catch(e){}
+ const g=(o,k,d)=>esc((x&&x[o]&&x[o][k])||(sg[o]&&sg[o][k])||d||'');
+ $('spbModal')&&$('spbModal').remove();
+ const d=document.createElement('div');d.id='spbModal';d.className='fixed inset-0 z-[110] bg-black/60 flex items-start md:items-center justify-center p-2 overflow-y-auto';
+ d.innerHTML=`<datalist id="spbDL">${MASTER.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
+ <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-4 md:p-5 space-y-3 text-xs my-2"><div class="flex justify-between items-center border-b pb-2"><h3 class="font-bold text-sm">${x?'✏️ Ubah SPB':'➕ SPB APD Baru'}</h3><button onclick="document.getElementById('spbModal').remove()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button></div>
+ <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+  <div class="col-span-2"><label class="font-semibold text-slate-600">No. SPB</label><input id="spbNo" class="${inp}" value="${esc(x?x.no:NEXT)}"></div>
+  <div><label class="font-semibold text-slate-600">Tanggal *</label><input type="date" id="spbTgl" class="${inp}" value="${esc(x?x.tanggal:todayISO())}"></div>
+  <div><label class="font-semibold text-slate-600">Status</label><select id="spbSt" class="${inp}">${['Draft','Diajukan','Disetujui','Selesai','Dibatalkan'].map(s=>`<option ${x&&x.status===s?'selected':''}>${s}</option>`).join('')}</select></div>
+  <div class="col-span-2"><label class="font-semibold text-slate-600">Unit / Bagian pemohon *</label><input id="spbUnit" class="${inp}" value="${esc(x?x.unit:'K3LH')}"></div>
+  <div class="col-span-2"><label class="font-semibold text-slate-600">Perihal</label><input id="spbPer" class="${inp}" value="${esc(x?x.perihal:'Pengadaan APD')}"></div></div>
+ <div><div class="flex justify-between items-center"><label class="font-bold text-slate-700">Daftar barang *</label><button type="button" onclick="spbAddItem()" class="text-[11px] font-bold text-red-700">+ Tambah barang</button></div>
+  <div id="spbItems" class="space-y-1.5 mt-1">${(x&&x.items.length?x.items:[{}]).map(itemRow).join('')}</div>
+  <p class="text-[10px] text-slate-400 mt-1">Ketik nama bebas atau pilih dari daftar APD yang ada.</p></div>
+ <div><label class="font-semibold text-slate-600">Keterangan / alasan pengadaan</label><textarea id="spbKet" rows="2" class="${inp}">${esc(x?x.keterangan:'')}</textarea></div>
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-2">${[['dibuat','Dibuat oleh'],['mengetahui','Mengetahui'],['menyetujui','Menyetujui']].map(([k,l])=>`<div class="border rounded-xl p-2 space-y-1"><p class="font-bold text-slate-600">${l}</p><input id="spb_${k}_n" class="${inp}" placeholder="Nama" value="${g(k,'nama')}"><input id="spb_${k}_j" class="${inp}" placeholder="Jabatan" value="${g(k,'jabatan')}"></div>`).join('')}</div>
+ <div class="flex gap-2 justify-end pt-1 flex-wrap"><button onclick="document.getElementById('spbModal').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Batal</button><button id="spbSave" onclick="spbSave(false)" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold">💾 Simpan</button><button id="spbSavePrint" onclick="spbSave(true)" class="px-4 py-2 rounded-xl bg-red-700 text-white font-bold">💾🖨️ Simpan &amp; Cetak</button></div></div>`;
+ document.body.appendChild(d);
+};
+window.spbSave=async pr=>{
+ const items=[...document.querySelectorAll('.spb-it')].map(r=>({nama:r.querySelector('.it-n').value.trim(),ukuran:r.querySelector('.it-u').value.trim(),qty:+r.querySelector('.it-q').value||1,satuan:r.querySelector('.it-s').value.trim(),ket:r.querySelector('.it-k').value.trim()})).filter(i=>i.nama);
+ if(!items.length)return toast('Isi minimal satu barang.',0);
+ const v=id=>$(id).value.trim(),sg=k=>({nama:v('spb_'+k+'_n'),jabatan:v('spb_'+k+'_j')});
+ const p={action:'wpSpbSave',orig:EDIT?EDIT.no:'',no:v('spbNo'),tanggal:$('spbTgl').value,status:$('spbSt').value,unit:v('spbUnit'),perihal:v('spbPer'),keterangan:v('spbKet'),items,dibuat:sg('dibuat'),mengetahui:sg('mengetahui'),menyetujui:sg('menyetujui')};
+ if(!p.unit)return toast('Unit / bagian pemohon wajib diisi.',0);
+ const b1=$('spbSave'),b2=$('spbSavePrint');b1.disabled=b2.disabled=true;
+ const w=pr?window.open('','_blank'):null;
+ try{
+  const r=await post(p);
+  try{localStorage.setItem('spbSign',JSON.stringify({dibuat:p.dibuat,mengetahui:p.mengetahui,menyetujui:p.menyetujui}))}catch(e){}
+  $('spbModal').remove();toast('SPB '+r.no+' tersimpan.');await spbLoad();
+  if(pr)await doPrint(r.no,w);
+ }catch(e){if(w)w.close();toast(e.message,0);b1.disabled=b2.disabled=false}
+};
+window.spbDel=async i=>{const x=LIST[i];if(!x||!confirm('Hapus SPB '+x.no+'?'))return;try{await post({action:'wpSpbDel',no:x.no});toast('SPB dihapus.');spbLoad()}catch(e){toast(e.message,0)}};
+
+/* ---------- cetak PDF dari template spreadsheet ---------- */
+async function doPrint(no,w){
+ try{
+  toast('Menyusun PDF…');
+  const r=await post({action:'wpSpbPrint',no});
+  const bin=atob(r.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);
+  const url=URL.createObjectURL(new Blob([u],{type:'application/pdf'}));
+  if(w&&!w.closed){w.location.href=url}
+  else{const a=document.createElement('a');a.href=url;a.download=r.name;document.body.appendChild(a);a.click();a.remove()}
+  setTimeout(()=>URL.revokeObjectURL(url),120000);
+ }catch(e){if(w)w.close();toast(e.message,0)}
+}
+window.spbPrint=i=>{const x=LIST[i];if(!x)return;doPrint(x.no,window.open('','_blank'))};
+window.spbTpl=async()=>{
+ try{const r=await post({action:'wpSpbInfo'});
+  const d=document.createElement('div');d.className='fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-3';
+  d.innerHTML=`<div class="bg-white max-w-lg w-full rounded-2xl shadow-2xl p-5 space-y-3 text-xs"><h3 class="font-bold text-sm">🧾 Template Cetak SPB</h3>
+  <p>Format cetak SPB diambil dari sheet <b>${esc(r.sheet)}</b> pada spreadsheet database. Tempel format Excel Anda di sheet itu, lalu tulis <b>kode isian</b> pada sel yang harus terisi, mis. <code>{{no_spb}}</code>, <code>{{tanggal}}</code>, <code>{{unit}}</code>, <code>{{keterangan}}</code>.</p>
+  <p>Baris daftar barang cukup <b>satu baris</b> berisi <code>{{no}}</code> <code>{{nama}}</code> <code>{{ukuran}}</code> <code>{{qty}}</code> <code>{{satuan}}</code> <code>{{ket}}</code>; baris itu otomatis digandakan. Daftar lengkap kode ada di catatan sel A1 pada sheet template.</p>
+  <div class="flex gap-2 justify-end"><button onclick="this.closest('.fixed').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Tutup</button><a href="${esc(r.url)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-amber-500 text-white font-bold">Buka Template di Google Sheets ↗</a></div></div>`;
+  document.body.appendChild(d)}catch(e){toast(e.message,0)}
+};
+})();
+</script>
+
 </body>
 </html>
