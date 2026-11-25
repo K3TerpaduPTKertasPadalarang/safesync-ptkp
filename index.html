@@ -5778,7 +5778,7 @@ window.spbShow=on=>{const m=ensure();if(!m)return;m.classList.toggle('hidden',!o
 
 /* ---------- form ---------- */
 let EDIT=null;
-function itemRow(it){it=it||{};return `<div class="spb-it grid grid-cols-12 gap-1.5 items-center"><input class="${inp} col-span-12 md:col-span-4 it-n" list="spbDL" placeholder="Nama barang *" value="${esc(it.nama||'')}"><input class="${inp} col-span-4 md:col-span-2 it-u" placeholder="Ukuran" value="${esc(it.ukuran||'')}"><input type="number" min="1" class="${inp} col-span-3 md:col-span-1 it-q text-center" value="${it.qty||1}"><input class="${inp} col-span-3 md:col-span-1 it-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-10 md:col-span-3 it-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-2 md:col-span-1 text-red-600 font-bold">✕</button></div>`}
+function itemRow(it){it=it||{};return `<div class="spb-it grid grid-cols-12 gap-1.5 items-center"><input class="${inp} col-span-12 md:col-span-2 it-c" placeholder="Item code" title="Item code (opsional, dari SAFT ERP)" value="${esc(it.kode||'')}"><input class="${inp} col-span-12 md:col-span-3 it-n" list="spbDL" placeholder="Nama barang *" value="${esc(it.nama||'')}"><input class="${inp} col-span-4 md:col-span-2 it-u" placeholder="Type/Ukuran/Merk" title="Type/Ukuran/Merk/Spesifikasi" value="${esc(it.ukuran||'')}"><input type="number" min="1" class="${inp} col-span-3 md:col-span-1 it-q text-center" value="${it.qty||1}"><input class="${inp} col-span-3 md:col-span-1 it-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-10 md:col-span-2 it-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-2 md:col-span-1 text-red-600 font-bold">✕</button></div>`}
 window.spbAddItem=()=>$('spbItems').insertAdjacentHTML('beforeend',itemRow());
 window.spbForm=i=>{
  const x=i==null?null:LIST[i];EDIT=x;
@@ -5796,14 +5796,14 @@ window.spbForm=i=>{
   <div class="col-span-2"><label class="font-semibold text-slate-600">Perihal</label><input id="spbPer" class="${inp}" value="${esc(x?x.perihal:'Pengadaan APD')}"></div></div>
  <div><div class="flex justify-between items-center"><label class="font-bold text-slate-700">Daftar barang *</label><button type="button" onclick="spbAddItem()" class="text-[11px] font-bold text-red-700">+ Tambah barang</button></div>
   <div id="spbItems" class="space-y-1.5 mt-1">${(x&&x.items.length?x.items:[{}]).map(itemRow).join('')}</div>
-  <p class="text-[10px] text-slate-400 mt-1">Ketik nama bebas atau pilih dari daftar APD yang ada.</p></div>
+  <p class="text-[10px] text-slate-400 mt-1">Urutan kolom: Item code (opsional) · Nama barang · Type/Ukuran/Merk/Spesifikasi · Jumlah · Satuan · Keterangan. Nama barang boleh diketik bebas atau dipilih dari daftar APD.</p></div>
  <div><label class="font-semibold text-slate-600">Keterangan / alasan pengadaan</label><textarea id="spbKet" rows="2" class="${inp}">${esc(x?x.keterangan:'')}</textarea></div>
  <div class="grid grid-cols-1 md:grid-cols-3 gap-2">${[['dibuat','Dibuat oleh'],['mengetahui','Mengetahui'],['menyetujui','Menyetujui']].map(([k,l])=>`<div class="border rounded-xl p-2 space-y-1"><p class="font-bold text-slate-600">${l}</p><input id="spb_${k}_n" class="${inp}" placeholder="Nama" value="${g(k,'nama')}"><input id="spb_${k}_j" class="${inp}" placeholder="Jabatan" value="${g(k,'jabatan')}"></div>`).join('')}</div>
  <div class="flex gap-2 justify-end pt-1 flex-wrap"><button onclick="document.getElementById('spbModal').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Batal</button><button id="spbSave" onclick="spbSave(false)" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold">💾 Simpan</button><button id="spbSavePrint" onclick="spbSave(true)" class="px-4 py-2 rounded-xl bg-red-700 text-white font-bold">💾🖨️ Simpan &amp; Cetak</button></div></div>`;
  document.body.appendChild(d);
 };
 window.spbSave=async pr=>{
- const items=[...document.querySelectorAll('.spb-it')].map(r=>({nama:r.querySelector('.it-n').value.trim(),ukuran:r.querySelector('.it-u').value.trim(),qty:+r.querySelector('.it-q').value||1,satuan:r.querySelector('.it-s').value.trim(),ket:r.querySelector('.it-k').value.trim()})).filter(i=>i.nama);
+ const items=[...document.querySelectorAll('.spb-it')].map(r=>({kode:r.querySelector('.it-c').value.trim(),nama:r.querySelector('.it-n').value.trim(),ukuran:r.querySelector('.it-u').value.trim(),qty:+r.querySelector('.it-q').value||1,satuan:r.querySelector('.it-s').value.trim(),ket:r.querySelector('.it-k').value.trim()})).filter(i=>i.nama);
  if(!items.length)return toast('Isi minimal satu barang.',0);
  const v=id=>$(id).value.trim(),sg=k=>({nama:v('spb_'+k+'_n'),jabatan:v('spb_'+k+'_j')});
  const p={action:'wpSpbSave',orig:EDIT?EDIT.no:'',no:v('spbNo'),tanggal:$('spbTgl').value,status:$('spbSt').value,unit:v('spbUnit'),perihal:v('spbPer'),keterangan:v('spbKet'),items,dibuat:sg('dibuat'),mengetahui:sg('mengetahui'),menyetujui:sg('menyetujui')};
@@ -5835,7 +5835,7 @@ window.spbPrint=i=>{const x=LIST[i];if(!x)return;doPrint(x.no,window.open('','_b
 window.spbTpl=async()=>{
  try{const r=await post({action:'wpSpbInfo'}),c=r.cfg||{},m=c.map||{},k=c.cols||{};
   const H=[['no_spb','Nomor SPB'],['tanggal','Tanggal'],['unit','Unit / Bagian'],['perihal','Perihal'],['keterangan','Keterangan'],['dibuat_nama','Dibuat – nama'],['dibuat_jabatan','Dibuat – jabatan'],['mengetahui_nama','Mengetahui – nama'],['mengetahui_jabatan','Mengetahui – jabatan'],['menyetujui_nama','Menyetujui – nama'],['menyetujui_jabatan','Menyetujui – jabatan'],['total_qty','Total jumlah']];
-  const C=[['no','No'],['nama','Nama barang'],['ukuran','Ukuran'],['qty','Jumlah'],['satuan','Satuan'],['ket','Ket.']];
+  const C=[['no','No'],['kode','Item code'],['nama','Nama barang'],['ukuran','Type/Ukuran/Merk/Spesifikasi'],['qty','Jumlah'],['satuan','Satuan'],['ket','Ket.']];
   const I=(id,l,v,ph)=>`<label class="block"><span class="font-semibold">${l}</span><input id="${id}" value="${esc(v||'')}" placeholder="${ph||''}" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"></label>`;
   const d=document.createElement('div');d.className='fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-3';
   d.innerHTML=`<div class="bg-white max-w-2xl w-full max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl p-5 space-y-4 text-xs"><h3 class="font-bold text-sm">🧾 Format Cetak SPB</h3>
@@ -5848,7 +5848,7 @@ window.spbTpl=async()=>{
   <div class="grid grid-cols-2 md:grid-cols-3 gap-2">${H.map(([x,l])=>I('sm_'+x,l,m[x],'mis. C7')).join('')}</div>
   <p class="font-semibold pt-1">Daftar barang</p>
   <div class="grid grid-cols-2 md:grid-cols-3 gap-2">${I('sc_ir','Baris pertama barang',c.itemRow||'','mis. 13')}${I('sc_in','Jumlah baris siap pakai',c.itemRows||'','mis. 10')}</div>
-  <div class="grid grid-cols-3 md:grid-cols-6 gap-2">${C.map(([x,l])=>I('sk_'+x,'Kolom '+l,k[x],'mis. B')).join('')}</div>
+  <div class="grid grid-cols-3 md:grid-cols-4 gap-2">${C.map(([x,l])=>I('sk_'+x,'Kolom '+l,k[x],'mis. B')).join('')}</div>
   <p class="text-slate-500">Bila barang melebihi jumlah baris siap pakai, baris ditambah otomatis dan sel di bawahnya ikut bergeser.</p></div>
   <div class="space-y-2"><p class="font-bold">3. Area &amp; kertas</p>
   <div class="grid grid-cols-3 gap-2">${I('sc_rg','Area cetak (opsional)',c.range,'mis. A1:H45')}
