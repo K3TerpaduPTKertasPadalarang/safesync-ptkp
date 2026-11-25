@@ -5833,13 +5833,39 @@ async function doPrint(no,w){
 }
 window.spbPrint=i=>{const x=LIST[i];if(!x)return;doPrint(x.no,window.open('','_blank'))};
 window.spbTpl=async()=>{
- try{const r=await post({action:'wpSpbInfo'});
+ try{const r=await post({action:'wpSpbInfo'}),c=r.cfg||{},m=c.map||{},k=c.cols||{};
+  const H=[['no_spb','Nomor SPB'],['tanggal','Tanggal'],['unit','Unit / Bagian'],['perihal','Perihal'],['keterangan','Keterangan'],['dibuat_nama','Dibuat – nama'],['dibuat_jabatan','Dibuat – jabatan'],['mengetahui_nama','Mengetahui – nama'],['mengetahui_jabatan','Mengetahui – jabatan'],['menyetujui_nama','Menyetujui – nama'],['menyetujui_jabatan','Menyetujui – jabatan'],['total_qty','Total jumlah']];
+  const C=[['no','No'],['nama','Nama barang'],['ukuran','Ukuran'],['qty','Jumlah'],['satuan','Satuan'],['ket','Ket.']];
+  const I=(id,l,v,ph)=>`<label class="block"><span class="font-semibold">${l}</span><input id="${id}" value="${esc(v||'')}" placeholder="${ph||''}" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"></label>`;
   const d=document.createElement('div');d.className='fixed inset-0 z-[110] bg-black/60 flex items-center justify-center p-3';
-  d.innerHTML=`<div class="bg-white max-w-lg w-full rounded-2xl shadow-2xl p-5 space-y-3 text-xs"><h3 class="font-bold text-sm">🧾 Template Cetak SPB</h3>
-  <p>Format cetak SPB diambil dari sheet <b>${esc(r.sheet)}</b> pada spreadsheet database. Tempel format Excel Anda di sheet itu, lalu tulis <b>kode isian</b> pada sel yang harus terisi, mis. <code>{{no_spb}}</code>, <code>{{tanggal}}</code>, <code>{{unit}}</code>, <code>{{keterangan}}</code>.</p>
-  <p>Baris daftar barang cukup <b>satu baris</b> berisi <code>{{no}}</code> <code>{{nama}}</code> <code>{{ukuran}}</code> <code>{{qty}}</code> <code>{{satuan}}</code> <code>{{ket}}</code>; baris itu otomatis digandakan. Daftar lengkap kode ada di catatan sel A1 pada sheet template.</p>
-  <div class="flex gap-2 justify-end"><button onclick="this.closest('.fixed').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Tutup</button><a href="${esc(r.url)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-amber-500 text-white font-bold">Buka Template di Google Sheets ↗</a></div></div>`;
-  document.body.appendChild(d)}catch(e){toast(e.message,0)}
+  d.innerHTML=`<div class="bg-white max-w-2xl w-full max-h-[92vh] overflow-y-auto rounded-2xl shadow-2xl p-5 space-y-4 text-xs"><h3 class="font-bold text-sm">🧾 Format Cetak SPB</h3>
+  <p>Format yang dipakai sekarang: sheet <b>${esc(r.sheet)}</b>. Cetak PDF menyalin sheet itu, mengisi data, lalu mengekspornya — tampilan mengikuti format Anda.</p>
+  <div class="space-y-2"><p class="font-bold">1. Pilih sheet format Anda</p>
+  ${I('sc_link','Link tab sheet (klik tab format di Google Sheets, salin link dari address bar; harus memuat gid)',c.link,'https://docs.google.com/spreadsheets/d/…/edit?gid=…')}
+  <p class="text-slate-500">Kosongkan untuk memakai sheet bawaan TEMPLATE_SPB. Format boleh berada di file spreadsheet lain, asalkan akun pemilik script punya akses.</p></div>
+  <div class="space-y-2"><p class="font-bold">2. Tentukan letak isian</p>
+  <p class="text-slate-500">Cara A: tulis kode seperti <code>{{no_spb}}</code> di sel format Anda. Cara B (tanpa mengubah format): isi alamat sel di bawah. Keduanya boleh dipakai bersamaan.</p>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2">${H.map(([x,l])=>I('sm_'+x,l,m[x],'mis. C7')).join('')}</div>
+  <p class="font-semibold pt-1">Daftar barang</p>
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-2">${I('sc_ir','Baris pertama barang',c.itemRow||'','mis. 13')}${I('sc_in','Jumlah baris siap pakai',c.itemRows||'','mis. 10')}</div>
+  <div class="grid grid-cols-3 md:grid-cols-6 gap-2">${C.map(([x,l])=>I('sk_'+x,'Kolom '+l,k[x],'mis. B')).join('')}</div>
+  <p class="text-slate-500">Bila barang melebihi jumlah baris siap pakai, baris ditambah otomatis dan sel di bawahnya ikut bergeser.</p></div>
+  <div class="space-y-2"><p class="font-bold">3. Area &amp; kertas</p>
+  <div class="grid grid-cols-3 gap-2">${I('sc_rg','Area cetak (opsional)',c.range,'mis. A1:H45')}
+  <label class="block"><span class="font-semibold">Kertas</span><select id="sc_pp" class="w-full border rounded-lg px-2 py-1.5 mt-0.5">${['A4','A3','A5','Letter','Legal'].map(x=>`<option ${(c.paper||'A4')===x?'selected':''}>${x}</option>`).join('')}</select></label>
+  <label class="block"><span class="font-semibold">Orientasi</span><select id="sc_ls" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"><option value="0">Potret</option><option value="1" ${c.land?'selected':''}>Lanskap</option></select></label></div></div>
+  <div class="flex flex-wrap gap-2 justify-end"><button onclick="this.closest('.fixed').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Tutup</button>
+  <button id="sc_reset" class="px-4 py-2 rounded-xl bg-slate-100 font-bold text-red-600">Pakai format bawaan</button>
+  <a href="${esc(r.url)}" target="_blank" rel="noopener" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Buka sheet ↗</a>
+  <button id="sc_save" class="px-4 py-2 rounded-xl bg-amber-500 text-white font-bold">Simpan pengaturan</button></div></div>`;
+  document.body.appendChild(d);
+  d.querySelector('#sc_save').onclick=async()=>{
+   const map={},cols={};H.forEach(([x])=>map[x]=$('sm_'+x).value.trim());C.forEach(([x])=>cols[x]=$('sk_'+x).value.trim());
+   const cfg={link:$('sc_link').value.trim(),map,cols,itemRow:$('sc_ir').value.trim(),itemRows:$('sc_in').value.trim(),range:$('sc_rg').value.trim(),paper:$('sc_pp').value,land:$('sc_ls').value==='1'};
+   try{await post({action:'wpSpbCfgSave',cfg});toast('Pengaturan format cetak disimpan.');d.remove()}catch(e){toast(e.message,0)}};
+  d.querySelector('#sc_reset').onclick=async()=>{if(!confirm('Kembali memakai sheet TEMPLATE_SPB bawaan?'))return;
+   try{await post({action:'wpSpbCfgSave',cfg:{reset:true}});toast('Kembali ke format bawaan.');d.remove()}catch(e){toast(e.message,0)}};
+ }catch(e){toast(e.message,0)}
 };
 })();
 </script>
