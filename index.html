@@ -3815,7 +3815,7 @@ window.pubTop=m=>{topMode=m;renderAll()};
 
 /* ---------- Shell modul APD (beda tampilan karyawan vs admin) ---------- */
 const card='bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 space-y-3';
-const TABS=['Peminjaman APD','SPB APD','Permintaan APD','Serah Terima APD','Safety Stock APD'];
+const TABS=['Peminjaman APD','Pengadaan Barang / SPB APD','Permintaan APD','Serah Terima APD','Safety Stock APD'];
 function buildShell(){
  shellRole=currentUser.role;const adm=isAdm();
  const tabs=`<div class="bg-white rounded-2xl shadow-lg p-3 border border-slate-100 flex gap-2 overflow-x-auto text-xs">${TABS.map((t,i)=>`<button onclick="pjTab(${i})" id="pjT${i}" class="whitespace-nowrap px-3.5 py-2 rounded-xl font-bold">${t}</button>`).join('')}</div><div id="pjDev" class="${card} hidden text-center py-10"><p class="text-4xl">🚧</p><p class="font-bold text-slate-700 mt-2" id="pjDevName"></p><p class="text-xs text-slate-500">Fitur ini masih dalam tahap pengembangan.</p></div>`;
@@ -4059,7 +4059,7 @@ const val=id=>$(id).value.trim(),ckd=c=>[...Q('.'+c)].filter(x=>x.checked).map(x
 
 
 /* ---------- SOP & IK: diunggah admin, dibaca / diunduh semua akun ---------- */
-const SOPM=[['apar','🧯 APAR'],['temuan','⚠️ Temuan K3'],['apd_pinjam','⛑️ APD — Peminjaman'],['apd_minta','⛑️ APD — Permintaan'],['apd_serah','⛑️ APD — Serah Terima'],['apd_spb','⛑️ APD — SPB'],['apd_stok','⛑️ APD — Safety Stock'],['wp','🧾 Work Permit & JSA'],['veh','🚗 Inspeksi Kendaraan'],['lap','📑 Laporan Bulanan'],['si','🦺 Safety Induction'],['umum','📌 Umum']];
+const SOPM=[['apar','🧯 APAR'],['temuan','⚠️ Temuan K3'],['apd_pinjam','⛑️ APD — Peminjaman'],['apd_minta','⛑️ APD — Permintaan'],['apd_serah','⛑️ APD — Serah Terima'],['apd_spb','⛑️ APD — Pengadaan Barang / SPB'],['apd_stok','⛑️ APD — Safety Stock'],['wp','🧾 Work Permit & JSA'],['veh','🚗 Inspeksi Kendaraan'],['lap','📑 Laporan Bulanan'],['si','🦺 Safety Induction'],['umum','📌 Umum']];
 const SOPF=[['all','Semua'],['apar','APAR'],['temuan','Temuan'],['apd','APD'],['wp','Work Permit & JSA'],['veh','Kendaraan'],['lap','Laporan Bulanan'],['si','Safety Induction'],['umum','Umum']];
 const SOPX={pdf:'application/pdf',doc:'application/msword',docx:'application/vnd.openxmlformats-officedocument.wordprocessingml.document',xls:'application/vnd.ms-excel',xlsx:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',ppt:'application/vnd.ms-powerpoint',pptx:'application/vnd.openxmlformats-officedocument.presentationml.presentation',png:'image/png',jpg:'image/jpeg',jpeg:'image/jpeg'};
 let SOP_CUR='',SOP_L=[],SOP_F='all',SOP_PV='';
@@ -5027,7 +5027,7 @@ addEventListener('keydown',e=>{if(e.key==='Escape'){const o=document.getElementB
 const $=id=>document.getElementById(id),E=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const post=async p=>{const r=await(await fetch(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({...p,token:localStorage.getItem('wpTok')||''})})).json();if(r.ok===undefined)throw new Error('Server belum diperbarui. Tempel Code.gs terbaru lalu Deploy > New version.');if(!r.ok)throw new Error(r.msg||'Gagal.');return r};
 const toast=(m,ok=1)=>{const t=document.createElement('div');t.className='fixed top-16 left-1/2 -translate-x-1/2 z-[120] text-white text-xs rounded-xl shadow-2xl px-4 py-2.5 '+(ok?'bg-emerald-700':'bg-red-700');t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),3800)};
-const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['hdr','⛑️ Modul APD'],['apd_pinjam','Peminjaman APD',1,1,1],['apd_spb','SPB APD',1,0,1],['apd_minta','Permintaan APD',1,0,1],['apd_serah','Serah Terima APD',1,0,1],['apd_stok','Safety Stock APD',1,0,1],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
+const MODS=[['apar','🧯 Pemeriksaan APAR',1,0],['temuan','⚠️ Temuan',1,0],['hdr','⛑️ Modul APD'],['apd_pinjam','Peminjaman APD',1,1,1],['apd_spb','Pengadaan Barang / SPB APD',1,0,1],['apd_minta','Permintaan APD',1,0,1],['apd_serah','Serah Terima APD',1,0,1],['apd_stok','Safety Stock APD',1,0,1],['wp','🧾 Work Permit & JSA',1,1],['veh','🚗 Inspeksi Kendaraan',1,0],['sop','📚 SOP & IK',1,1]];
 const APDS=['apd_pinjam','apd_spb','apd_minta','apd_serah','apd_stok'];
 const keyOf=b=>{const o=b.getAttribute('onclick')||'',m=o.match(/^switchModule\('(apar|temuan|apd|wp|veh)'\)/);return m?m[1]:/^sopOpen\(/.test(o)?'sop':null};
 const NAMA=Object.assign(Object.fromEntries(MODS.map(m=>[m[0],m[1]])),{apd:'⛑️ APD'});
@@ -5752,10 +5752,10 @@ function ensure(){
 }
 function shell(){
  const m=ensure();if(!m)return;
- if(!isAdm()){m.innerHTML=`<div class="${card} text-center py-10"><p class="text-4xl">🔒</p><p class="font-bold text-slate-700 mt-2">SPB APD</p><p class="text-xs text-slate-500">Fitur ini khusus admin K3LH.</p></div>`;return}
+ if(!isAdm()){m.innerHTML=`<div class="${card} text-center py-10"><p class="text-4xl">🔒</p><p class="font-bold text-slate-700 mt-2">Pengadaan Barang / SPB APD</p><p class="text-xs text-slate-500">Fitur ini khusus admin K3LH.</p></div>`;return}
  m.innerHTML=`<div class="${card}">
   <div class="flex justify-between items-start gap-2 flex-wrap border-b border-slate-100 pb-3">
-   <div><h2 class="text-sm md:text-lg font-bold text-slate-900">📦 Pengadaan / SPB APD</h2><p class="text-[11px] text-slate-500">Surat Permintaan Barang APD. Cetak PDF memakai format template di spreadsheet (format tidak berubah).</p></div>
+   <div><h2 class="text-sm md:text-lg font-bold text-slate-900">📦 Pengadaan Barang / SPB APD</h2><p class="text-[11px] text-slate-500">Surat Permintaan Barang (APD dan non-APD). Cetak PDF memakai format template di spreadsheet (format tidak berubah).</p></div>
    <div class="flex gap-2 flex-wrap"><button onclick="spbForm()" class="bg-red-700 hover:bg-red-800 text-white font-bold px-3.5 py-2 rounded-xl text-xs shadow">➕ SPB Baru</button>
    <button onclick="spbLoad(1)" class="bg-slate-900 text-white font-bold px-3.5 py-2 rounded-xl text-xs">🔄 Muat Ulang</button>
    <button onclick="spbTpl()" class="bg-amber-500 hover:bg-amber-600 text-white font-bold px-3.5 py-2 rounded-xl text-xs">🧾 Template Cetak</button></div></div>
@@ -5775,26 +5775,46 @@ window.spbLoad=async(force)=>{
  try{const r=await post({action:'wpSpbList'});LIST=r.list||[];NEXT=r.next||'';rows()}
  catch(e){const b=$('spbRows');if(b)b.innerHTML=`<tr><td colspan="6" class="px-2 py-6 text-center text-red-600">${esc(e.message)}</td></tr>`}
  finally{loading=false}
- if(!MASTER.length){try{const s=await(await fetch(SCRIPT_URL+'?action=apdState&_='+Date.now())).json();MASTER=((s&&s.master)||[]).filter(m=>m.aktif!==false).map(m=>m.kategori+(m.varian&&m.varian!=='-'?' '+m.varian:''))}catch(e){}}
+ 
 };
 window.spbShow=on=>{const m=ensure();if(!m)return;m.classList.toggle('hidden',!on);if(on){if(!$('spbRows'))shell();spbLoad()}};
 
 /* ---------- form ---------- */
 let EDIT=null;
-function itemRow(it){it=it||{};return `<div class="spb-it grid grid-cols-12 gap-1.5 items-center"><input class="${inp} col-span-12 md:col-span-2 it-c" placeholder="Item code" title="Item code (opsional, dari SAFT ERP)" value="${esc(it.kode||'')}"><input class="${inp} col-span-12 md:col-span-3 it-n" list="spbDL" placeholder="Nama barang *" value="${esc(it.nama||'')}"><input class="${inp} col-span-4 md:col-span-2 it-u" placeholder="Type/Ukuran/Merk" title="Type/Ukuran/Merk/Spesifikasi" value="${esc(it.ukuran||'')}"><input type="number" min="1" class="${inp} col-span-3 md:col-span-1 it-q text-center" value="${it.qty||1}"><input class="${inp} col-span-3 md:col-span-1 it-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-10 md:col-span-2 it-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-2 md:col-span-1 text-red-600 font-bold">✕</button></div>`}
+let STKL=[];
+const loadStk=async()=>{try{const r=await post({action:'wpStokList'});STKL=(r.list||[]).filter(z=>z.aktif)}catch(e){toast(e.message,0)}};
+const cOK=x=>!!x&&/pakaian|wearpack|t-shirt|vest|rompi|jas|apron|arc flash|seragam|baju|kemeja|celana/i.test((x.kategori||'')+' '+(x.nama||''));
+const cIs=u=>/^custom\s*:/i.test(String(u||''));
+const szOpts=(m,cur)=>'<option value="">Ukuran…</option>'+(m.sizes||[]).map(z=>`<option value="${esc(z.u)}" ${cur===z.u?'selected':''}>${esc(z.u)}</option>`).join('')+(cOK(m)?`<option value="__c" ${cur==='__c'?'selected':''}>✏️ Ukuran custom…</option>`:'');
+function itemRow(it){it=it||{};
+ const nm=String(it.nama||'').trim().toLowerCase();let m=it.sid?STKL.find(z=>z.id===it.sid):null;if(!m&&nm)m=STKL.find(z=>String(z.nama).toLowerCase()===nm)||null;
+ const uk=String(it.ukuran||'');let cur='',cu='';
+ if(m&&(m.sizes||[]).length){const e=m.sizes.find(z=>String(z.u).toLowerCase()===uk.trim().toLowerCase());if(e)cur=e.u;else if(cIs(uk)&&cOK(m)){cur='__c';cu=uk.replace(/^custom\s*:\s*/i,'')}else if(uk)m=null}
+ const lain=!m&&!!nm,sel=m?m.id:(lain?'__x':''),hasSz=!!(m&&(m.sizes||[]).length);
+ const ks=[...new Set(STKL.map(z=>z.kategori))],opts=ks.map(k=>`<optgroup label="${esc(k)}">${STKL.filter(z=>z.kategori===k).map(z=>`<option value="${esc(z.id)}" ${z.id===sel?'selected':''}>${esc(z.nama)}</option>`).join('')}</optgroup>`).join('');
+ return `<div class="spb-it grid grid-cols-12 gap-1.5 items-center border border-slate-100 rounded-xl p-1.5"><input class="${inp} col-span-12 md:col-span-2 it-c" placeholder="Item code" title="Item code (opsional, dari SAFT ERP)" value="${esc(it.kode||'')}">`
+ +`<select class="${inp} col-span-12 md:col-span-3 it-sel" onchange="spbPick(this)"><option value="">Pilih barang…</option>${opts}<option value="__x" ${sel==='__x'?'selected':''}>Lainnya (non-APD, ketik sendiri)</option></select>`
+ +`<input class="${inp} col-span-12 it-n ${lain?'':'hidden'}" placeholder="Nama barang NON-APD (mis. pulpen, ATK) *" value="${lain?esc(it.nama):''}">`
+ +`<select class="${inp} col-span-4 md:col-span-2 it-uz ${hasSz?'':'hidden'}" onchange="spbSz(this)">${hasSz?szOpts(m,cur):''}</select><input class="${inp} col-span-4 md:col-span-2 it-u ${hasSz?'hidden':''}" placeholder="Type/Ukuran/Merk" title="Type/Ukuran/Merk/Spesifikasi" value="${hasSz?'':esc(uk)}">`
+ +`<input type="number" min="1" class="${inp} col-span-3 md:col-span-1 it-q text-center" value="${it.qty||1}"><input class="${inp} col-span-3 md:col-span-1 it-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-10 md:col-span-2 it-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-2 md:col-span-1 text-red-600 font-bold">✕</button>`
+ +`<input class="${inp} col-span-12 it-uc ${cur==='__c'?'':'hidden'}" maxlength="50" placeholder="Ukuran custom, mis. lingkar dada 110 cm, panjang 72 cm" value="${esc(cu)}"></div>`}
+window.spbPick=sel=>{const r=sel.closest('.spb-it'),v=sel.value,m=STKL.find(z=>z.id===v),n=r.querySelector('.it-n'),uz=r.querySelector('.it-uz'),u=r.querySelector('.it-u'),sat=r.querySelector('.it-s'),sz=m?(m.sizes||[]):[];
+ n.classList.toggle('hidden',v!=='__x');r.querySelector('.it-uc').classList.add('hidden');
+ if(sz.length){uz.innerHTML=szOpts(m,'');uz.classList.remove('hidden');u.classList.add('hidden')}else{uz.classList.add('hidden');u.classList.remove('hidden')}
+ if(m)sat.value=m.satuan||'Pcs';if(v==='__x')n.focus()};
+window.spbSz=sel=>{const uc=sel.closest('.spb-it').querySelector('.it-uc'),on=sel.value==='__c';uc.classList.toggle('hidden',!on);if(on)uc.focus()};
 window.spbAddItem=()=>$('spbItems').insertAdjacentHTML('beforeend',itemRow());
 const ROMB=['I','II','III','IV','V','VI','VII','VIII','IX','X','XI','XII'];
 const noSfx=iso=>{const m=/^(\d{4})-(\d{2})/.exec(iso||'');return m?'.2/SPB/JAMINDAL K3LH/'+ROMB[+m[2]-1]+'/'+m[1]:''};
 const noNext=iso=>{const y=+String(iso||todayISO()).slice(0,4);let mx=0;LIST.forEach(s=>{const k=/^(\d+)(?:\.\d+)?\/SPB\/JAMINDAL K3LH\/[^\/]+\/(\d{4})$/i.exec(s.no)||/^SPB-(\d+)\/.*\/(\d{4})$/.exec(s.no);if(k&&+k[2]===y)mx=Math.max(mx,+k[1])});const n=String(mx+1);return n.padStart(3,'0')};
 window.spbNoRefresh=()=>{const s=$('spbNoSfx'),n=$('spbNo'),t=$('spbTgl').value;if(!s||!n||s.dataset.full==='1')return;s.textContent=noSfx(t);if(!EDIT&&n.dataset.touched!=='1')n.value=noNext(t)};
-window.spbForm=i=>{
+window.spbForm=async i=>{await loadStk();
  const x=i==null?null:LIST[i];EDIT=x;
  let sg={};try{sg=JSON.parse(localStorage.getItem('spbSign')||'{}')}catch(e){}
  const g=(o,k,d)=>esc((x&&x[o]&&x[o][k])||(sg[o]&&sg[o][k])||d||'');
  $('spbModal')&&$('spbModal').remove();
  const d=document.createElement('div');d.id='spbModal';d.className='fixed inset-0 z-[110] bg-black/60 flex items-start md:items-center justify-center p-2 overflow-y-auto';
- d.innerHTML=`<datalist id="spbDL">${MASTER.map(n=>`<option value="${esc(n)}">`).join('')}</datalist>
- <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-4 md:p-5 space-y-3 text-xs my-2"><div class="flex justify-between items-center border-b pb-2"><h3 class="font-bold text-sm">${x?'✏️ Ubah SPB':'➕ SPB APD Baru'}</h3><button onclick="document.getElementById('spbModal').remove()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button></div>
+ d.innerHTML=` <div class="bg-white w-full max-w-3xl rounded-2xl shadow-2xl p-4 md:p-5 space-y-3 text-xs my-2"><div class="flex justify-between items-center border-b pb-2"><h3 class="font-bold text-sm">${x?'✏️ Ubah SPB':'➕ SPB APD Baru'}</h3><button onclick="document.getElementById('spbModal').remove()" class="w-8 h-8 rounded-full bg-slate-100 font-bold">✕</button></div>
  <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
   <div class="col-span-2"><label class="font-semibold text-slate-600">No. SPB <span class="font-normal text-slate-400">(isi nomornya saja)</span></label><div class="flex items-center gap-1">${(()=>{const mm=x?/^(.*?)(\.\d+\/SPB\/JAMINDAL K3LH\/[^\/]+\/\d{4})$/i.exec(x.no):null,full=!!x&&!mm,tg=x?x.tanggal:todayISO();return `<input id="spbNo" oninput="this.dataset.touched='1'" ${full?'':'inputmode="numeric"'} class="${inp} ${full?'flex-1':'w-20 text-center'} font-bold" value="${esc(full?x.no:(mm?mm[1]:noNext(tg)))}"><span id="spbNoSfx" data-full="${full?1:0}" class="text-[11px] font-semibold text-slate-600 whitespace-nowrap">${full?'':esc(mm?noSfx(tg):noSfx(tg))}</span>`})()}</div><p class="text-[10px] text-slate-400 mt-0.5">Berurut otomatis; boleh diketik manual. Bila diketik lengkap dengan “/”, dipakai apa adanya.</p></div>
   <div><label class="font-semibold text-slate-600">Tanggal *</label><input type="date" id="spbTgl" onchange="spbNoRefresh()" class="${inp}" value="${esc(x?x.tanggal:todayISO())}"></div>
@@ -5803,14 +5823,22 @@ window.spbForm=i=>{
   <div class="col-span-2"><label class="font-semibold text-slate-600">Perihal</label><input id="spbPer" class="${inp}" value="${esc(x?x.perihal:'Pengadaan APD')}"></div></div>
  <div><div class="flex justify-between items-center"><label class="font-bold text-slate-700">Daftar barang *</label><button type="button" onclick="spbAddItem()" class="text-[11px] font-bold text-red-700">+ Tambah barang</button></div>
   <div id="spbItems" class="space-y-1.5 mt-1">${(x&&x.items.length?x.items:[{}]).map(itemRow).join('')}</div>
-  <p class="text-[10px] text-slate-400 mt-1">Urutan kolom: Item code (opsional) · Nama barang · Type/Ukuran/Merk/Spesifikasi · Jumlah · Satuan · Keterangan. Nama barang boleh diketik bebas atau dipilih dari daftar APD.</p></div>
+  <p class="text-[10px] text-slate-400 mt-1">Urutan kolom: Item code (opsional) · Nama barang · Type/Ukuran/Merk/Spesifikasi · Jumlah · Satuan · Keterangan. <b>Barang APD wajib dipilih dari daftar Safety Stock</b> (bila belum ada, tambahkan dulu di menu Safety Stock APD). Pilihan “Lainnya” hanya untuk barang non-APD, mis. pulpen/ATK, dan tidak masuk Safety Stock.</p></div>
  <div><label class="font-semibold text-slate-600">Keterangan / alasan pengadaan</label><textarea id="spbKet" rows="2" class="${inp}">${esc(x?x.keterangan:'')}</textarea></div>
  <div class="grid grid-cols-1 md:grid-cols-3 gap-2">${[['dibuat','Dibuat oleh'],['mengetahui','Mengetahui'],['menyetujui','Menyetujui']].map(([k,l])=>`<div class="border rounded-xl p-2 space-y-1"><p class="font-bold text-slate-600">${l}</p><input id="spb_${k}_n" class="${inp}" placeholder="Nama" value="${g(k,'nama')}"><input id="spb_${k}_j" class="${inp}" placeholder="Jabatan" value="${g(k,'jabatan')}"></div>`).join('')}</div>
  <div class="flex gap-2 justify-end pt-1 flex-wrap"><button onclick="document.getElementById('spbModal').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Batal</button><button id="spbSave" onclick="spbSave(false)" class="px-4 py-2 rounded-xl bg-slate-900 text-white font-bold">💾 Simpan</button><button id="spbSavePrint" onclick="spbSave(true)" class="px-4 py-2 rounded-xl bg-red-700 text-white font-bold">💾🖨️ Simpan &amp; Cetak</button></div></div>`;
  document.body.appendChild(d);
 };
 window.spbSave=async pr=>{
- const items=[...document.querySelectorAll('.spb-it')].map(r=>({kode:r.querySelector('.it-c').value.trim(),nama:r.querySelector('.it-n').value.trim(),ukuran:r.querySelector('.it-u').value.trim(),qty:+r.querySelector('.it-q').value||1,satuan:r.querySelector('.it-s').value.trim(),ket:r.querySelector('.it-k').value.trim()})).filter(i=>i.nama);
+ let bad='';const items=[];
+ document.querySelectorAll('.spb-it').forEach(r=>{if(bad)return;const v=r.querySelector('.it-sel').value;if(!v)return;
+  const m=STKL.find(z=>z.id===v),kode=r.querySelector('.it-c').value.trim(),q=+r.querySelector('.it-q').value||1,sat=r.querySelector('.it-s').value.trim(),ket=r.querySelector('.it-k').value.trim();
+  if(v==='__x'){const n=r.querySelector('.it-n').value.trim();if(!n){bad='Isi nama barang pada baris “Lainnya”.';return}items.push({kode,sid:'',nama:n,ukuran:r.querySelector('.it-u').value.trim(),qty:q,satuan:sat,ket});return}
+  if(!m)return;const hasSz=(m.sizes||[]).length;let uk=hasSz?r.querySelector('.it-uz').value:r.querySelector('.it-u').value.trim();
+  if(hasSz&&!uk){bad='Pilih ukuran untuk '+m.nama+'.';return}
+  if(uk==='__c'){const c=r.querySelector('.it-uc').value.trim();if(!c){bad='Isi detail ukuran custom untuk '+m.nama+'.';return}uk='Custom: '+c}
+  items.push({kode,sid:m.id,nama:m.nama,ukuran:uk,qty:q,satuan:sat,ket})});
+ if(bad)return toast(bad,0);
  if(!items.length)return toast('Isi minimal satu barang.',0);
  const v=id=>$(id).value.trim(),sg=k=>({nama:v('spb_'+k+'_n'),jabatan:v('spb_'+k+'_j')});
  let no=v('spbNo');const sf=$('spbNoSfx');if(no&&sf&&sf.dataset.full!=='1'&&no.indexOf('/')<0){if(/^\d{1,2}$/.test(no))no=no.padStart(3,'0');no+=noSfx($('spbTgl').value)}
@@ -6040,7 +6068,7 @@ window.opSpbForm=pre=>{const R=PM.filter(r=>r.status==='Disetujui'&&r.items.some
  <label class="flex items-center gap-2"><input id="spM" type="checkbox" checked> Gabungkan barang yang sama (nama, ukuran, satuan sama) menjadi satu baris SPB</label>
  <div class="flex gap-2 justify-end"><button onclick="document.getElementById('opModal').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Batal</button><button id="spGo" class="${bR}">Buat SPB</button></div>`);
  $('spGo').onclick=async()=>{const lines=[...document.querySelectorAll('.sp-c:checked')].map(c=>({no:c.dataset.no,i:+c.dataset.i,qty:+c.closest('tr').querySelector('.sp-q').value}));if(!lines.length)return toast('Centang minimal satu barang.',0);
-  $('spGo').disabled=true;try{const r=await post({action:'wpPmSpb',lines,merge:$('spM').checked,unit:$('spU').value,perihal:$('spP').value,keterangan:$('spK').value});closeM();toast('SPB '+r.no+' dibuat.');await pmView();if(typeof window.pjTab==='function'&&confirm('SPB '+r.no+' dibuat. Buka tab SPB APD sekarang?'))window.pjTab(1)}catch(e){toast(e.message,0);$('spGo').disabled=false}}};
+  $('spGo').disabled=true;try{const r=await post({action:'wpPmSpb',lines,merge:$('spM').checked,unit:$('spU').value,perihal:$('spP').value,keterangan:$('spK').value});closeM();toast('SPB '+r.no+' dibuat.');await pmView();if(typeof window.pjTab==='function'&&confirm('SPB '+r.no+' dibuat. Buka tab Pengadaan Barang / SPB APD sekarang?'))window.pjTab(1)}catch(e){toast(e.message,0);$('spGo').disabled=false}}};
 window.pmSave=async()=>{const items=[];let bad='';document.querySelectorAll('#pmItems .pi').forEach(r=>{const v=r.querySelector('.pi-sel').value;if(!v)return;const x=SSL.find(z=>z.id===v),q=+r.querySelector('.pi-q').value,sat=r.querySelector('.pi-s').value.trim(),ket=r.querySelector('.pi-k').value.trim();
  if(v==='__x'){const n=r.querySelector('.pi-n').value.trim();if(!n){bad='Isi nama APD pada baris “Lainnya”.';return}items.push({sid:'',nama:n,ukuran:r.querySelector('.pi-u').value.trim(),qty:q,satuan:sat,ket})}
  else if(x){const hasSz=szOf(x).length;let uk=hasSz?r.querySelector('.pi-uz').value:r.querySelector('.pi-u').value.trim();if(hasSz&&!uk){bad='Pilih ukuran untuk '+x.nama+'.';return}if(uk==='__c'){const c=r.querySelector('.pi-uc').value.trim();if(!c){bad='Isi detail ukuran custom untuk '+x.nama+'.';return}uk='Custom: '+c}items.push({sid:x.id,nama:x.nama,ukuran:uk,qty:q,satuan:sat,ket})}});
