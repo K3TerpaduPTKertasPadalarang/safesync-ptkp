@@ -683,7 +683,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div><label class="block font-semibold text-slate-600 mb-1">ID Temuan</label><input type="text" id="tId" readonly class="w-full px-3.5 py-2.5 border rounded-xl bg-slate-50 font-bold text-red-700 shadow-sm"></div>
                             <div><label class="block font-semibold text-slate-600 mb-1">Nama Pelapor *</label><input type="text" id="tNama" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
-                            <div><label class="block font-semibold text-slate-600 mb-1">NIK / NIP Pelapor *</label><input type="text" id="tReg" required placeholder="NIK" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
+                            <div><label class="block font-semibold text-slate-600 mb-1">Nomor Register Pelapor *</label><input type="text" id="tReg" required placeholder="Nomor Register" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div>
@@ -734,7 +734,7 @@
                         <div id="selectedTemuanPreview" class="p-3.5 bg-slate-50 rounded-xl text-xs text-slate-600 border shadow-inner hidden"></div>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                             <div><label class="block font-semibold text-slate-700 mb-1">Nama PIC Tindak Lanjut *</label><input type="text" id="tlNama" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
-                            <div><label class="block font-semibold text-slate-700 mb-1">NIK PIC *</label><input type="text" id="tlReg" required placeholder="NIK" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
+                            <div><label class="block font-semibold text-slate-700 mb-1">Nomor Register PIC *</label><input type="text" id="tlReg" required placeholder="Nomor Register" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
                         </div>
                         <div>
                             <label class="block font-semibold text-slate-700 mb-1">Uraian Progres / Perbaikan *</label>
@@ -827,7 +827,7 @@
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div><label class="block font-semibold text-slate-600 mb-1">Tanggal *</label><input type="date" id="aTgl" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm"></div>
                             <div><label class="block font-semibold text-slate-600 mb-1">Nama Pemohon *</label><input type="text" id="aNama" required class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
-                            <div><label class="block font-semibold text-slate-600 mb-1">NIK Pemohon *</label><input type="text" id="aReg" required placeholder="NIK" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
+                            <div><label class="block font-semibold text-slate-600 mb-1">Nomor Register Pemohon *</label><input type="text" id="aReg" required placeholder="Nomor Register" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
                         </div>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div><label class="block font-semibold text-slate-600 mb-1">Departemen *</label><input type="text" id="aDept" required placeholder="Produksi / K3LH" class="w-full px-3.5 py-2.5 border rounded-xl shadow-sm focus:ring-2 focus:ring-red-500 outline-none"></div>
@@ -5923,7 +5923,7 @@ window.pmRows=()=>{const b=$('pmRows');if(!b)return;const q=($('pmQ')?.value||''
 const itemRow=it=>{it=it||{};return `<div class="pi grid grid-cols-12 gap-1.5 items-center"><input class="${inp} col-span-12 md:col-span-4 pi-n" list="pmDL" placeholder="Nama APD *" value="${esc(it.nama||'')}"><input class="${inp} col-span-12 md:col-span-3 pi-u" placeholder="Type/Ukuran/Merk/Spesifikasi" value="${esc(it.ukuran||'')}"><input type="number" min="1" class="${inp} col-span-3 md:col-span-1 pi-q text-center" value="${it.qty||1}"><input class="${inp} col-span-4 md:col-span-1 pi-s" placeholder="Satuan" value="${esc(it.satuan||'Pcs')}"><input class="${inp} col-span-4 md:col-span-2 pi-k" placeholder="Keterangan" value="${esc(it.ket||'')}"><button type="button" onclick="this.parentNode.remove()" class="col-span-1 text-red-600 font-bold">✕</button></div>`};
 window.pmForm=()=>{const u=currentUser||{},dv=localStorage.getItem('opDept')||'',jb=localStorage.getItem('opJab')||'';
  const o=modal(`<h3 class="font-bold text-sm">📝 Formulir Permintaan APD</h3><datalist id="pmDL">${STK.map(s=>`<option value="${esc(s.nama)}">`).join('')}</datalist>
- <div class="grid grid-cols-1 md:grid-cols-3 gap-2"><label>Nama<input class="${inp} bg-slate-50" value="${esc(u.name||'')}" readonly></label><label>NIK<input class="${inp} bg-slate-50" value="${esc(u.reg||'')}" readonly></label>
+ <div class="grid grid-cols-1 md:grid-cols-3 gap-2"><label>Nama<input class="${inp} bg-slate-50" value="${esc(u.name||'')}" readonly></label><label>Nomor Register<input class="${inp} bg-slate-50" value="${esc(u.reg||'')}" readonly></label>
  <label>Departemen *<select id="pmDept" class="${inp}"><option value="">Pilih…</option>${DEPTS.map(d=>`<option ${d===dv?'selected':''}>${d}</option>`).join('')}</select></label>
  <label>Jabatan<input id="pmJab" class="${inp}" value="${esc(jb)}"></label><label>Jenis permintaan<select id="pmJenis" class="${inp}">${JENIS.map(j=>`<option>${j}</option>`).join('')}</select></label><label>Alasan *<input id="pmAlasan" class="${inp}" placeholder="mis. sepatu sobek, area kerja baru"></label></div>
  <p class="font-bold pt-1">Daftar APD</p><div id="pmItems" class="space-y-1.5">${itemRow()}</div><button type="button" onclick="document.getElementById('pmItems').insertAdjacentHTML('beforeend',window.opItemRow())" class="text-red-700 font-bold">➕ Tambah APD</button>
@@ -5984,9 +5984,9 @@ window.ssSave=async id=>{try{await post({action:'wpStokSave',id,kategori:$('sfK'
 window.opPrint=async(action,no)=>{const w=window.open('','_blank');try{toast('Menyusun PDF…');const r=await post({action,no});
  const bin=atob(r.pdf),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const url=URL.createObjectURL(new Blob([u],{type:'application/pdf'}));
  if(w&&!w.closed)w.location.href=url;else{const a=document.createElement('a');a.href=url;a.download=r.name;document.body.appendChild(a);a.click();a.remove()}setTimeout(()=>URL.revokeObjectURL(url),120000)}catch(e){if(w)w.close();toast(e.message,0)}};
-const HK={pm:[['no_pm','Nomor permintaan'],['tanggal','Tanggal'],['nama','Nama pemohon'],['nik','NIK'],['departemen','Departemen'],['jabatan','Jabatan'],['jenis','Jenis permintaan'],['alasan','Alasan'],['keterangan','Keterangan (isi = alasan)'],['total_qty','Total jumlah']],
- st:[['no_st','Nomor serah terima'],['no_pm','Nomor permintaan'],['tanggal','Tanggal'],['nama','Nama penerima'],['nik','NIK'],['departemen','Departemen'],['jabatan','Jabatan'],['kondisi','Kondisi / catatan'],['total_qty','Total jumlah']]};
-const CK=[['no','No'],['kode','Item code'],['nama','Nama barang'],['ukuran','Type/Ukuran/Merk/Spesifikasi'],['qty','Jumlah'],['satuan','Satuan'],['ket','Ket.']];
+const HK={pm:[['no_pm','Nomor permintaan'],['tanggal','Tanggal'],['nama','Nama pemohon'],['no_register','Nomor Register'],['departemen','Departemen'],['jabatan','Jabatan'],['jenis','Jenis permintaan'],['alasan','Alasan'],['keterangan','Keterangan (isi = alasan)'],['total_qty','Total jumlah']],
+ st:[['no_st','Nomor serah terima'],['no_pm','Nomor permintaan'],['tanggal','Tanggal'],['nama','Nama penerima'],['no_register','Nomor Register'],['departemen','Departemen'],['jabatan','Jabatan'],['kondisi','Kondisi / catatan'],['total_qty','Total jumlah']]};
+const CK=[['no','No'],['kode','Item code'],['nama','Nama barang'],['ukuran','Type/Ukuran/Merk/Spesifikasi'],['qty','Jumlah'],['satuan','Satuan'],['tgl_ajuan','Tanggal Pengajuan'],['tgl_terima','Tanggal Terima'],['ket','Ket.']];
 window.opTpl=async kind=>{try{const r=await post({action:'wpFmtInfo',kind}),c=r.cfg||{},m=c.map||{},k=c.cols||{},H=HK[kind],T=kind==='pm'?'Formulir Permintaan APD':'Bukti Serah Terima APD';
  const I=(id,l,v,ph)=>`<label class="block"><span class="font-semibold">${l}</span><input id="${id}" value="${esc(v||'')}" placeholder="${ph||''}" class="w-full border rounded-lg px-2 py-1.5 mt-0.5"></label>`;
  const V=(id,l,v)=>`<label class="block"><span class="font-semibold">${l}</span><select id="${id}" class="w-full border rounded-lg px-2 py-1.5 mt-0.5">${[['','Ikuti format sheet'],['top','Atas'],['middle','Tengah'],['bottom','Bawah']].map(([o,t])=>`<option value="${o}" ${(v||'')===o?'selected':''}>${t}</option>`).join('')}</select></label>`;
