@@ -3810,7 +3810,7 @@ function renderAll(){
  document.querySelectorAll('.pj-sel').forEach(s=>{if(s!==document.activeElement)fillSel(s)});
  if(isAdm()){admMaster();$('pjStats').innerHTML=[['Sedang dipinjam',S.stats.aktif],['Transaksi hari ini',S.stats.hariIni],['Total transaksi',S.stats.total]].map(x=>`<div class="bg-slate-50 border rounded-2xl p-3 text-center"><p class="text-2xl font-extrabold text-red-700">${x[1]??0}</p><p class="text-[11px] text-slate-500">${x[0]}</p></div>`).join('')}
 }
-async function apdLoad(){try{const r=await(await fetch(A+'?action=apdState&_='+Date.now())).json();if(r&&r.ok){S=r;renderAll()}else $('pubLive').textContent='○ Backend belum diperbarui'}catch(e){$('pubLive').textContent='○ Offline'}}
+let apdBusy=0;async function apdLoad(){if(apdBusy)return;apdBusy=1;try{const r=await(await fetch(A+'?action=apdState&_='+Date.now())).json();if(r&&r.ok){S=r;renderAll()}else $('pubLive').textContent='○ Backend belum diperbarui'}catch(e){$('pubLive').textContent='○ Offline'}finally{apdBusy=0}}
 window.pubTop=m=>{topMode=m;renderAll()};
 
 /* ---------- Shell modul APD (beda tampilan karyawan vs admin) ---------- */
@@ -3818,7 +3818,7 @@ const card='bg-white rounded-2xl shadow-lg p-4 md:p-6 border border-slate-100 sp
 const TABS=['Peminjaman APD','Pengadaan Barang / SPB APD','Permintaan APD','Serah Terima APD','Safety Stock APD'];
 function buildShell(){
  shellRole=currentUser.role;const adm=isAdm();
- const tabs=`<div class="bg-white rounded-2xl shadow-lg p-3 border border-slate-100 flex gap-2 overflow-x-auto text-xs">${TABS.map((t,i)=>`<button onclick="pjTab(${i})" id="pjT${i}" class="whitespace-nowrap px-3.5 py-2 rounded-xl font-bold">${t}</button>`).join('')}</div><div id="pjDev" class="${card} hidden text-center py-10"><p class="text-4xl">🚧</p><p class="font-bold text-slate-700 mt-2" id="pjDevName"></p><p class="text-xs text-slate-500">Fitur ini masih dalam tahap pengembangan.</p></div>`;
+ const tabs=`<div class="bg-white rounded-2xl shadow-lg p-3 border border-slate-100 flex gap-2 overflow-x-auto text-xs">${TABS.map((t,i)=>`<button onclick="pjTab(${i})" id="pjT${i}" ${i===1&&!adm?'style="display:none"':''} class="whitespace-nowrap px-3.5 py-2 rounded-xl font-bold">${t}</button>`).join('')}</div><div id="pjDev" class="${card} hidden text-center py-10"><p class="text-4xl">🚧</p><p class="font-bold text-slate-700 mt-2" id="pjDevName"></p><p class="text-xs text-slate-500">Fitur ini masih dalam tahap pengembangan.</p></div>`;
  const live=`<div class="${card}"><div class="flex justify-between items-center flex-wrap gap-1"><h2 class="text-sm md:text-base font-bold text-slate-800">🔴 Live Record Peminjaman APD</h2><span class="text-[10px] font-bold text-emerald-600">● realtime (auto-refresh 5 dtk)</span></div><p class="text-[11px] text-slate-500">${adm?'Klik baris untuk melihat detail, bukti pengembalian, atau membatalkan.':'Data Anda langsung muncul di sini. Untuk mengembalikan APD, <b>klik baris Anda</b> berstatus Dipinjam.'}</p><div class="table-container"><table class="w-full text-xs min-w-[640px]">${TH(1)}<tbody id="pjLive"></tbody></table></div></div>`;
  const stock=`<div class="${card}"><h2 class="text-sm md:text-base font-bold text-slate-800">📦 Ketersediaan APD <span class="text-[10px] text-emerald-600">● realtime</span></h2><div id="pjStock" class="grid grid-cols-2 md:grid-cols-4 gap-3"></div></div>`;
  const form=`<div class="${card}"><div class="flex justify-between items-center flex-wrap gap-1"><h2 class="text-sm md:text-base font-bold text-slate-800">📝 Formulir Peminjaman APD</h2><span class="text-[11px] text-slate-500">⏱ <span id="pjClock"></span></span></div>
@@ -3839,7 +3839,7 @@ function buildShell(){
  if(!adm){const w=JSON.parse(localStorage.getItem('pjWho')||'null');if(w){$('pjNama').value=w.n;$('pjReg').value=w.r;$('pjTipe').value=w.t;pjTipeCh();if(w.t==='Vendor')$('pjDept').value=w.d;else $('pjDeptSel').value=DEPTS.includes(w.d)?w.d:''}pjTipeCh();pjAddRow()}
 }
 window.apdEnter=()=>{if(shellRole!==currentUser.role||!$('pjMain'))buildShell();dirty=false;pjTab(0);apdLoad()};
-window.pjTab=i=>{TABS.forEach((_,k)=>{$('pjT'+k).className='whitespace-nowrap px-3.5 py-2 rounded-xl font-bold '+(k===i?'bg-red-600 text-white shadow':'bg-slate-100 text-slate-700')});$('pjMain').classList.toggle('hidden',i>0);$('pjDev').classList.add('hidden');$('pjDevName').textContent=TABS[i];if(window.spbShow)window.spbShow(i===1);if(window.apdOps)window.apdOps(i)};
+window.pjTab=i=>{if(i===1&&!isAdm())i=0;TABS.forEach((_,k)=>{$('pjT'+k).className='whitespace-nowrap px-3.5 py-2 rounded-xl font-bold '+(k===i?'bg-red-600 text-white shadow':'bg-slate-100 text-slate-700')});$('pjMain').classList.toggle('hidden',i>0);$('pjDev').classList.add('hidden');$('pjDevName').textContent=TABS[i];if(window.spbShow)window.spbShow(i===1);if(window.apdOps)window.apdOps(i)};
 window.pjDirty=()=>dirty=true;
 setInterval(()=>{const c=$('pjClock');if(c)c.textContent=new Date().toLocaleString('id-ID',{timeZone:'Asia/Jakarta',dateStyle:'full',timeStyle:'medium',hour12:false}).replace(/\./g,':')},1000);
 
@@ -3934,7 +3934,7 @@ setInterval(()=>{if($('loginPage').classList.contains('hidden')||document.hidden
  const busy=document.querySelector('.fixed.inset-0:not(.hidden)')||[...document.querySelectorAll('.siv video')].some(v=>!v.paused&&!v.ended)||/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
  if(busy){idle=0;return}if(++idle>=(Number(slides[ci].dataset.dwell)||5)){idle=0;pubGo(ci+1)}},1000);
 
-setInterval(()=>{if(document.hidden)return;const pub=!$('loginPage').classList.contains('hidden'),mod=currentUser&&!$('modulApd').classList.contains('hidden');if(pub||mod)apdLoad()},5000);
+setInterval(()=>{if(document.hidden)return;const pub=!$('loginPage').classList.contains('hidden'),mod=currentUser&&!$('modulApd').classList.contains('hidden')&&$('pjMain')&&!$('pjMain').classList.contains('hidden');if(pub||mod)apdLoad()},5000);   // modul APD: hanya ikut auto-refresh saat tab Peminjaman terbuka
 $('pubPrev').onclick=()=>pubGo(ci-1);$('pubNext').onclick=()=>pubGo(ci+1);pubGo(0);apdLoad();
 })();
 </script>
@@ -4195,7 +4195,7 @@ window.wpLogs=wpLogs;async function wpLogs(){try{const r=await post({action:'wpL
 let LQ=[],LQb=false;
 function showLogin(){if(LQb||!LQ.length)return;LQb=true;const l=LQ.shift(),d=document.createElement('div');d.className='fixed bottom-4 left-4 z-[85] bg-slate-900 text-white text-xs rounded-xl shadow-2xl px-4 py-3';d.innerHTML='🔔 <b>'+E(l.user)+'</b>'+(l.reg?' (Reg '+E(l.reg)+')':'')+' login<br><span class="text-slate-300">'+fmtT(l.waktu)+'</span>';document.body.appendChild(d);setTimeout(()=>{d.remove();LQb=false;showLogin()},4500)}
 async function pollLogin(){if(!currentUser||!isAdm()||document.hidden)return;try{const r=await post({action:'wpLogins',token:localStorage.getItem('wpTok')||''});if(!r.ok||!r.list.length)return;const nw=r.list.filter(l=>l.waktu>lastLogin&&l.kind!=='admin').reverse();if(lastLogin)LQ.push(...nw);lastLogin=r.list[0].waktu;localStorage.setItem('wpLastLogin',lastLogin);showLogin()}catch(e){}}
-setInterval(pollLogin,5000);setTimeout(pollLogin,1500);
+setInterval(pollLogin,20000);setTimeout(pollLogin,1500);
 document.body.insertAdjacentHTML('beforeend','<div id="wpModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-3 no-print"><div id="wpMB" class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[92vh] overflow-y-auto p-5 space-y-3 text-xs"></div></div>');
 window.wpCloseM=()=>$('wpModal').classList.add('hidden');
 $('wpModal').addEventListener('click',e=>{if(e.target.id==='wpModal')wpCloseM()});
@@ -4307,7 +4307,7 @@ const nbRead=()=>isAdm()?post({action:'wpAdminNotifRead',token:localStorage.getI
 async function nbPoll(){const on=!!currentUser;Q('.nb-btn').forEach(b=>b.classList.toggle('hidden',!on));if(!on||document.hidden)return;
  try{let r;if(isAdm())r=await post({action:'wpAdminNotif',token:localStorage.getItem('wpTok')||''});else if(localStorage.getItem('wpTok')){r=await post({action:'wpNotif',...auth()});if(r.ok)r.list=r.list.map(n=>({waktu:n.waktu,pesan:n.pesan,ref:n.nomor,dibaca:n.dibaca}))}else return;
   if(r.ok){NB=r.list;const u=NB.filter(n=>!n.dibaca).length;if(prevU>=0&&u>prevU&&!isAdm())toast('🔔 '+NB.find(n=>!n.dibaca).pesan);prevU=u;nbRender();const pn=$('nbPanel');if(pn&&!pn.classList.contains('hidden'))nbList()}}catch(e){}}
-setInterval(nbPoll,5000);setTimeout(nbPoll,1200);
+setInterval(nbPoll,30000);setTimeout(nbPoll,1200);
 window.nbToggle=async()=>{let p=$('nbPanel');if(!p){p=document.createElement('div');p.id='nbPanel';p.className='hidden fixed top-16 right-3 z-[70] w-[340px] max-w-[92vw] max-h-[70vh] overflow-y-auto bg-white rounded-2xl shadow-2xl border p-3 text-xs no-print';document.body.appendChild(p)}
  if(!p.classList.toggle('hidden')){NB_Q='';NB_S=null;{const q=$('nbQ');if(q)q.value=''}nbList();try{await nbRead();NB.forEach(n=>n.dibaca=true);nbRender()}catch(e){}}};
 window.nbClose=()=>{const p=$('nbPanel');if(p)p.classList.add('hidden')};
@@ -5049,15 +5049,15 @@ window.accRefresh=async()=>{await load();if(CURM&&!closed(CURM)){hideTutup();win
 /* ---- tombol menu: tanda gembok ---- */
 function closedTab(i){const k=APDS[i];let c=$('pjClosed');if(!c){const m=$('pjMain');if(!m)return;m.insertAdjacentHTML('beforebegin','<div id="pjClosed" class="hidden bg-white rounded-2xl shadow-lg border border-slate-100 p-8 text-center space-y-2"></div>');c=$('pjClosed')}
  if(closedK(k)){c.innerHTML=`<div class="text-4xl">🛠️</div><h3 class="font-bold text-sm">Fitur ${E(NAMA[k])} Sedang Ditutup Sementara</h3><p class="text-xs text-slate-600">${E(ACC.pesan||'Fitur ini ditutup sementara oleh admin untuk pemeliharaan atau pembaruan sistem.')}</p>`;c.classList.remove('hidden');$('pjMain').classList.add('hidden');if($('pjDev'))$('pjDev').classList.add('hidden');['spbMain','pmMain','stMain','ssMain'].forEach(x=>{if($(x))$(x).classList.add('hidden')})}else c.classList.add('hidden')}
-function tabs(){APDS.forEach((k,i)=>{const b=$('pjT'+i);if(!b)return;const c=closedK(k),l=b.querySelector('.accL');if(c&&!l)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&l)l.remove();b.style.display=(grp()==='vendor'&&!isAdm()&&i>0)?'none':''});const cur=APDS.findIndex((k,i)=>$('pjT'+i)&&$('pjT'+i).className.includes('bg-red-600'));if(cur>=0)closedTab(cur)}
-function apply(){document.querySelectorAll('button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
+function tabs(){APDS.forEach((k,i)=>{const b=$('pjT'+i);if(!b)return;const c=closedK(k),l=b.querySelector('.accL');if(c&&!l)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&l)l.remove();b.style.display=(!isAdm()&&((grp()==='vendor'&&i>0)||i===1))?'none':''});const cur=APDS.findIndex((k,i)=>$('pjT'+i)&&$('pjT'+i).className.includes('bg-red-600'));if(cur>=0)closedTab(cur)}
+function apply(){document.querySelectorAll('button[onclick]').forEach(b=>{const k=keyOf(b);if(!k)return;const c=closed(k);b.dataset.tutup=c?'1':'0';if(k==='veh'){if(!isAdm()){b.style.display='none';b.dataset.vh='1'}else if(b.dataset.vh){b.style.display='';delete b.dataset.vh}}const i=b.querySelector('.accL');if(c&&!i)b.insertAdjacentHTML('beforeend','<span class="accL"> 🔒</span>');if(!c&&i)i.remove()});
  tabs();if(!isAdm()&&CURM&&closed(CURM))showTutup(CURM);else if(SHOWN&&CURM&&!closed(CURM))accRefresh()}
 const PT=window.pjTab;if(PT)window.pjTab=function(){const r=PT.apply(this,arguments);tabs();return r};
 async function load(){if(!currentUser||!localStorage.getItem('wpTok'))return;try{const r=await post({action:'wpAksesGet'});ACC=r.cfg;apply();if(isAdm())fill()}catch(e){}}
 
 /* ---- pembungkus navigasi ---- */
 const SM=window.switchModule;
-window.switchModule=function(m){const em=currentUser&&currentUser.kind==='vendor'&&m!=='profile'?(m==='apd'?'apd':'wp'):m;CURM=em;
+window.switchModule=function(m){if(m==='veh'&&!isAdm()){toast('Fitur Inspeksi Kendaraan belum tersedia.',0);return}const em=currentUser&&currentUser.kind==='vendor'&&m!=='profile'?(m==='apd'?'apd':'wp'):m;CURM=em;
  if(m==='profile'&&isAdm()){card();load()}
  if(closed(em)){showTutup(em);return}
  hideTutup();return SM.apply(this,arguments)};
@@ -5962,7 +5962,7 @@ window.opsReload=()=>window.apdOps(CUR);
 async function pmView(){
  $('pmMain').innerHTML=`<div class="${card}">${head('📝 Permintaan APD',isAdm()?'Pantau dan setujui permintaan APD dari karyawan.':'Ajukan permintaan APD dan pantau statusnya di sini.',(isAdm()?`<button onclick="opSpbForm()" class="${bR}">🧾 Buat SPB dari Permintaan</button><button onclick="opGdgForm()" class="${bD}">📥 Terima Barang Gudang</button><button onclick="opTpl('pm')" class="${bA}">🖨️ Template Cetak</button>`:`<button onclick="pmForm()" class="${bR}">➕ Buat Permintaan</button>`)+`<button onclick="opsReload()" class="${bD}">🔄 Muat Ulang</button>`)}
  <div id="pmInfo"></div><input id="pmQ" oninput="pmRows()" placeholder="Cari nomor, nama, departemen, APD, atau status" class="${inp}">${tbl(['No. Permintaan','Tanggal','Pemohon','Barang','Status & Progres','Aksi'],'pmRows',940)}</div>`;
- await loadPM();pmRows();const mn=PM.filter(r=>r.minta&&r.minta.reg===myReg()&&r.status==='Diverifikasi').length;if(mn&&!isAdm())$('pmInfo').innerHTML=`<div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-800">Ada <b>${mn}</b> permintaan APD yang menunggu persetujuan Anda. Klik ikon ⋮ pada baris terkait, lalu pilih “Setujui &amp; paraf”.</div>`}
+ if(PM.length)pmRows();if(!SSL.length)loadSS();await loadPM();pmRows();const mn=PM.filter(r=>r.minta&&r.minta.reg===myReg()&&r.status==='Diverifikasi').length;if(mn&&!isAdm())$('pmInfo').innerHTML=`<div class="bg-amber-50 border border-amber-200 rounded-xl px-3 py-2 text-xs text-amber-800">Ada <b>${mn}</b> permintaan APD yang menunggu persetujuan Anda. Klik ikon ⋮ pada baris terkait, lalu pilih “Setujui &amp; paraf”.</div>`}
 const stepC=(on,t,sub)=>`<div class="flex flex-col items-center min-w-[58px]"><span class="w-5 h-5 rounded-full text-[10px] font-bold flex items-center justify-center ${on==='done'?'bg-emerald-500 text-white':on==='part'?'bg-amber-400 text-white':'bg-slate-200 text-slate-400'}">${on==='done'?'✓':on==='part'?'…':'•'}</span><span class="text-[10px] leading-tight text-center ${on?'text-slate-700':'text-slate-400'}">${t}</span>${sub?`<span class="text-[9px] text-slate-400 text-center leading-tight">${sub}</span>`:''}</div>`;
 const anySpb=r=>r.items.some(i=>(i.spbQty||0)>0);
 const prog=r=>{if(r.status==='Ditolak'||r.status==='Dibatalkan')return tag(r.status)+(r.catatan?`<div class="text-[10px] text-slate-500 mt-1">${esc(r.catatan)}</div>`:'');
@@ -6010,12 +6010,12 @@ window.piPick=sel=>{const row=sel.closest('.pi'),v=sel.value,x=SSL.find(z=>z.id=
  row.querySelector('.pi-ph').innerHTML=ph(x||null);n.classList.toggle('hidden',v!=='__x');
  row.querySelector('.pi-uc').classList.add('hidden');if(sz.length){uz.innerHTML='<option value="">Ukuran…</option>'+sz.map(z=>`<option value="${esc(z.u)}">${esc(z.u)}${z.s>0?'':' (stok habis)'}</option>`).join('')+(custOK(x)?'<option value="__c">✏️ Ukuran custom…</option>':'');uz.classList.remove('hidden');u.classList.add('hidden')}else{uz.classList.add('hidden');u.classList.remove('hidden')}
  if(x)sat.value=x.satuan};
-window.pmForm=async()=>{if(!SSL.length)await loadSS();const u=currentUser||{},dv=localStorage.getItem('opDept')||'',jb=localStorage.getItem('opJab')||'';
+window.pmForm=async()=>{if(!SSL.length)await loadSS();if(!SSL.length&&STK.length)SSL=STK.map(x=>({...x,aktif:true}));const u=currentUser||{},dv=localStorage.getItem('opDept')||'',jb=localStorage.getItem('opJab')||'';
  const o=modal(`<h3 class="font-bold text-sm">📝 Formulir Permintaan APD</h3>
  <div class="grid grid-cols-1 md:grid-cols-3 gap-2"><label>Nama<input class="${inp} bg-slate-50" value="${esc(u.name||'')}" readonly></label><label>Nomor Register<input class="${inp} bg-slate-50" value="${esc(u.reg||'')}" readonly></label>
  <label>Departemen *<select id="pmDept" class="${inp}"><option value="">Pilih…</option>${DEPTS.map(d=>`<option ${d===dv?'selected':''}>${d}</option>`).join('')}</select></label>
  <label>Jabatan<input id="pmJab" class="${inp}" value="${esc(jb)}"></label><label>Jenis permintaan<select id="pmJenis" class="${inp}">${JENIS.map(j=>`<option>${j}</option>`).join('')}</select></label><label>Alasan *<input id="pmAlasan" class="${inp}" placeholder="mis. sepatu sobek, area kerja baru"></label></div>
- <p class="font-bold pt-1">Daftar APD</p><p class="text-slate-500">Pilih APD dari daftar (foto tampil di kiri; klik foto untuk memperbesar). Untuk APD berukuran seperti sepatu dan pakaian, pilih ukurannya. Untuk pakaian yang ukurannya tidak ada di daftar, pilih “Ukuran custom…” lalu isi detailnya.</p><div id="pmItems" class="space-y-1.5">${itemRow()}</div><button type="button" onclick="document.getElementById('pmItems').insertAdjacentHTML('beforeend',window.opItemRow())" class="text-red-700 font-bold">➕ Tambah APD</button>
+ <p class="font-bold pt-1">Daftar APD</p><p class="text-slate-500">Pilih APD dari daftar (foto tampil di kiri; klik foto untuk memperbesar). Untuk APD berukuran seperti sepatu dan pakaian, pilih ukurannya. Untuk pakaian yang ukurannya tidak ada di daftar, pilih “Ukuran custom…” lalu isi detailnya.</p>${SSL.some(z=>z.aktif)?'':'<p class="text-red-600 font-semibold">⚠️ Daftar APD belum berhasil dimuat. Tutup formulir, klik “Muat Ulang”, lalu coba lagi. Bila tetap kosong, hubungi admin K3LH.</p>'}<div id="pmItems" class="space-y-1.5">${itemRow()}</div><button type="button" onclick="document.getElementById('pmItems').insertAdjacentHTML('beforeend',window.opItemRow())" class="text-red-700 font-bold">➕ Tambah APD</button>
  <div class="pt-1"><p class="font-bold">Paraf pemohon *</p>${padHTML('pmPad')}<p class="mt-1">Nama terang: <b>${esc(u.name||'')}</b></p></div>
  <div class="flex gap-2 justify-end pt-2"><button onclick="document.getElementById('opModal').remove()" class="px-4 py-2 rounded-xl bg-slate-100 font-bold">Batal</button><button id="pmSave" onclick="pmSave()" class="${bR}">Ajukan Permintaan</button></div>`);
  padInit('pmPad')};
