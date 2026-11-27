@@ -5871,7 +5871,7 @@ window.spbSave=async pr=>{
   if(pr)await doPrint(r.no,w);
  }catch(e){if(w)w.close();toast(e.message,0);b1.disabled=b2.disabled=false}
 };
-window.spbDel=async i=>{const x=LIST[i];if(!x||!confirm('Hapus SPB '+x.no+'?'))return;try{await post({action:'wpSpbDel',no:x.no});toast('SPB dihapus.');spbLoad()}catch(e){toast(e.message,0)}};
+window.spbDel=async i=>{const x=LIST[i];if(!x||!confirm('Hapus SPB '+x.no+'?\n\nJika barang SPB ini sudah diterima Gudang, jumlah tersebut ikut dikurangi dari Safety Stock (stok input manual tidak berubah) dan status permintaan terkait dikembalikan.'))return;try{const r=await post({action:'wpSpbDel',no:x.no});toast('SPB dihapus.'+(r.stok?' Safety Stock dikurangi '+r.stok+' pcs.':'')+((r.notes||[]).length?' Catatan: '+r.notes.join('; '):''));spbLoad()}catch(e){toast(e.message,0)}};
 
 /* ---------- cetak PDF dari template spreadsheet ---------- */
 async function doPrint(no,w){
@@ -6132,7 +6132,7 @@ window.pmSave=async()=>{const items=[];let bad='';document.querySelectorAll('#pm
  const b=$('pmSave');b.disabled=true;try{const r=await post({action:'wpPmSave',dept,jabatan:jab,jenis:$('pmJenis').value,alasan:al,items,ttd});localStorage.setItem(parafKey(),ttd);localStorage.setItem('opDept',dept);localStorage.setItem('opJab',jab);closeM();toast('Permintaan '+r.no+' diajukan.');pmView()}catch(e){toast(e.message,0);b.disabled=false}};
 window.opSt=async(no,st)=>{let cat='';if(st==='Ditolak'){cat=prompt('Alasan penolakan (wajib):')||'';if(!cat.trim())return toast('Alasan penolakan wajib diisi.',0)}else if(!confirm(st+' permintaan '+no+'?'))return;
  try{await post({action:'wpPmStatus',no,status:st,catatan:cat});toast('Status: '+st);opsReload()}catch(e){toast(e.message,0)}};
-window.opDel=async no=>{if(!confirm('Hapus permintaan '+no+' beserta riwayat serah terimanya? Stok tidak dikembalikan otomatis.'))return;try{await post({action:'wpPmDel',no});toast('Dihapus.');opsReload()}catch(e){toast(e.message,0)}};
+window.opDel=async no=>{if(!confirm('Hapus permintaan '+no+' beserta riwayat serah terimanya?\n\nBarang kiriman Gudang dari permintaan ini yang masih ada di Safety Stock akan ikut dikurangi. Stok yang diinput manual tidak berubah.'))return;try{const r=await post({action:'wpPmDel',no});toast('Dihapus.'+(r.stok?' Safety Stock dikurangi '+r.stok+' pcs.':'')+((r.notes||[]).length?' Catatan: '+r.notes.join('; '):''));opsReload()}catch(e){toast(e.message,0)}};
 
 /* ---------- Serah Terima ---------- */
 const ser=()=>PM.flatMap(r=>r.serah.map(z=>({...z,pm:r}))).sort((a,b)=>b.no.localeCompare(a.no));
